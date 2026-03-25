@@ -5,27 +5,30 @@ This skill ships from a single source of truth and works across multiple AI plat
 ## Source of Truth
 
 ```
-skills/proof-engine/
-├── SKILL.md              <- canonical skill definition
-├── scripts/              <- bundled Python verification scripts
-├── references/           <- hardening rules documentation
-├── evals/                <- evaluation test suite
-└── agents/
-    └── openai.yaml       <- Codex CLI UI metadata
+proof-engine/                         <- plugin subdirectory
+├── .claude-plugin/plugin.json        <- plugin manifest
+└── skills/proof-engine/
+    ├── SKILL.md                      <- canonical skill definition
+    ├── scripts/                      <- bundled Python verification scripts
+    ├── references/                   <- hardening rules documentation
+    ├── evals/                        <- evaluation test suite
+    └── agents/
+        └── openai.yaml              <- Codex CLI UI metadata
 ```
 
 ## How Each Platform Consumes the Skill
 
-### Claude Code — direct from repo
+### Claude Code / Claude Cowork — direct from repo
 
 - Installs from the plugin marketplace: `/plugin marketplace add yaniv-golan/proof-engine`
-- Manifest: `.claude-plugin/plugin.json` with `"skills": "./skills"`
-- Claude Code discovers `skills/proof-engine/SKILL.md` automatically
+- Marketplace manifest: `.claude-plugin/marketplace.json` with `"source": "./proof-engine"`
+- Plugin manifest: `proof-engine/.claude-plugin/plugin.json` with `"skills": "./skills"`
+- Claude Code discovers `proof-engine/skills/proof-engine/SKILL.md` automatically
 
 ### Cursor — direct from repo
 
 - Installs as a plugin: Settings -> paste repo URL into "Search or Paste Link"
-- Manifest: `.cursor-plugin/plugin.json` (no `skills` field needed — auto-discovers from `skills/`)
+- Manifest: `.cursor-plugin/plugin.json` with `"skills": "./proof-engine/skills"`
 - Same `SKILL.md` as Claude Code
 
 ### Manus — upload zip from GitHub Releases
@@ -59,8 +62,9 @@ $skill-installer https://github.com/yaniv-golan/proof-engine
 CI (`.github/workflows/release.yml`) runs on version tags (`v*`) and produces the generic zip:
 
 ```bash
-cp -r skills/proof-engine proof-engine
-sed -i 's|\${CLAUDE_SKILL_DIR}/||g' proof-engine/SKILL.md
+cp -r proof-engine/skills/proof-engine proof-engine-zip
+sed -i 's|\${CLAUDE_SKILL_DIR}/||g' proof-engine-zip/SKILL.md
+mv proof-engine-zip proof-engine
 zip -r "proof-engine.zip" proof-engine/
 ```
 

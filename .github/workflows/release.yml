@@ -20,8 +20,9 @@ jobs:
 
       - name: Build generic zip (Manus, ChatGPT, Cursor, etc.)
         run: |
-          cp -r skills/proof-engine proof-engine
-          sed -i 's|\${CLAUDE_SKILL_DIR}/||g' proof-engine/SKILL.md
+          cp -r proof-engine/skills/proof-engine proof-engine-zip
+          sed -i 's|\${CLAUDE_SKILL_DIR}/||g' proof-engine-zip/SKILL.md
+          mv proof-engine-zip proof-engine
           zip -r "proof-engine.zip" proof-engine/
           rm -rf proof-engine
 

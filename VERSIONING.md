@@ -11,9 +11,9 @@ The canonical version lives in the `VERSION` file at the repo root. All other ve
 The version appears in these files (all managed by the bump script):
 
 1. `VERSION` — source of truth
-2. `.claude-plugin/plugin.json` → `"version"` field
+2. `proof-engine/.claude-plugin/plugin.json` → `"version"` field
 3. `.cursor-plugin/plugin.json` → `"version"` field
-4. `skills/proof-engine/SKILL.md` → `metadata.version` in YAML frontmatter
+4. `proof-engine/skills/proof-engine/SKILL.md` → `metadata.version` in YAML frontmatter
 
 ## Bumping the Version
 

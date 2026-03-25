@@ -8,5 +8,6 @@
     "email": "yaniv@golan.name"
   },
   "license": "MIT",
-  "keywords": ["proof", "verification", "fact-check", "citations", "formal-reasoning", "claims"]
+  "keywords": ["proof", "verification", "fact-check", "citations", "formal-reasoning", "claims"],
+  "skills": "./proof-engine/skills"
 }
