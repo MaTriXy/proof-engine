@@ -207,6 +207,39 @@ class ProofValidator:
         else:
             self.passed.append("Rule 7: No hard-coded constants or inline formulas detected")
 
+    def check_fact_registry(self):
+        """Check that proof defines a FACT_REGISTRY dict."""
+        has_registry = bool(re.search(r'FACT_REGISTRY\s*=\s*\{', self.source))
+        if has_registry:
+            self.passed.append("Contract: FACT_REGISTRY dict found")
+        else:
+            self.issues.append(("Contract: No FACT_REGISTRY dict — required for report generation", []))
+
+    def check_json_summary(self):
+        """Check that proof emits a JSON summary block in __main__."""
+        has_json_import = bool(re.search(r'import json', self.source))
+        has_summary_print = bool(re.search(r'PROOF SUMMARY.*JSON', self.source))
+        has_json_dumps = bool(re.search(r'json\.dumps\s*\(', self.source))
+
+        if has_json_import and has_summary_print and has_json_dumps:
+            self.passed.append("Contract: JSON summary block found (import json + PROOF SUMMARY header + json.dumps)")
+        elif has_summary_print or has_json_dumps:
+            self.warnings.append(("Contract: Partial JSON summary block — verify all components present", []))
+        else:
+            self.issues.append(("Contract: No JSON summary block — required for report generation", []))
+
+    def check_extraction_verification(self):
+        """Check that extracted values are verified, not just parsed."""
+        has_parse = bool(re.search(r'parse_date_from_quote|parse_number_from_quote|parse_percentage_from_quote', self.source))
+        has_verify = bool(re.search(r'verify_extraction\s*\(', self.source))
+
+        if has_parse and has_verify:
+            self.passed.append("Contract: Extracted values verified via verify_extraction()")
+        elif has_parse and not has_verify:
+            self.warnings.append(("Contract: Values parsed from quotes but verify_extraction() not called — extraction records may be incomplete", []))
+        else:
+            self.passed.append("Contract: No value parsing detected (pure-math proof or no extractions)")
+
     def check_general_selfcontained(self):
         """General: proof is self-contained and runnable."""
         problems = []
@@ -238,6 +271,9 @@ class ProofValidator:
         self.check_rule5_adversarial()
         self.check_rule6_independent_crosscheck()
         self.check_rule7_no_hardcoded_constants()
+        self.check_fact_registry()
+        self.check_json_summary()
+        self.check_extraction_verification()
         self.check_general_selfcontained()
 
         # Print report

@@ -17,7 +17,7 @@ LLMs have two weaknesses that make them unreliable for factual claims: they hall
 - **Offloading reasoning to code** — every computation is executable Python, not prose
 - **Enforcing 7 hardening rules** — closing specific failure modes where proof code looks correct but is silently wrong
 
-The skill produces two outputs: a re-runnable `.py` proof script and a readable `.md` summary with a verdict (PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED, or PROVED with unverified citations).
+The skill produces three outputs: a re-runnable `proof.py` script, a reader-facing `proof.md` summary with verdict, and a `proof_audit.md` with full verification details. Verdicts: PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED, or PROVED with unverified citations.
 
 ## Installation
 
@@ -93,7 +93,7 @@ The skill will:
 2. **Gather evidence** — search for supporting AND contradicting sources (adversarial)
 3. **Write proof code** — a self-contained Python script with hardening rules enforced
 4. **Validate and execute** — run static analysis, then execute the proof
-5. **Report** — deliver a `.py` proof script and `.md` summary with verdict
+5. **Report** — deliver three files: `proof.py` (re-runnable script), `proof.md` (reader summary with verdict), and `proof_audit.md` (full verification details)
 
 ## What Claims Work Well?
 

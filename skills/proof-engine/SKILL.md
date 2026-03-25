@@ -21,7 +21,7 @@ metadata:
 
 LLMs have two weaknesses that make them unreliable for factual claims: they hallucinate facts and they make reasoning errors. This skill overcomes both by offloading all verification to **code** and **citations**. The LLM never asserts a fact on its own authority. Every fact is either computed by Python code anyone can re-run (Type A) or backed by a specific source, URL, and exact quote (Type B).
 
-The skill produces two outputs: a re-runnable `.py` proof script and a readable `.md` summary.
+The skill produces three outputs: a re-runnable `proof.py` script, a reader-facing `proof.md` summary, and a `proof_audit.md` with full verification details.
 
 ## Before Writing Any Proof Code
 
@@ -88,26 +88,139 @@ Required structural elements in every proof script:
 - `compute_age()`, `compare()`, `explain_calc()`, and constants from `${CLAUDE_SKILL_DIR}/scripts/computations.py` — never hand-code formulas or well-known constants, and use `explain_calc()` for self-documenting output (Rule 7)
 - Adversarial checks section (Rule 5)
 - Cross-checks from independent sources (Rule 6)
-- `if __name__ == "__main__"` block printing everything including verdict
+- `FACT_REGISTRY` dict mapping report IDs (B1, A1) to proof-script keys and labels
+- JSON summary block in `__main__` with all structured fields (see hardening-rules.md template)
+- `if __name__ == "__main__"` block with structured output ending in `=== PROOF SUMMARY (JSON) ===`
 
 ### Step 4: Validate Before Executing
 Run `python ${CLAUDE_SKILL_DIR}/scripts/validate_proof.py proof_file.py` and fix any issues before proceeding.
 
 ### Step 5: Execute and Report
-Run the proof script, capture output. Write both outputs:
-- **`.py` file**: the proof script itself (re-runnable)
-- **`.md` file**: readable summary with claim interpretation, fact registry, verification status, adversarial results, verdict, and hardening checklist
+
+Run the proof script, capture its output. The script produces two output streams:
+1. **Inline output** — human-readable traces from bundled scripts (verify_citations, verify_extraction, explain_calc) that appear during execution
+2. **JSON summary block** — a structured `=== PROOF SUMMARY (JSON) ===` block at the end containing all fields needed for report generation
+
+Write three output files:
+
+- **`proof.py`**: the proof script itself (re-runnable, with FACT_REGISTRY and JSON summary in `__main__`)
+- **`proof.md`**: reader-facing summary (structure below)
+- **`proof_audit.md`**: full verification details (structure below)
+
+Use the JSON summary for populating structured sections (tables, fact IDs, verification statuses). Use the inline output for detailed traces (computation steps, citation verification messages).
+
+#### proof.md structure
+
+The reader-facing report. A reader who never opens proof_audit.md should fully understand the verdict and its justification.
+
+Title line: `# Proof: [claim text]`
+
+Header block:
+- Generated: [date]
+- Verdict: [VERDICT]
+- Audit trail: link to proof_audit.md and proof.py
+
+Section "Key Findings": 3-4 bullet points with the decisive numbers that justify the verdict. This is the executive summary — a reader who stops here should understand the result. Source: JSON summary `verdict` and `key_results`.
+
+Section "Claim Interpretation": CLAIM_FORMAL in prose. State the natural-language claim, the formal interpretation, the operator choice with rationale. Expand acronyms on first use (e.g., "greenhouse gases (GHGs)"). Source: JSON summary `claim_formal` and `claim_natural`.
+
+Section "Evidence Summary": Table with columns ID, Fact, Verified. IDs and labels from JSON summary `fact_registry`.
+- Type A facts: Verified = "Computed"
+- Type B facts: Verified = "Yes", "No", or "Partial" with brief reason for No/Partial (e.g., "No (URL returned 403)"). Derive from JSON summary `citations[fact_id].status`.
+- Each source is its own fact row — no aggregation
+
+Section "Proof Logic": Narrative explanation of the reasoning chain. Every key number must reference its fact ID inline, e.g., "Human activities account for ~95.5% of observed warming (B1, B3)." When multiple facts establish the same claim, note the redundancy: "Israel was founded on May 14, 1948 (B1, B2 — independently sourced)." Sub-claims get their own sub-sections if the proof has multiple parts. Source: author analysis.
+
+Section "Counter-Evidence Search": Results of adversarial checks — what counter-evidence was searched for and what was found. Use plain language, not "Rule 5". Source: JSON summary `adversarial_checks`.
+
+Section "Conclusion": Restate verdict with the key numbers. Verdict-specific:
+- PROVED/DISPROVED: If any citations are not fully verified, state which conclusions depend on them and whether those conclusions are independently supported by verified sources.
+- PROVED (with unverified citations): Same as PROVED, but explicitly list the unverified citations and their impact.
+- PARTIALLY VERIFIED: List which sub-claims were proved and which remain unverifiable, with reasons.
+- UNDETERMINED: State what specific evidence would be needed to resolve the claim.
+Source: JSON summary `verdict`, `key_results`; impact analysis is author analysis.
+
+#### proof_audit.md structure
+
+The verification-focused report. Contains everything a verifier needs to check the proof's machinery without running proof.py.
+
+Title line: `# Audit: [claim text]`
+
+Header block:
+- Generated: [date]
+- Reader summary: link to proof.md
+- Proof script: link to proof.py
+
+Section "Claim Specification": CLAIM_FORMAL fields. Source: proof.py JSON summary `claim_formal`.
+
+Section "Fact Registry": FACT_REGISTRY showing ID-to-key mapping. Source: proof.py JSON summary `fact_registry`.
+
+Section "Full Evidence Table": Two sub-sections:
+
+- "Type A (Computed) Facts" — table with columns: ID, Fact, Method, Result. All fields from JSON summary `fact_registry` entries where `method` and `result` are present. Source: proof.py JSON summary.
+- "Type B (Empirical) Facts" — table with columns: ID, Fact, Source, URL, Quote, Status, Method. One row per source. Source: proof.py JSON summary `citations` (which has normalized `status` and `method` fields — not free-form messages). For pure-math proofs, omit.
+
+Section "Citation Verification Details": For each Type B citation, three fields — all from normalized JSON fields, not parsed from prose:
+- Status: Verified / Partially verified / Not verified / Fetch failed. Source: JSON summary `citations[fact_id].status`.
+- Method (only if Verified or Partially verified): Full quote match / Full quote match after Unicode normalization / Fragment match (N/M words, P% coverage). Source: JSON summary `citations[fact_id].method` and `.coverage_pct`. Note: Partially verified (fragment match) is a degraded result — present it distinctly from full verification.
+- Impact (only if NOT fully Verified): Which conclusions in proof.md depend on this citation, and whether they have independent support. Source: author analysis (label as such).
+For pure-math proofs, omit this section.
+
+Section "Computation Traces": The explain_calc() output showing symbolic expression, substituted values, and result for each computation step. Source: proof.py inline output (execution trace). This is the mechanical audit of all calculations — reproduce the explain_calc lines verbatim.
+
+Section "Independent Source Agreement (Rule 6)": Cross-check details — which values were independently sourced, whether they agree, source-to-source comparisons. Source: proof.py JSON summary `cross_checks`. For pure-math proofs, omit.
+
+Section "Adversarial Checks (Rule 5)": Full records with questions, searches performed, findings, and whether each breaks the proof. Source: proof.py JSON summary `adversarial_checks`.
+
+Section "Extraction Records": For each extracted value — fact ID, extracted value, whether value was found in quote. Source: JSON summary `extractions[fact_id]` (value, value_in_quote, quote_snippet). Plus: extraction method and normalization narrative. Source: author analysis (label as such). For pure-math proofs, omit.
+
+Section "Hardening Checklist":
+- Rule 1: Every empirical value parsed from quote text, not hand-typed
+- Rule 2: Every citation URL fetched and quote checked
+- Rule 3: System time used for date-dependent logic
+- Rule 4: Claim interpretation explicit with operator rationale
+- Rule 5: Adversarial checks searched for independent counter-evidence
+- Rule 6: Cross-checks used independently sourced inputs
+- Rule 7: Constants and formulas imported from computations.py, not hand-coded
+- validate_proof.py result: [PASS/FAIL with details]
+
+For pure-math proofs, mark Rules 1, 2, and 6 as "N/A — pure computation, no empirical facts."
+
+#### Consistency rules
+
+- Every fact ID in proof.md must appear in the JSON summary's `fact_registry` and in proof_audit.md's evidence table
+- Verification statuses in proof.md must be derivable from JSON summary `citations[].status` (normalized field, not parsed from message)
+- The verdict and key numbers must be identical across proof.md, proof_audit.md, and the JSON summary
+- All Type A facts in proof_audit.md must have method/result from JSON summary `fact_registry` entries
+- All extraction records in proof_audit.md must have value/value_in_quote from JSON summary `extractions`
+- Sections labeled "Source: proof.py JSON summary" or "Source: proof.py inline output" must be traceable to actual proof.py output
+- Sections labeled "Source: author analysis" must be clearly marked as such in proof_audit.md
 
 ### Step 6: Self-Critique Checklist
+
 Before presenting results, verify:
-- [ ] Every empirical value parsed from quote text, not hand-typed (Rule 1)
-- [ ] Every citation URL fetched and quote checked (Rule 2)
-- [ ] System time used for date-dependent logic (Rule 3)
-- [ ] Claim interpretation explicit with operator rationale (Rule 4)
-- [ ] Adversarial checks searched for independent counter-evidence (Rule 5)
-- [ ] Cross-checks used independently sourced inputs (Rule 6)
-- [ ] Constants and formulas imported from computations.py, not hand-coded (Rule 7)
+
+Hardening rules (verify each in proof_audit.md):
+- [ ] All 7 hardening rules checked in proof_audit.md hardening checklist
 - [ ] validate_proof.py passes
+
+Proof script contract:
+- [ ] proof.py includes FACT_REGISTRY with IDs for all facts
+- [ ] proof.py `__main__` emits `=== PROOF SUMMARY (JSON) ===` block
+- [ ] JSON summary contains required keys: fact_registry (with method/result for A-types), claim_formal, adversarial_checks, verdict, key_results
+- [ ] For empirical proofs: JSON summary also contains citations (with normalized status/method/coverage_pct), extractions (with value/value_in_quote/quote_snippet), cross_checks
+- [ ] For pure-math proofs: citations, extractions, and cross_checks may be empty objects or omitted
+- [ ] FACT_REGISTRY keys in JSON match IDs used in both report documents
+
+Document consistency:
+- [ ] proof.md has executive summary with key numbers directly under verdict
+- [ ] Every fact ID in proof.md appears in JSON summary fact_registry and proof_audit.md evidence table
+- [ ] proof.md verification statuses derivable from JSON summary `citations[].status` (not from message strings)
+- [ ] proof.md conclusion addresses unverified/partially verified citations with impact analysis (if any)
+- [ ] proof_audit.md sections labeled with provenance (proof.py JSON summary / proof.py inline output / author analysis)
+- [ ] proof_audit.md includes Computation Traces reproduced from explain_calc inline output
+- [ ] proof_audit.md presents "Partially verified" citations distinctly from "Verified"
+- [ ] All three files are consistent with each other
 
 ## Verdicts
 

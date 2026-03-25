@@ -12,7 +12,15 @@
         "The proof provides a factorization as counterexample",
         "A CLAIM_FORMAL dict with operator_note is present",
         "The proof script is self-contained and runnable via python proof.py",
-        "validate_proof.py passes with no issues"
+        "validate_proof.py passes with no issues",
+        "proof.py includes FACT_REGISTRY with A-prefixed IDs",
+        "proof.py __main__ emits === PROOF SUMMARY (JSON) === block",
+        "JSON summary contains fact_registry (A-types with method/result), claim_formal, verdict, key_results",
+        "Three output files: proof.py, proof.md, proof_audit.md",
+        "proof.md has executive summary with key numbers under verdict",
+        "proof.md uses inline fact references (A1, A2)",
+        "proof_audit.md contains Type A facts table, computation traces, and hardening checklist",
+        "proof_audit.md omits Type B sections (pure-math proof)"
       ]
     },
     {
@@ -29,7 +37,20 @@
         "At least 3 adversarial checks are structurally independent",
         "Cross-check confirms both sources agree on the founding date",
         "Verdict is PROVED or PROVED (with unverified citations)",
-        "validate_proof.py passes with no issues"
+        "validate_proof.py passes with no issues",
+        "proof.py includes FACT_REGISTRY mapping B1, B2 to source keys",
+        "proof.py __main__ emits === PROOF SUMMARY (JSON) === block",
+        "JSON summary contains fact_registry, claim_formal, citations (with normalized status/method/coverage_pct), extractions, cross_checks, adversarial_checks, verdict, key_results",
+        "Three output files: proof.py, proof.md, proof_audit.md",
+        "proof.md has executive summary with key numbers under verdict",
+        "proof.md uses inline fact references (B1, B2)",
+        "proof_audit.md contains full evidence table with quotes and URLs sourced from JSON summary citations",
+        "proof_audit.md citation details use normalized status/method fields from JSON (not parsed from message strings)",
+        "proof_audit.md contains CLAIM_FORMAL specification and FACT_REGISTRY from JSON summary",
+        "proof_audit.md contains computation traces reproduced from explain_calc inline output",
+        "proof_audit.md sections labeled with provenance",
+        "proof_audit.md hardening checklist is complete",
+        "proof.md conclusion states impact of any unverified citations"
       ]
     },
     {
@@ -42,6 +63,29 @@
         "The response identifies the claim as a value judgment or opinion",
         "The response explains that 'best' has no objective definition without criteria",
         "The response offers factual alternatives that could be proven"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Fact-check this: Earth's average temperature has risen by more than 1 degree Celsius since 1880.",
+      "expected_output": "PROVED or PROVED (with unverified citations) — multiple sources confirm ~1.1C warming. Proof uses multiple independent sources, some may have partial citation verification due to page formatting.",
+      "files": [],
+      "expectations": [
+        "At least 3 independent empirical sources cited (NOAA, NASA, IPCC, etc.)",
+        "FACT_REGISTRY has B1, B2, B3+ entries, each mapping to a distinct source key",
+        "Each source is its own fact row in proof.md Evidence Summary",
+        "JSON summary citations object has entries for each B-prefixed fact ID with normalized status/method/coverage_pct",
+        "JSON summary extractions object has entries for each extracted value",
+        "proof_audit.md shows per-source citation verification using normalized status and method from JSON",
+        "Any Partially verified citation is clearly distinguished from Verified in proof_audit.md",
+        "proof_audit.md Citation Verification Details has impact field for non-verified citations labeled as author analysis",
+        "proof.md Proof Logic references fact IDs inline and notes source agreement where applicable",
+        "proof.md conclusion addresses any unverified citations with impact on specific conclusions",
+        "Fact IDs are consistent across proof.py JSON summary, proof.md, and proof_audit.md",
+        "proof_audit.md extraction records include method narrative labeled as author analysis",
+        "proof_audit.md computation traces reproduced verbatim from explain_calc inline output",
+        "Three output files: proof.py, proof.md, proof_audit.md",
+        "validate_proof.py passes with no issues"
       ]
     }
   ]

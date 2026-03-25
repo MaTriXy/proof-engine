@@ -320,20 +320,22 @@ The three-column output (symbolic → substituted → result) makes every step a
 
 ## Complete Proof Template
 
-A well-formed proof script has this structure:
+A well-formed proof script has this structure. The structural elements (FACT_REGISTRY, JSON summary block, required JSON fields) are the contract. Variable names and specific logic are illustrative — adapt them to the claim being proved.
 
 ```python
 """
 Proof: [claim text]
 Generated: [date]
 """
+import json
+import re as _re
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from datetime import date
 from scripts.extract_values import parse_date_from_quote, parse_number_from_quote
 from scripts.smart_extract import normalize_unicode, verify_extraction
 from scripts.verify_citations import verify_all_citations
-from scripts.computations import compute_age, compare, DAYS_PER_GREGORIAN_YEAR, days_to_years
+from scripts.computations import compute_age, compare, explain_calc, DAYS_PER_GREGORIAN_YEAR, days_to_years
 
 # 1. CLAIM INTERPRETATION (Rule 4)
 CLAIM_NATURAL = "..."
@@ -345,37 +347,181 @@ CLAIM_FORMAL = {
     "threshold": ...,
 }
 
-# 2. EMPIRICAL FACTS — quotes only, NO hand-typed values (Rule 1)
+# 2. FACT REGISTRY — maps report IDs to proof-script keys
+# CONTRACT: Every proof must define this. It is the single source of truth
+# for cross-document ID consistency between proof.md and proof_audit.md.
+# B = empirical (Type B), A = computed (Type A). Each source is its own fact.
+FACT_REGISTRY = {
+    "B1": {"key": "source_a", "label": "...one-line description..."},
+    "B2": {"key": "source_b", "label": "...one-line description..."},
+    "A1": {"label": "...one-line description...", "method": None, "result": None},
+    # A-type method and result are populated in __main__ after computation.
+}
+
+# 3. EMPIRICAL FACTS — quotes only, NO hand-typed values (Rule 1)
 empirical_facts = {
     "source_a": {"quote": "...", "url": "...", "source_name": "..."},
     "source_b": {"quote": "...", "url": "...", "source_name": "..."},
 }
 
-# 3. CITATION VERIFICATION (Rule 2)
+# 4. CITATION VERIFICATION (Rule 2)
+# NOTE: verify_all_citations prints per-citation results inline during execution.
+# These appear in stdout before the JSON summary block.
 citation_results = verify_all_citations(empirical_facts)
 
-# 4. VALUE EXTRACTION — parsed from quotes (Rule 1)
+# 5. VALUE EXTRACTION — parsed from quotes (Rule 1)
+# NOTE: parse functions and verify_extraction print match status inline.
 val_a = parse_date_from_quote(empirical_facts["source_a"]["quote"], "source_a")
+val_a_in_quote = verify_extraction(val_a, empirical_facts["source_a"]["quote"], "B1")
 val_b = parse_date_from_quote(empirical_facts["source_b"]["quote"], "source_b")
+val_b_in_quote = verify_extraction(val_b, empirical_facts["source_b"]["quote"], "B2")
 
-# 5. CROSS-CHECK (Rule 6)
+# 6. CROSS-CHECK (Rule 6)
 assert val_a == val_b, f"Sources disagree: {val_a} vs {val_b}"
 
-# 6. SYSTEM TIME (Rule 3)
+# 7. SYSTEM TIME (Rule 3)
 PROOF_GENERATION_DATE = date(...)
 today = date.today()
 
-# 7. COMPUTATION — use bundled functions (Rule 7)
+# 8. COMPUTATION — use bundled functions (Rule 7)
+# NOTE: explain_calc prints symbolic/substituted/result traces inline.
 age = compute_age(val_a, today)
+approx_years = explain_calc("(today - val_a).days / DAYS_PER_GREGORIAN_YEAR", locals())
 
-# 8. CLAIM EVALUATION — use compare(), not eval() (Rule 7)
+# 9. CLAIM EVALUATION — use compare(), not eval() (Rule 7)
 claim_holds = compare(age, CLAIM_FORMAL["operator"], CLAIM_FORMAL["threshold"])
 
-# 9. ADVERSARIAL CHECKS (Rule 5)
-adversarial_checks = [...]
+# 10. ADVERSARIAL CHECKS (Rule 5)
+adversarial_checks = [
+    {
+        "question": "...",
+        "search_performed": "...",
+        "finding": "...",
+        "breaks_proof": False,
+    },
+]
 
-# 10. VERDICT
+# 11. VERDICT AND STRUCTURED OUTPUT
+# CONTRACT: __main__ must end with a JSON summary block containing all
+# structured fields that proof.md and proof_audit.md depend on.
+# The inline output from bundled scripts (above) provides human-readable
+# traces; the JSON block provides the structured data for report generation.
 if __name__ == "__main__":
-    # print everything and state verdict
-    ...
+    # --- Verdict logic (adapt to claim structure) ---
+    # All five levels must be considered:
+    #   PROVED, PROVED (with unverified citations), DISPROVED,
+    #   PARTIALLY VERIFIED, UNDETERMINED
+    any_unverified = any(
+        v["verified"] is not True for v in citation_results.values()
+    )
+    if claim_holds and not any_unverified:
+        verdict = "PROVED"
+    elif claim_holds and any_unverified:
+        verdict = "PROVED (with unverified citations)"
+    elif not claim_holds:
+        verdict = "DISPROVED"
+    # For complex proofs, also handle:
+    # verdict = "PARTIALLY VERIFIED"  — some sub-claims proved, others not
+    # verdict = "UNDETERMINED"        — insufficient evidence either way
+
+    # --- Populate Type A method/result (after computation completes) ---
+    FACT_REGISTRY["A1"]["method"] = "compute_age()"
+    FACT_REGISTRY["A1"]["result"] = str(age)
+
+    # --- Build normalized citation details ---
+    # CONTRACT: Citation fields are normalized here, not left as free-form
+    # message strings. This prevents the report layer from parsing prose.
+    citation_detail = {}
+    for fact_id, info in FACT_REGISTRY.items():
+        key = info.get("key")
+        if key and key in citation_results:
+            cr = citation_results[key]
+            msg = cr["message"]
+            # Normalize status from verify_citation return values
+            if cr["verified"] is True:
+                status = "Verified"
+            elif cr["verified"] == "partial":
+                status = "Partially verified"
+            elif cr["verified"] is False:
+                status = "Not verified"
+            else:  # None
+                status = "Fetch failed"
+            # Extract method from message — must handle ALL verify_citation return paths.
+            # Default is "Unknown method" so unrecognized messages fail visibly
+            # rather than silently upgrading to "Full quote match".
+            coverage_pct = None
+            if "Full quote verified" in msg and "normalization" not in msg:
+                method = "Full quote match"
+            elif "after Unicode normalization" in msg:
+                method = "Full quote match after Unicode normalization"
+            elif "largely verified" in msg or ("words matched" in msg and status == "Verified"):
+                method = "Fragment match (high coverage)"
+                m = _re.search(r'(\d+)/(\d+)', msg)
+                if m:
+                    method = f"Fragment match ({m.group(1)}/{m.group(2)} words)"
+                    coverage_pct = round(int(m.group(1)) / int(m.group(2)) * 100, 1)
+            elif "words matched" in msg and status == "Partially verified":
+                method = "Fragment match (low coverage)"
+                m = _re.search(r'(\d+)/(\d+)', msg)
+                if m:
+                    method = f"Fragment match ({m.group(1)}/{m.group(2)} words)"
+                    coverage_pct = round(int(m.group(1)) / int(m.group(2)) * 100, 1)
+            elif "aggressive normalization" in msg:
+                method = "Aggressive normalization (verify manually)"
+            else:
+                method = "Unknown method"
+            citation_detail[fact_id] = {
+                "source_key": key,
+                "source_name": empirical_facts[key].get("source_name", ""),
+                "url": empirical_facts[key].get("url", ""),
+                "quote": empirical_facts[key].get("quote", ""),
+                "status": status,
+                "method": method if status in ("Verified", "Partially verified") else None,
+                "coverage_pct": coverage_pct,
+            }
+
+    # --- Build extraction records ---
+    # CONTRACT: Structured per-fact extraction data using actual
+    # verify_extraction() return values, not hard-coded booleans.
+    # Adapt the entries below to match the actual extractions in this proof.
+    extractions = {
+        "B1": {
+            "value": str(val_a),
+            "value_in_quote": val_a_in_quote,  # actual return from verify_extraction()
+            "quote_snippet": empirical_facts["source_a"]["quote"][:80],
+        },
+        "B2": {
+            "value": str(val_b),
+            "value_in_quote": val_b_in_quote,  # actual return from verify_extraction()
+            "quote_snippet": empirical_facts["source_b"]["quote"][:80],
+        },
+    }
+
+    # --- Build JSON summary ---
+    summary = {
+        "fact_registry": {
+            fid: {k: v for k, v in info.items()}
+            for fid, info in FACT_REGISTRY.items()
+        },
+        "claim_formal": CLAIM_FORMAL,
+        "claim_natural": CLAIM_NATURAL,
+        "citations": citation_detail,
+        "extractions": extractions,
+        "cross_checks": [
+            # Adapt to actual cross-check variables
+            {"description": "...", "values_compared": [str(val_a), str(val_b)], "agreement": val_a == val_b}
+        ],
+        "adversarial_checks": adversarial_checks,
+        "verdict": verdict,
+        "key_results": {
+            # Adapt to actual computed values
+            "age": age,
+            "threshold": CLAIM_FORMAL["threshold"],
+            "operator": CLAIM_FORMAL["operator"],
+            "claim_holds": claim_holds,
+        },
+    }
+
+    print("\n=== PROOF SUMMARY (JSON) ===")
+    print(json.dumps(summary, indent=2, default=str))
 ```
