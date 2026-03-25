@@ -140,7 +140,7 @@ class ProofValidator:
         """Rule 6: Cross-checks use truly independent sources."""
         # Count distinct source references
         source_patterns = re.findall(
-            r'["\'](?:source_[a-z]|fact_\d+|source_\d+)["\']',
+            r'["\'](?:source_[a-z][a-z0-9_]*|fact_\d+|source_\d+)["\']',
             self.source, re.IGNORECASE,
         )
         unique_sources = set(s.strip("\"'") for s in source_patterns)

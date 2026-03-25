@@ -172,6 +172,69 @@ def parse_percentage_from_quote(quote: str, fact_id: str = "unknown") -> float:
     raise ValueError(f"{fact_id}: No percentage found in quote: '{quote[:80]}...'")
 
 
+def parse_range_from_quote(quote: str, pattern: str = None, fact_id: str = "unknown") -> tuple:
+    """Parse a numeric range from a citation quote string.
+
+    Finds patterns like "1.0°C to 2.0°C", "1.0–2.0", "93% to 123%",
+    "0.8 to 1.3", "between 1.0 and 2.0".
+
+    Args:
+        quote: The citation quote text.
+        pattern: Optional regex with TWO capture groups for low and high values.
+        fact_id: Identifier for logging.
+
+    Returns:
+        tuple of (low: float, high: float).
+
+    Raises:
+        ValueError: if no range pattern found.
+    """
+    # Normalize Unicode first (en-dashes → hyphens, etc.)
+    try:
+        from scripts.smart_extract import normalize_unicode
+    except ImportError:
+        from smart_extract import normalize_unicode
+    norm = normalize_unicode(quote)
+
+    if pattern:
+        m = re.search(pattern, norm)
+        if m:
+            try:
+                low = float(m.group(1).replace(",", ""))
+                high = float(m.group(2).replace(",", ""))
+            except (IndexError, ValueError) as e:
+                raise ValueError(
+                    f"{fact_id}: Pattern '{pattern}' matched but could not extract two numbers: {e}"
+                )
+            print(f"  {fact_id}: Parsed range '{m.group(0)}' -> ({low}, {high})")
+            return (low, high)
+        raise ValueError(f"{fact_id}: Pattern '{pattern}' not found in quote: '{quote[:80]}...'")
+
+    # Default patterns, tried in order.
+    # Unit chars: °, %, letters — skipped between numbers and "to"/"and".
+    _unit = r'[°%]?\w*'
+    range_patterns = [
+        # "N to N" with optional units (°C, %, etc.)
+        r'([\d,]+\.?\d*)\s*' + _unit + r'\s+to\s+([\d,]+\.?\d*)',
+        # "between N and N"
+        r'between\s+([\d,]+\.?\d*)\s*' + _unit + r'\s+and\s+([\d,]+\.?\d*)',
+        # "N–N" or "N-N" (en-dash or hyphen between numbers)
+        r'([\d,]+\.?\d*)\s*[-]\s*([\d,]+\.?\d*)',
+    ]
+
+    for pat in range_patterns:
+        m = re.search(pat, norm, re.IGNORECASE)
+        if m:
+            low = float(m.group(1).replace(",", ""))
+            high = float(m.group(2).replace(",", ""))
+            if low > high:
+                low, high = high, low
+            print(f"  {fact_id}: Parsed range '{m.group(0)}' -> ({low}, {high})")
+            return (low, high)
+
+    raise ValueError(f"{fact_id}: No range found in quote: '{quote[:80]}...'")
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -181,6 +244,7 @@ if __name__ == "__main__":
         print('  python extract_values.py date   "On May 14, 1948, David Ben-Gurion..."')
         print('  python extract_values.py number  "population reached 13,988,129"')
         print('  python extract_values.py percent "grew by 12.5% in Q3"')
+        print('  python extract_values.py range   "warming of 1.0°C to 2.0°C"')
         sys.exit(1)
 
     mode = sys.argv[1].lower()
@@ -196,8 +260,11 @@ if __name__ == "__main__":
         elif mode in ("percent", "percentage"):
             result = parse_percentage_from_quote(quote, "cli")
             print(f"Result: {result}%")
+        elif mode == "range":
+            low, high = parse_range_from_quote(quote, fact_id="cli")
+            print(f"Result: ({low}, {high})")
         else:
-            print(f"Unknown mode '{mode}'. Use: date, number, percent")
+            print(f"Unknown mode '{mode}'. Use: date, number, percent, range")
             sys.exit(1)
     except ValueError as e:
         print(f"ERROR: {e}", file=sys.stderr)

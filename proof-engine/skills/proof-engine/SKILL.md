@@ -33,16 +33,17 @@ Import these instead of re-implementing verification logic. They are tested and 
 
 | Script | Purpose | Key functions |
 |--------|---------|---------------|
-| `${CLAUDE_SKILL_DIR}/scripts/extract_values.py` | Parse values FROM quote strings (Rule 1) | `parse_date_from_quote()`, `parse_number_from_quote()`, `parse_percentage_from_quote()` |
+| `${CLAUDE_SKILL_DIR}/scripts/extract_values.py` | Parse values FROM quote strings (Rule 1) | `parse_date_from_quote()`, `parse_number_from_quote()`, `parse_percentage_from_quote()`, `parse_range_from_quote()` |
 | `${CLAUDE_SKILL_DIR}/scripts/smart_extract.py` | Unicode normalization + LLM-assisted extraction utilities | `normalize_unicode()`, `verify_extraction()`, `diagnose_mismatch()`, `ExtractionRecord` |
 | `${CLAUDE_SKILL_DIR}/scripts/verify_citations.py` | Fetch URLs, verify quotes exist on page (Rule 2) | `verify_citation()`, `verify_all_citations()` |
 | `${CLAUDE_SKILL_DIR}/scripts/computations.py` | Verified constants, formulas, and self-documenting output (Rule 7) | `compute_age()`, `compare()`, `explain_calc()`, `DAYS_PER_GREGORIAN_YEAR` |
 | `${CLAUDE_SKILL_DIR}/scripts/validate_proof.py` | Static analysis for rule compliance (pre-flight) | `ProofValidator(filepath).validate()` |
 
-To import these from a proof script, add the proof-engine root to the path:
+To import these from a proof script, set `PROOF_ENGINE_ROOT` to the skill's install directory (the directory containing this SKILL.md and the `scripts/` subdirectory). In Claude Code, use the resolved value of `${CLAUDE_SKILL_DIR}`:
 ```python
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import sys
+PROOF_ENGINE_ROOT = "${CLAUDE_SKILL_DIR}"  # ← replaced with actual path at proof-writing time
+sys.path.insert(0, PROOF_ENGINE_ROOT)
 ```
 
 ## Core Concepts

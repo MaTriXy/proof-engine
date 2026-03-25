@@ -175,6 +175,19 @@ def days_to_years(days: int, calendar: str = "gregorian") -> float:
 # AST-based expression explainer
 # ---------------------------------------------------------------------------
 
+# Operator precedence for display formatting.
+# Higher number = binds tighter. Used by _format_node to decide when parens are needed.
+_OP_PRECEDENCE = {
+    ast.Add: 2, ast.Sub: 2,
+    ast.Mult: 3, ast.Div: 3, ast.FloorDiv: 3, ast.Mod: 3,
+    ast.Pow: 4,
+}
+
+# Non-commutative operators: right child needs parens even at equal precedence.
+# e.g., a - (b - c) and a / (b / c) need parens on the right.
+_NON_COMMUTATIVE_OPS = {ast.Sub, ast.Div, ast.FloorDiv, ast.Mod}
+
+
 def _resolve_node(node, scope: dict):
     """Resolve an AST node to its runtime value using the provided scope.
 
@@ -276,9 +289,26 @@ def _format_node(node, scope: dict) -> str:
             ast.Add: "+", ast.Sub: "-", ast.Mult: "*",
             ast.Div: "/", ast.FloorDiv: "//", ast.Mod: "%", ast.Pow: "**",
         }
-        left = _format_node(node.left, scope)
-        right = _format_node(node.right, scope)
+        parent_prec = _OP_PRECEDENCE.get(type(node.op), 0)
         sym = op_symbols.get(type(node.op), "?")
+
+        left = _format_node(node.left, scope)
+        # Wrap left child if it has lower precedence
+        if isinstance(node.left, ast.BinOp):
+            child_prec = _OP_PRECEDENCE.get(type(node.left.op), 0)
+            if child_prec < parent_prec:
+                left = f"({left})"
+
+        right = _format_node(node.right, scope)
+        # Wrap right child if it has lower precedence, OR equal precedence
+        # with a non-commutative parent (e.g., a - (b - c), a / (b * c))
+        if isinstance(node.right, ast.BinOp):
+            child_prec = _OP_PRECEDENCE.get(type(node.right.op), 0)
+            if child_prec < parent_prec:
+                right = f"({right})"
+            elif child_prec == parent_prec and type(node.op) in _NON_COMMUTATIVE_OPS:
+                right = f"({right})"
+
         return f"{left} {sym} {right}"
 
     if isinstance(node, ast.UnaryOp):

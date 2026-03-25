@@ -238,20 +238,32 @@ def verify_extraction(value: Any, quote: str, fact_id: str, description: str = "
         ValueError: If strict=True and the value is not found in the quote.
     """
     value_str = str(value)
-    # For floats, also check the integer form and common representations
+    # For floats, also check the integer form and common representations.
+    # Only include the integer/rounded form if it equals the original value
+    # (e.g., 77.0 → "77" is safe, but 1.1 → "1" is a lossy round that
+    # would false-positive on "11.1").
     check_forms = [value_str]
     if isinstance(value, (int, float)):
+        int_form = str(int(value))
         check_forms.extend([
-            str(int(value)) if value == int(value) else "",
+            int_form if value == int(value) else "",
             f"{value:.1f}",
             f"{value:.2f}",
-            f"{value:,.0f}",
+            f"{value:,.0f}" if value == round(value) else "",
         ])
 
     # Normalize quote for comparison
     norm_quote = normalize_unicode(quote.lower())
 
-    found = any(v and v in norm_quote for v in check_forms if v)
+    # Use word-boundary-aware matching to avoid false positives
+    # (e.g., "1.1" matching inside "11.1" or "21.1")
+    import re as _re
+    def _boundary_match(v, text):
+        # (?<!\d\.?) = not preceded by digit or digit+dot
+        # (?![.\d]) = not followed by dot or digit
+        return bool(_re.search(r'(?<![\d.])' + _re.escape(v) + r'(?![\d.])', text))
+
+    found = any(v and _boundary_match(v, norm_quote) for v in check_forms if v)
     desc = f" ({description})" if description else ""
 
     if found:

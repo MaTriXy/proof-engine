@@ -329,13 +329,28 @@ Generated: [date]
 """
 import json
 import re as _re
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import sys
+
+# Path to proof-engine scripts directory (the directory containing SKILL.md).
+# In Claude Code, replace with the resolved value of ${CLAUDE_SKILL_DIR}.
+# In standalone use, set to the absolute path of the skills/proof-engine directory.
+PROOF_ENGINE_ROOT = "..."  # ← LLM fills this with the actual path at proof-writing time
+sys.path.insert(0, PROOF_ENGINE_ROOT)
 from datetime import date
-from scripts.extract_values import parse_date_from_quote, parse_number_from_quote
+
+# --- STRUCTURAL IMPORTS (always needed) ---
 from scripts.smart_extract import normalize_unicode, verify_extraction
 from scripts.verify_citations import verify_all_citations
-from scripts.computations import compute_age, compare, explain_calc, DAYS_PER_GREGORIAN_YEAR, days_to_years
+from scripts.computations import compare, explain_calc
+
+# --- CLAIM-SPECIFIC IMPORTS (adapt to your proof) ---
+# For date/age proofs:
+from scripts.extract_values import parse_date_from_quote
+from scripts.computations import compute_age, DAYS_PER_GREGORIAN_YEAR, days_to_years
+# For empirical/numeric proofs:
+#   from scripts.extract_values import parse_number_from_quote, parse_percentage_from_quote, parse_range_from_quote
+# For pure-math proofs:
+#   (no extract_values imports needed)
 
 # 1. CLAIM INTERPRETATION (Rule 4)
 CLAIM_NATURAL = "..."
@@ -525,3 +540,14 @@ if __name__ == "__main__":
     print("\n=== PROOF SUMMARY (JSON) ===")
     print(json.dumps(summary, indent=2, default=str))
 ```
+
+### Adapting for empirical consensus proofs
+
+The template above uses date/age variables as examples. For proofs where the claim is "multiple authoritative sources agree on a quantitative finding" (e.g., climate attribution, economic statistics), adapt as follows:
+
+- **Imports**: Use `parse_number_from_quote`, `parse_percentage_from_quote`, `parse_range_from_quote` instead of `parse_date_from_quote`. Drop `compute_age`, `DAYS_PER_GREGORIAN_YEAR`, `days_to_years`.
+- **FACT_REGISTRY**: Typically 3+ B-type entries (one per authoritative source) and 1-2 A-type entries for derived computations (averages, ratios).
+- **Extraction**: Values are often ranges ("1.0°C to 2.0°C") — use `parse_range_from_quote()`. Call `verify_extraction()` on each extracted value.
+- **Cross-checks**: Compare independently extracted values across sources. Agreement within ranges is sufficient — exact equality is unlikely for empirical data.
+- **Computation**: Derive summary statistics (midpoint of range, percentage attribution) using `explain_calc()`.
+- **Verdict**: Empirical consensus proofs often land on PROVED (with unverified citations) because government and scientific websites frequently have formatting that prevents full quote verification.
