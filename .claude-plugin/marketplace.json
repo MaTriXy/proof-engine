@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "proof-engine",
-      "source": "./",
+      "source": ".",
       "description": "Create formal, verifiable proofs of claims with machine-checkable reasoning",
       "author": {
         "name": "Yaniv Golan",
