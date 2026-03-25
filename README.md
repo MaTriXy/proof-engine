@@ -1,5 +1,9 @@
 # Proof Engine
 
+<p align="center">
+  <img src="assets/banner.png" alt="Proof Engine" width="100%">
+</p>
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Agent Skills Compatible](https://img.shields.io/badge/Agent_Skills-compatible-4A90D9)](https://agentskills.io)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude_Code-plugin-F97316)](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/plugins)
@@ -7,7 +11,7 @@
 
 An AI agent skill that creates formal, verifiable proofs of claims. Every fact is either computed by Python code anyone can re-run or backed by a specific source, URL, and exact quote. The LLM never asserts a fact on its own authority.
 
-Uses the open [Agent Skills](https://agentskills.io) standard. Works with Claude, Codex CLI, Cursor, Windsurf, Manus, ChatGPT, and any other compatible tool.
+Uses the open [Agent Skills](https://agentskills.io) standard. Works with Claude Desktop, Claude Cowork, Claude Code, Codex CLI, Cursor, Windsurf, Manus, ChatGPT, and any other compatible tool.
 
 ## What It Does
 
@@ -32,6 +36,7 @@ The skill produces three outputs: a re-runnable `proof.py` script, a reader-faci
 
 ```bash
 /plugin marketplace add yaniv-golan/proof-engine
+/plugin install proof-engine@proof-engine-marketplace
 ```
 
 ### Cursor
@@ -49,7 +54,7 @@ The skill produces three outputs: a re-runnable `proof.py` script, a reader-faci
 ### ChatGPT
 
 1. Download [`proof-engine.zip`](https://github.com/yaniv-golan/proof-engine/releases/latest/download/proof-engine.zip)
-2. Upload as a skill in ChatGPT settings
+2. Upload at [chatgpt.com/skills](https://chatgpt.com/skills)
 
 ### Codex CLI
 
