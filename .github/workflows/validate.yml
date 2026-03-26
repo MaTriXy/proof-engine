@@ -1,0 +1,74 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests sympy python-dateutil
+
+      - name: Syntax check bundled scripts
+        run: |
+          for f in proof-engine/skills/proof-engine/scripts/*.py; do
+            python -c "import py_compile; py_compile.compile('$f', doraise=True)"
+            echo "OK: $f"
+          done
+
+      - name: Validate example proofs (static analysis)
+        run: |
+          for d in docs/examples/*/; do
+            if [ -f "$d/proof.py" ]; then
+              echo "=== Validating $d/proof.py ==="
+              python proof-engine/skills/proof-engine/scripts/validate_proof.py "$d/proof.py"
+              echo ""
+            fi
+          done
+
+      - name: Run example proofs and check JSON summary
+        run: |
+          FAILED=0
+          for d in docs/examples/*/; do
+            if [ -f "$d/proof.py" ]; then
+              echo "=== Running $d/proof.py ==="
+              if python "$d/proof.py" > "$d/output.txt" 2>&1; then
+                # Check JSON summary exists and has required keys
+                python3 -c "
+          import json, sys
+          text = open('${d}output.txt').read()
+          if '=== PROOF SUMMARY (JSON) ===' not in text:
+              print('FAIL: no JSON summary block')
+              sys.exit(1)
+          idx = text.index('=== PROOF SUMMARY (JSON) ===')
+          data = json.loads(text[idx + len('=== PROOF SUMMARY (JSON) ==='):])
+          required = {'fact_registry', 'claim_formal', 'verdict', 'key_results'}
+          missing = required - set(data.keys())
+          if missing:
+              print(f'FAIL: missing keys: {missing}')
+              sys.exit(1)
+          print(f'PASS: verdict={data[\"verdict\"]}')
+          " || FAILED=1
+              else
+                echo "FAIL: proof.py exited with non-zero status"
+                cat "$d/output.txt"
+                FAILED=1
+              fi
+              echo ""
+            fi
+          done
+          if [ "$FAILED" -eq 1 ]; then
+            echo "Some example proofs failed."
+            exit 1
+          fi
+          echo "All example proofs passed."
