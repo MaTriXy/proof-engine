@@ -36,7 +36,7 @@ Import these instead of re-implementing verification logic. They are tested and 
 | `${CLAUDE_SKILL_DIR}/scripts/extract_values.py` | Parse values FROM quote strings (Rule 1) | `parse_date_from_quote()`, `parse_number_from_quote()`, `parse_percentage_from_quote()`, `parse_range_from_quote()` |
 | `${CLAUDE_SKILL_DIR}/scripts/smart_extract.py` | Unicode normalization + LLM-assisted extraction utilities | `normalize_unicode()`, `verify_extraction()`, `diagnose_mismatch()`, `ExtractionRecord` |
 | `${CLAUDE_SKILL_DIR}/scripts/verify_citations.py` | Fetch URLs, verify quotes (live, snapshot, Wayback, PDF) (Rule 2) | `verify_citation()`, `verify_all_citations()` |
-| `${CLAUDE_SKILL_DIR}/scripts/computations.py` | Verified constants, formulas, and self-documenting output (Rule 7) | `compute_age()`, `compare()`, `explain_calc()`, `DAYS_PER_GREGORIAN_YEAR` |
+| `${CLAUDE_SKILL_DIR}/scripts/computations.py` | Verified constants, formulas, and self-documenting output (Rule 7) | `compute_age()`, `compare()`, `explain_calc()`, `cross_check()`, `compute_percentage_change()`, `DAYS_PER_GREGORIAN_YEAR` |
 | `${CLAUDE_SKILL_DIR}/scripts/validate_proof.py` | Static analysis for rule compliance (pre-flight) | `ProofValidator(filepath).validate()` |
 
 To import these from a proof script, set `PROOF_ENGINE_ROOT` to the skill's install directory (the directory containing this SKILL.md and the `scripts/` subdirectory). In Claude Code, use the resolved value of `${CLAUDE_SKILL_DIR}`:
@@ -76,6 +76,11 @@ Many scientific papers and reports are behind paywalls. When a key source return
 3. **Cite the abstract quote** — if the abstract contains the key finding, that's a valid citation. Note "cited from abstract; full text behind paywall" in the audit doc.
 4. **Find alternative sources** — if the claim is well-established, there are usually multiple sources. Prefer open-access ones.
 5. **Last resort** — if the paywalled source is essential and no alternative exists, cite it with whatever quote is publicly visible and mark as "Not verified (paywall)" in the audit doc. This does not invalidate the proof if other verified sources support the same finding.
+
+**Government statistics sites (.gov):** BLS, FRED, Federal Reserve, Census, and similar .gov sites systematically return 403 to automated fetching. This is the norm, not the exception. For government statistics:
+- Use the **snapshot workflow as the primary path** — fetch via browser during Step 2, embed as `snapshot` in `empirical_facts`
+- Use reliable aggregators as citation URLs: rateinflation.com, inflationdata.com (for CPI); measuringworth.com (for historical data)
+- Note in the audit doc that aggregator sources republish data from the primary authority (e.g., "sourced from BLS via rateinflation.com")
 
 ## Core Concepts
 

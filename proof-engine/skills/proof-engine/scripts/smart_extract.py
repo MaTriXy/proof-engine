@@ -49,6 +49,7 @@ Usage as CLI:
   python scripts/smart_extract.py diagnose --url URL --quote "expected quote"
 """
 
+import datetime
 import re
 import sys
 import unicodedata
@@ -250,7 +251,20 @@ def verify_extraction(value: Any, quote: str, fact_id: str, description: str = "
     # (e.g., 77.0 → "77" is safe, but 1.1 → "1" is a lossy round that
     # would false-positive on "11.1").
     check_forms = [value_str]
-    if isinstance(value, (int, float)):
+    if isinstance(value, datetime.date) and not isinstance(value, datetime.datetime):
+        _MONTHS = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December",
+        ]
+        m = _MONTHS[value.month - 1]
+        check_forms.extend([
+            f"{m} {value.day}, {value.year}",          # December 23, 1913
+            f"{value.day} {m} {value.year}",            # 23 December 1913
+            value.isoformat(),                           # 1913-12-23
+            f"{value.month}/{value.day}/{value.year}",   # 12/23/1913
+            str(value.year),                             # 1913 (year alone)
+        ])
+    elif isinstance(value, (int, float)):
         int_form = str(int(value))
         check_forms.extend([
             int_form if value == int(value) else "",
@@ -265,9 +279,11 @@ def verify_extraction(value: Any, quote: str, fact_id: str, description: str = "
     # Use word-boundary-aware matching to avoid false positives
     # (e.g., "1.1" matching inside "11.1" or "21.1")
     def _boundary_match(v, text):
-        # (?<!\d\.?) = not preceded by digit or digit+dot
-        # (?![.\d]) = not followed by dot or digit
-        return bool(re.search(r'(?<![\d.])' + re.escape(v) + r'(?![\d.])', text))
+        # Lowercase v to match the lowercased norm_quote (fixes case-sensitivity
+        # bug for string values like "December 23, 1913")
+        # (?<![\d.]) = not preceded by digit or dot
+        # (?![\d.]) = not followed by digit or dot
+        return bool(re.search(r'(?<![\d.])' + re.escape(v.lower()) + r'(?![\d.])', text))
 
     found = any(v and _boundary_match(v, norm_quote) for v in check_forms if v)
     desc = f" ({description})" if description else ""

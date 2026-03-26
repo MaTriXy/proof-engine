@@ -266,6 +266,8 @@ assert age_a == age_b, f"Ages disagree: source_a→{age_a}, source_b→{age_b}"
 
 Now if one source has a different date, the assertion catches it. The cross-check has truly independent inputs.
 
+**Interpreting "independent" for government statistics:** For data published by a single authority (BLS for CPI, Census for population), truly independent *measurements* don't exist — all sources trace back to the same authority. In this context, "independent" means independent *publication and presentation*: two different websites that republish BLS data can catch transcription errors, display bugs, or rounding differences between them. This provides weaker assurance than independent measurements but still has value. Note the distinction in the audit doc: "independently published (same upstream authority)" vs "independently measured."
+
 **How validate_proof.py catches it**: Counts distinct source references (`source_a`, `source_b`, etc.). Warns if only one source is found for an empirical proof.
 
 ---
@@ -562,3 +564,26 @@ For claims where the evidence is "multiple authoritative sources agree that X is
 - **Cross-checks**: Compare whether independently sourced quotes agree on the same qualitative finding. Agreement means the same concept is present, not necessarily the same wording.
 - **Adversarial**: Search for sources that explicitly dispute or qualify the consensus. Look for review articles that note exceptions or controversy.
 - **Verdict**: PROVED if all/most sources agree and no credible counter-evidence found. PARTIALLY VERIFIED if sources agree but with significant caveats. DISPROVED if authoritative sources explicitly contradict the claim.
+
+### Citing structured/tabular data
+
+For economic, statistical, or scientific claims, the key numeric values often live in HTML tables rather than prose text. The verifiable prose quote confirms the source authority, while the numbers come from a data table.
+
+Use a `data_values` dict alongside the quote:
+
+```python
+empirical_facts = {
+    "source_a_cpi": {
+        "quote": "The CPI for USA is calculated and issued by: U.S. Bureau of Labor Statistics",
+        "url": "https://www.rateinflation.com/consumer-price-index/usa-historical-cpi/",
+        "source_name": "RateInflation.com (sourced from BLS)",
+        # Table values stored separately — these are the extractable numbers
+        "data_values": {"cpi_1913": "9.883", "cpi_2024": "313.689"},
+    },
+}
+```
+
+- The `quote` field verifies the source's authority via `verify_all_citations()`
+- The `data_values` entries are parsed with `parse_number_from_quote(fact["data_values"]["cpi_1913"], r"([\d.]+)", "B1_cpi_1913")`
+- The audit doc distinguishes "source authority verified via quote" from "numeric data extracted from table"
+- Use `cross_check()` from computations.py to compare values across sources with tolerance

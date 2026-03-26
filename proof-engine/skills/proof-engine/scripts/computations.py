@@ -93,6 +93,74 @@ def compare(value, op_str: str, threshold) -> bool:
     return result
 
 
+def cross_check(value_a, value_b, tolerance=0.01, mode="absolute", label=None):
+    """Compare two independently sourced values with tolerance.
+
+    For empirical data, values from different sources rarely match exactly
+    due to rounding, different publication dates, or different precision.
+    This function replaces manual tolerance logic in proofs.
+
+    Args:
+        value_a: First value.
+        value_b: Second value.
+        tolerance: Maximum acceptable difference.
+        mode: "absolute" (|a - b| < tolerance) or
+              "relative" (|a - b| / max(|a|, |b|) < tolerance).
+        label: Optional description for output.
+
+    Returns:
+        bool — True if values agree within tolerance.
+
+    Example:
+        >>> cross_check(9.883, 9.9, tolerance=0.05, mode="absolute")
+        True
+    """
+    diff = abs(value_a - value_b)
+    tag = label or "cross_check"
+    if mode == "relative":
+        denom = max(abs(value_a), abs(value_b))
+        if denom == 0:
+            result = diff == 0
+            pct = 0.0
+        else:
+            pct = diff / denom
+            result = pct < tolerance
+        print(f"  {tag}: {value_a} vs {value_b}, diff={diff}, "
+              f"relative={pct:.6f}, tolerance={tolerance} "
+              f"-> {'AGREE' if result else 'DISAGREE'}")
+    else:  # absolute
+        result = diff < tolerance
+        print(f"  {tag}: {value_a} vs {value_b}, diff={diff}, "
+              f"tolerance={tolerance} -> {'AGREE' if result else 'DISAGREE'}")
+    return result
+
+
+def compute_percentage_change(old_value, new_value, label=None):
+    """Compute percentage change from old to new value.
+
+    Args:
+        old_value: The starting value (must be non-zero).
+        new_value: The ending value.
+        label: Optional description for output.
+
+    Returns:
+        float — percentage change. Positive = increase, negative = decrease.
+
+    Example:
+        >>> compute_percentage_change(9.883, 313.689)
+        3073.35  # increase
+
+        >>> compute_percentage_change(313.689, 9.883)
+        -96.85   # decline
+    """
+    if old_value == 0:
+        raise ValueError("Cannot compute percentage change from zero")
+    change = (new_value - old_value) / old_value * 100
+    tag = label or "pct_change"
+    print(f"  {tag}: ({new_value} - {old_value}) / {old_value} * 100 = {change:.4f}%")
+    return change
+
+
 # ---------------------------------------------------------------------------
 # Age / duration computations
 # ---------------------------------------------------------------------------
