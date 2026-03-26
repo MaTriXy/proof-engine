@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2026-03-27
+
+### Added
+
+- `build_citation_detail()` helper in verify_citations.py — replaces ~15 lines of boilerplate in every proof's `__main__` block
+- Claude Code environment notes in SKILL.md: live fetch is primary path, WebFetch returns summaries (not raw text), keep web research in main thread
+- Index base mismatch guidance in Gotchas: how to diagnose and handle different CPI base periods across sources
+- `explain_calc()` vs `compute_*()` usage guidance: use named functions when they exist, explain_calc for ad-hoc expressions
+
+### Fixed
+
+- `validate_proof.py` extraction check: mixed-pattern proofs (both `verify_extraction()` and `data_values`) now get accurate message instead of claiming all extractions were "verified via verify_extraction()"
+- Proof template in hardening-rules.md uses `build_citation_detail()` instead of inline loop
+- Step 2 / adversarial checks clarified: adversarial research happens once in Step 2, proof code encodes results (not a second round)
+- Government statistics guidance: aggregators promoted as preferred path over snapshot workflow
+
+### Changed
+
+- Self-critique checklist split into **Must-check** (structural — proof is broken if these fail) and **Verify** (quality/completeness) tiers
+- Platform-specific environment notes replace generic "sandboxed environments (ChatGPT, cloud containers)" text
+
 ## [0.5.2] - 2026-03-26
 
 ### Fixed

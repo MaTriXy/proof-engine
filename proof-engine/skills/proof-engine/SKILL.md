@@ -35,7 +35,7 @@ Import these instead of re-implementing verification logic. They are tested and 
 |--------|---------|---------------|
 | `${CLAUDE_SKILL_DIR}/scripts/extract_values.py` | Parse values FROM quote strings (Rule 1) | `parse_date_from_quote()`, `parse_number_from_quote()`, `parse_percentage_from_quote()`, `parse_range_from_quote()` |
 | `${CLAUDE_SKILL_DIR}/scripts/smart_extract.py` | Unicode normalization + LLM-assisted extraction utilities | `normalize_unicode()`, `verify_extraction()`, `diagnose_mismatch()`, `ExtractionRecord` |
-| `${CLAUDE_SKILL_DIR}/scripts/verify_citations.py` | Fetch URLs, verify quotes (live, snapshot, Wayback, PDF) (Rule 2) | `verify_citation()`, `verify_all_citations()` |
+| `${CLAUDE_SKILL_DIR}/scripts/verify_citations.py` | Fetch URLs, verify quotes (live, snapshot, Wayback, PDF) (Rule 2) | `verify_citation()`, `verify_all_citations()`, `build_citation_detail()` |
 | `${CLAUDE_SKILL_DIR}/scripts/computations.py` | Verified constants, formulas, and self-documenting output (Rule 7) | `compute_age()`, `compare()`, `explain_calc()`, `cross_check()`, `compute_percentage_change()`, `DAYS_PER_GREGORIAN_YEAR` |
 | `${CLAUDE_SKILL_DIR}/scripts/source_credibility.py` | Assess domain credibility from URL (offline, bundled data). **Note:** `verify_all_citations()` runs credibility assessment automatically — do NOT call `assess_all()` separately in proof scripts. Use `assess_credibility(url)` only for standalone CLI use. | `assess_credibility(url)`, `assess_all(empirical_facts)` |
 | `${CLAUDE_SKILL_DIR}/scripts/validate_proof.py` | Static analysis for rule compliance (pre-flight) | `ProofValidator(filepath).validate()` |
@@ -51,7 +51,10 @@ sys.path.insert(0, PROOF_ENGINE_ROOT)
 
 Full Type B (empirical) verification requires **outbound HTTP access** from Python to fetch citation URLs. Without it, `verify_all_citations()` falls back through a chain: live fetch → embedded snapshot → Wayback Machine (if opted in).
 
-**Workaround for sandboxed environments (ChatGPT, cloud containers):** During Step 2 (Gather Facts), fetch each source page using your browsing capability and include the page text as the `snapshot` field in `empirical_facts`. The proof script will verify quotes against these snapshots instead of live-fetching. The audit doc will show `fetch_mode: "snapshot"`.
+**Environment-specific notes:**
+- **Claude Code:** Has outbound HTTP from Python, so live fetch is the primary path. `verify_all_citations()` fetches URLs directly. WebFetch/WebSearch tools return processed summaries, NOT raw page text — do not use them to populate `snapshot` fields. Keep web research (Step 2) in the main conversation thread; subagents may not have web access.
+- **ChatGPT:** Python sandbox has no outbound HTTP. Use the browsing capability during Step 2 to fetch each source page and include raw page text as the `snapshot` field in `empirical_facts`.
+- **Other sandboxed environments:** If Python cannot fetch URLs, use the snapshot workflow — pre-fetch page text by any available means and embed it in `empirical_facts`.
 
 **Verification fallback chain:**
 1. **Live fetch** — try to fetch the URL directly. If successful, verify against live page.
@@ -79,8 +82,8 @@ Many scientific papers and reports are behind paywalls. When a key source return
 5. **Last resort** — if the paywalled source is essential and no alternative exists, cite it with whatever quote is publicly visible and mark as "Not verified (paywall)" in the audit doc. This does not invalidate the proof if other verified sources support the same finding.
 
 **Government statistics sites (.gov):** BLS, FRED, Federal Reserve, Census, and similar .gov sites systematically return 403 to automated fetching. This is the norm, not the exception. For government statistics:
-- Use the **snapshot workflow as the primary path** — fetch via browser during Step 2, embed as `snapshot` in `empirical_facts`
-- Use reliable aggregators as citation URLs: rateinflation.com, inflationdata.com (for CPI); measuringworth.com (for historical data)
+- **Preferred:** Use reliable aggregators as citation URLs: rateinflation.com, inflationdata.com (for CPI); measuringworth.com, officialdata.org (for historical data); fred.stlouisfed.org (for FRED series). These are tier 3 (established reference) in credibility scoring.
+- **Fallback:** Use the snapshot workflow — fetch via browser during Step 2, embed as `snapshot` in `empirical_facts`
 - Note in the audit doc that aggregator sources republish data from the primary authority (e.g., "sourced from BLS via rateinflation.com")
 
 ## Core Concepts
@@ -124,6 +127,8 @@ If fewer than 3 are true, consider whether a simpler factual summary would serve
 
 ### Step 2: Gather Facts (Both Directions)
 Search for sources that SUPPORT the claim. Then search for sources that CONTRADICT it (adversarial — Rule 5). For empirical facts, find at least two independent sources (Rule 6). For math claims, identify the right tool (sympy, plain Python) and plan at least two mathematically independent approaches for cross-checking (Rule 6 — see "Interpreting independent for pure-math proofs" in hardening-rules.md).
+
+**Adversarial work happens once, here in Step 2.** The `adversarial_checks` list in the proof code (Step 3) encodes the results of this research — it documents what you searched for and found, not a second round of searching. Do the searching here, record the findings in the proof code.
 
 When fetching source pages during research, save the page text for each citation. Include it as the `snapshot` field in `empirical_facts` so the proof is reproducible offline. This is especially important in sandboxed environments where Python cannot fetch URLs directly.
 
@@ -252,31 +257,29 @@ For pure-math proofs, mark Rules 1, 2, and 6 as "N/A — pure computation, no em
 
 ### Step 6: Self-Critique Checklist
 
-Before presenting results, verify:
+Before presenting results, verify. **Must-check** items are structural — if these fail, the proof is broken. **Verify** items are quality checks.
 
-Hardening rules (verify each in proof_audit.md):
-- [ ] All 7 hardening rules checked in proof_audit.md hardening checklist
+**Must-check** (structural correctness):
 - [ ] validate_proof.py passes
-
-Proof script contract:
 - [ ] proof.py includes FACT_REGISTRY with IDs for all facts
 - [ ] proof.py `__main__` emits `=== PROOF SUMMARY (JSON) ===` block
 - [ ] JSON summary contains required keys: fact_registry (with method/result for A-types), claim_formal, adversarial_checks, verdict, key_results
-- [ ] For empirical proofs: JSON summary also contains citations (with normalized status/method/coverage_pct/credibility), extractions (with value/value_in_quote/quote_snippet), cross_checks
-- [ ] For pure-math proofs: omit citations and extractions keys entirely (do not include as empty dicts). cross_checks should contain computationally independent verification methods (see Rule 6 in hardening-rules.md for what "independent" means in a pure-math context). Use the pure-math template from hardening-rules.md.
+- [ ] For empirical proofs: JSON summary also contains citations (with normalized status/method/coverage_pct/credibility), extractions, cross_checks
+- [ ] For pure-math proofs: omit citations and extractions keys entirely. Use the pure-math template from hardening-rules.md.
 - [ ] FACT_REGISTRY keys in JSON match IDs used in both report documents
-
-Document consistency:
-- [ ] proof.md has executive summary with key numbers directly under verdict
 - [ ] Every fact ID in proof.md appears in JSON summary fact_registry and proof_audit.md evidence table
+- [ ] All three files are consistent with each other
+
+**Verify** (quality and completeness):
+- [ ] All 7 hardening rules checked in proof_audit.md hardening checklist
+- [ ] proof.md has executive summary with key numbers directly under verdict
 - [ ] proof.md verification statuses derivable from JSON summary `citations[].status` (not from message strings)
 - [ ] proof.md conclusion addresses unverified/partially verified citations with impact analysis (if any)
+- [ ] proof.md conclusion notes low-credibility sources if any cited source has tier ≤ 2
 - [ ] proof_audit.md sections labeled with provenance (proof.py JSON summary / proof.py inline output / author analysis)
-- [ ] proof_audit.md includes Computation Traces reproduced from explain_calc inline output
+- [ ] proof_audit.md includes Computation Traces reproduced from inline output
 - [ ] proof_audit.md presents "Partially verified" citations distinctly from "Verified"
 - [ ] proof_audit.md includes Source Credibility Assessment table (for empirical proofs)
-- [ ] proof.md conclusion notes low-credibility sources if any cited source has tier ≤ 2
-- [ ] All three files are consistent with each other
 
 ## Verdicts
 
@@ -393,3 +396,5 @@ See hardening-rules.md "Citing structured/tabular data" for the full pattern.
 - **Handle HTML in citations**: Government websites often use inline `<span>` tags. The bundled script handles this — but only if you use it.
 - **Handle Unicode in citations**: Real web pages use en-dashes (–), curly quotes ('), ring-above (˚) vs degree (°), non-breaking spaces, etc. `verify_citations.py` automatically applies `normalize_unicode()` from `smart_extract.py`. For custom extraction, import and use `normalize_unicode()` explicitly.
 - **Don't write print() descriptions of formulas**: Use `explain_calc("expr", locals())` instead. It AST-walks the expression and prints what the code actually does, not what you think it does. This closes the gap between computation and description.
+- **`explain_calc()` vs `compute_*()`**: Use `compute_percentage_change()`, `compute_age()`, and other named functions when they match your computation — they produce self-documenting output already. Use `explain_calc()` for ad-hoc expressions that don't have a named helper (e.g., `"(1 - old / new) * 100"`). Don't wrap a `compute_*()` call in `explain_calc()` — that's redundant.
+- **Index base mismatches**: Economic data from different aggregators may use different base periods (e.g., CPI base 1982-84=100 vs base 1967=100). If `cross_check()` flags a large disagreement between sources that should agree, check whether the sources use different scaling. Document the base period in the source_name field (e.g., "BLS CPI-U, base 1982-84=100") and either normalize to a common base or choose one source and note the discrepancy in the adversarial checks.

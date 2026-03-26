@@ -265,7 +265,9 @@ class ProofValidator:
         has_verify = bool(re.search(r'verify_extraction\s*\(', self.source))
         has_data_values = bool(re.search(r'data_values', self.source))
 
-        if has_parse and has_verify:
+        if has_parse and has_verify and has_data_values:
+            self.passed.append("Contract: Mixed extraction — free-text values verified via verify_extraction(), table data via data_values (cross-check)")
+        elif has_parse and has_verify:
             self.passed.append("Contract: Extracted values verified via verify_extraction()")
         elif has_verify and not has_parse:
             self.passed.append("Contract: Custom extraction with verify_extraction() (no standard parse functions — qualitative or keyword-based proof)")

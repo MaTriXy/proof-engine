@@ -361,7 +361,7 @@ from datetime import date
 
 # --- STRUCTURAL IMPORTS (always needed) ---
 from scripts.smart_extract import normalize_unicode, verify_extraction
-from scripts.verify_citations import verify_all_citations
+from scripts.verify_citations import verify_all_citations, build_citation_detail
 from scripts.computations import compare, explain_calc
 
 # --- CLAIM-SPECIFIC IMPORTS (adapt to your proof) ---
@@ -511,23 +511,8 @@ if __name__ == "__main__":
     FACT_REGISTRY["A1"]["method"] = "compute_age()"
     FACT_REGISTRY["A1"]["result"] = str(age)
 
-    # --- Build citation details from structured results (no message parsing) ---
-    citation_detail = {}
-    for fact_id, info in FACT_REGISTRY.items():
-        key = info.get("key")
-        if key and key in citation_results:
-            cr = citation_results[key]
-            citation_detail[fact_id] = {
-                "source_key": key,
-                "source_name": empirical_facts[key].get("source_name", ""),
-                "url": empirical_facts[key].get("url", ""),
-                "quote": empirical_facts[key].get("quote", ""),
-                "status": cr["status"],
-                "method": cr["method"],
-                "coverage_pct": cr["coverage_pct"],
-                "fetch_mode": cr["fetch_mode"],
-                "credibility": cr.get("credibility"),
-            }
+    # --- Build citation details from structured results ---
+    citation_detail = build_citation_detail(FACT_REGISTRY, citation_results, empirical_facts)
 
     # --- Build extraction records ---
     extractions = {

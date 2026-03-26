@@ -418,6 +418,41 @@ def verify_all_citations(empirical_facts: dict, wayback_fallback: bool = False) 
     return results
 
 
+def build_citation_detail(fact_registry: dict, citation_results: dict,
+                          empirical_facts: dict) -> dict:
+    """Build the citation_detail dict for the JSON summary.
+
+    This replaces the ~15-line boilerplate loop that appears in every proof's
+    __main__ block. It maps FACT_REGISTRY entries to their citation results
+    and empirical fact metadata.
+
+    Args:
+        fact_registry: The proof's FACT_REGISTRY dict.
+        citation_results: Return value of verify_all_citations().
+        empirical_facts: The proof's empirical_facts dict.
+
+    Returns:
+        dict of {fact_id: citation_detail} for Type B facts only.
+    """
+    detail = {}
+    for fact_id, info in fact_registry.items():
+        key = info.get("key")
+        if key and key in citation_results:
+            cr = citation_results[key]
+            detail[fact_id] = {
+                "source_key": key,
+                "source_name": empirical_facts[key].get("source_name", ""),
+                "url": empirical_facts[key].get("url", ""),
+                "quote": empirical_facts[key].get("quote", ""),
+                "status": cr["status"],
+                "method": cr.get("method", ""),
+                "coverage_pct": cr.get("coverage_pct"),
+                "fetch_mode": cr.get("fetch_mode", ""),
+                "credibility": cr.get("credibility"),
+            }
+    return detail
+
+
 def _print_status(fact_id: str, result: dict):
     status = result["status"]
     msg = result["message"]
