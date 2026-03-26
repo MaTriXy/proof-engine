@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.4] - 2026-03-27
+
+### Added
+
+- Key function signatures section in SKILL.md: `cross_check()`, `compute_percentage_change()`, `explain_calc()`, `build_citation_detail()` with parameter names, modes, and return types
+- Dynamic/JS-rendered site guidance in Gotchas: prefer static-content aggregators, expect partial matches on JS sites
+- `cross_check()` example call with full signature in hardening-rules.md data_values section
+
+### Fixed
+
+- hardening-rules.md reading guidance: note file is large, start from template (search "Proof Template")
+- data_values CPI example marked as worked example to prevent LLMs from copying stale values
+- `explain_calc()` documented as returning the computed value (not just printing)
+
 ## [0.5.3] - 2026-03-27
 
 ### Added

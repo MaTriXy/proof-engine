@@ -688,7 +688,7 @@ For claims where the evidence is "multiple authoritative sources agree that X is
 
 For economic, statistical, or scientific claims, the key numeric values often live in HTML tables rather than prose text. The verifiable prose quote confirms the source authority, while the numbers come from a data table.
 
-Use a `data_values` dict alongside the quote:
+Use a `data_values` dict alongside the quote (worked example using CPI data — always do fresh research for actual values):
 
 ```python
 empirical_facts = {
@@ -706,5 +706,5 @@ empirical_facts = {
 - The `data_values` entries are parsed with `parse_number_from_quote(fact["data_values"]["cpi_1913"], r"([\d.]+)", "B1_cpi_1913")`
 - **Do NOT call `verify_extraction()` on data_values** — it's circular. Cross-check across independent sources (Rule 6) is the verification for table data.
 - The audit doc distinguishes "source authority verified via quote" from "numeric data extracted from table"
-- Use `cross_check()` from computations.py to compare values across sources with tolerance
+- Cross-check values across sources: `cross_check(cpi_1913_a, cpi_1913_b, tolerance=0.05, mode="absolute", label="CPI 1913")`
 - For multiple values from one source, use sub-IDs in extractions: `B1_cpi_1913`, `B1_cpi_2024`

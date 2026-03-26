@@ -40,6 +40,24 @@ Import these instead of re-implementing verification logic. They are tested and 
 | `${CLAUDE_SKILL_DIR}/scripts/source_credibility.py` | Assess domain credibility from URL (offline, bundled data). **Note:** `verify_all_citations()` runs credibility assessment automatically — do NOT call `assess_all()` separately in proof scripts. Use `assess_credibility(url)` only for standalone CLI use. | `assess_credibility(url)`, `assess_all(empirical_facts)` |
 | `${CLAUDE_SKILL_DIR}/scripts/validate_proof.py` | Static analysis for rule compliance (pre-flight) | `ProofValidator(filepath).validate()` |
 
+**Key function signatures** (to avoid runtime errors from guessing):
+
+```python
+# computations.py
+cross_check(value_a, value_b, tolerance=0.01, mode="absolute", label=None) -> bool
+#   mode="absolute": |a - b| < tolerance
+#   mode="relative": |a - b| / max(|a|, |b|) < tolerance
+compute_percentage_change(old_value, new_value, label=None, mode="increase") -> float
+#   mode="increase": (new - old) / old * 100
+#   mode="decline": (1 - old / new) * 100
+explain_calc(expr_str, scope, label=None) -> object
+#   Prints symbolic → substituted → result. RETURNS the computed value (not just prints).
+
+# verify_citations.py
+build_citation_detail(fact_registry, citation_results, empirical_facts) -> dict
+#   Builds the citation_detail dict for JSON summary from FACT_REGISTRY + verify results.
+```
+
 To import these from a proof script, set `PROOF_ENGINE_ROOT` to the skill's install directory (the directory containing this SKILL.md and the `scripts/` subdirectory). In Claude Code, use the resolved value of `${CLAUDE_SKILL_DIR}`:
 ```python
 import sys
@@ -133,7 +151,7 @@ Search for sources that SUPPORT the claim. Then search for sources that CONTRADI
 When fetching source pages during research, save the page text for each citation. Include it as the `snapshot` field in `empirical_facts` so the proof is reproducible offline. This is especially important in sandboxed environments where Python cannot fetch URLs directly.
 
 ### Step 3: Write the Proof Code
-Read [references/hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) first. Start from the template at the bottom of that file. Import and use the bundled scripts. The proof script must be self-contained: `python proof.py` produces the full output.
+Read [references/hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) first. The file is large (~700 lines) — read in chunks if needed. **Start from the proof template near the end** (search for "Proof Template"). Import and use the bundled scripts. The proof script must be self-contained: `python proof.py` produces the full output.
 
 Required structural elements in every proof script:
 - `CLAIM_FORMAL` dict with `operator_note` (Rule 4). For compound claims, a `sub_claims` list with per-sub-claim evaluation and a `conjunction` type (AND/OR/BECAUSE/IMPLIES)
@@ -398,3 +416,5 @@ See hardening-rules.md "Citing structured/tabular data" for the full pattern.
 - **Don't write print() descriptions of formulas**: Use `explain_calc("expr", locals())` instead. It AST-walks the expression and prints what the code actually does, not what you think it does. This closes the gap between computation and description.
 - **`explain_calc()` vs `compute_*()`**: Use `compute_percentage_change()`, `compute_age()`, and other named functions when they match your computation — they produce self-documenting output already. Use `explain_calc()` for ad-hoc expressions that don't have a named helper (e.g., `"(1 - old / new) * 100"`). Don't wrap a `compute_*()` call in `explain_calc()` — that's redundant.
 - **Index base mismatches**: Economic data from different aggregators may use different base periods (e.g., CPI base 1982-84=100 vs base 1967=100). If `cross_check()` flags a large disagreement between sources that should agree, check whether the sources use different scaling. Document the base period in the source_name field (e.g., "BLS CPI-U, base 1982-84=100") and either normalize to a common base or choose one source and note the discrepancy in the adversarial checks.
+- **Dynamic/JS-rendered sites and partial matches**: Some aggregator sites (e.g., officialdata.org, in2013dollars.com) render content via JavaScript. Live fetch gets raw HTML without JS-rendered data, causing low fragment coverage (30-50%). Prefer static-content aggregators (rateinflation.com, inflationdata.com) for citation URLs. If you must cite a dynamic site, use `snapshot` mode or accept partial verification and note it in the audit doc.
+- **`cross_check()` for data_values**: When comparing table-sourced values across sources, use the full signature: `cross_check(cpi_a, cpi_b, tolerance=0.05, mode="absolute", label="CPI 1913 cross-check")`. The `mode="relative"` option is useful when values span different magnitudes.
