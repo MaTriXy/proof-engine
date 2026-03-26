@@ -114,7 +114,12 @@ def parse_number_from_quote(quote: str, pattern: str = None, fact_id: str = "unk
                     f"Add parentheses around the number, e.g. r'population (\\d+)'"
                 )
             result = float(raw)
-            print(f"  {fact_id}: Parsed '{m.group(1)}' -> {result}")
+            orig = m.group(1)
+            # Show original string when float repr drops trailing zeros (9.900 -> 9.9)
+            if raw != str(result):
+                print(f"  {fact_id}: Parsed '{orig}' -> {result} (source text: '{orig}')")
+            else:
+                print(f"  {fact_id}: Parsed '{orig}' -> {result}")
             return result
         raise ValueError(f"{fact_id}: Pattern '{pattern}' not found in quote: '{quote[:80]}...'")
 

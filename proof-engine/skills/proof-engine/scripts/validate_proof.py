@@ -250,17 +250,27 @@ class ProofValidator:
             self.issues.append(("Contract: No JSON summary block — required for report generation", []))
 
     def check_extraction_verification(self):
-        """Check that extracted values are verified, not just parsed."""
+        """Check that extracted values are verified, not just parsed.
+
+        Three valid patterns:
+          1. parse_*() + verify_extraction() — standard free-text extraction
+          2. verify_extraction() without parse_*() — qualitative/keyword proof
+          3. parse_*() + data_values (no verify_extraction) — table-sourced data
+             where cross-check replaces verify_extraction (it would be circular)
+        """
         has_parse = bool(re.search(
             r'parse_date_from_quote|parse_number_from_quote|parse_percentage_from_quote|parse_range_from_quote',
             self.source,
         ))
         has_verify = bool(re.search(r'verify_extraction\s*\(', self.source))
+        has_data_values = bool(re.search(r'data_values', self.source))
 
         if has_parse and has_verify:
             self.passed.append("Contract: Extracted values verified via verify_extraction()")
         elif has_verify and not has_parse:
             self.passed.append("Contract: Custom extraction with verify_extraction() (no standard parse functions — qualitative or keyword-based proof)")
+        elif has_parse and not has_verify and has_data_values:
+            self.passed.append("Contract: Table-sourced data via data_values — verify_extraction() correctly skipped (cross-check is the verification)")
         elif has_parse and not has_verify:
             self.warnings.append(("Contract: Values parsed from quotes but verify_extraction() not called — extraction records may be incomplete", []))
         else:

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2026-03-26
+
+### Fixed
+
+- `validate_proof.py` extraction check: correctly recognizes `data_values` path (parse without `verify_extraction()`) instead of false-positive "verified via verify_extraction()"
+- `parse_number_from_quote()` trace output now preserves original string precision: shows `Parsed '9.900' -> 9.9 (source text: '9.900')` when float repr differs
+- Proof template in hardening-rules.md now shows both extraction paths: PATH A (free-text + verify_extraction) and PATH B (data_values + cross-check, no verify_extraction)
+
 ## [0.5.1] - 2026-03-26
 
 ### Fixed

@@ -436,11 +436,29 @@ empirical_facts = {
 citation_results = verify_all_citations(empirical_facts, wayback_fallback=True)
 
 # 5. VALUE EXTRACTION — parsed from quotes (Rule 1)
-# NOTE: parse functions and verify_extraction print match status inline.
+# Two paths depending on data type:
+#
+# PATH A — Free-text quotes: parse + verify_extraction
+#   val = parse_date_from_quote(empirical_facts["source_a"]["quote"], "source_a")
+#   val_in_quote = verify_extraction(val, empirical_facts["source_a"]["quote"], "B1")
+#
+# PATH B — Table/numeric data via data_values: parse only, NO verify_extraction
+#   (verify_extraction on data_values is circular — the cross-check IS the verification)
+#   val = parse_number_from_quote(empirical_facts["source_a"]["data_values"]["key"], r"([\d.]+)", "B1_key")
+#
+# Choose the path that matches your data source. Both are valid.
+
+# Example using PATH A (free-text):
 val_a = parse_date_from_quote(empirical_facts["source_a"]["quote"], "source_a")
 val_a_in_quote = verify_extraction(val_a, empirical_facts["source_a"]["quote"], "B1")
 val_b = parse_date_from_quote(empirical_facts["source_b"]["quote"], "source_b")
 val_b_in_quote = verify_extraction(val_b, empirical_facts["source_b"]["quote"], "B2")
+
+# Example using PATH B (data_values) — shown here commented:
+# cpi_1913_a = parse_number_from_quote(empirical_facts["source_a"]["data_values"]["cpi_1913"], r"([\d.]+)", "B1_cpi_1913")
+# cpi_2024_a = parse_number_from_quote(empirical_facts["source_a"]["data_values"]["cpi_2024"], r"([\d.]+)", "B1_cpi_2024")
+# cpi_1913_b = parse_number_from_quote(empirical_facts["source_b"]["data_values"]["cpi_1913"], r"([\d.]+)", "B2_cpi_1913")
+# cpi_2024_b = parse_number_from_quote(empirical_facts["source_b"]["data_values"]["cpi_2024"], r"([\d.]+)", "B2_cpi_2024")
 
 # 6. CROSS-CHECK (Rule 6)
 assert val_a == val_b, f"Sources disagree: {val_a} vs {val_b}"
