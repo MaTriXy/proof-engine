@@ -370,6 +370,27 @@ CLAIM_FORMAL = {
     "threshold": ...,
 }
 
+# For compound claims ("X AND Y", "X BECAUSE Y"), decompose into sub-claims:
+# sub_claims = [
+#     {
+#         "id": "A",
+#         "natural": "X is true",
+#         "operator": ">",
+#         "operator_note": "...",
+#         "threshold": ...,
+#     },
+#     {
+#         "id": "B",
+#         "natural": "Y is true",
+#         "operator": "==",
+#         "operator_note": "...",
+#         "threshold": ...,
+#     },
+# ]
+# conjunction = "AND"  # or "OR", "BECAUSE", "IMPLIES"
+# Overall verdict: PROVED only if all sub-claims proved (for AND).
+# Include sub_claims and conjunction in the JSON summary.
+
 # 2. FACT REGISTRY — maps report IDs to proof-script keys
 # CONTRACT: Every proof must define this. It is the single source of truth
 # for cross-document ID consistency between proof.md and proof_audit.md.
@@ -528,3 +549,16 @@ The template above uses date/age variables as examples. For proofs where the cla
 - **Cross-checks**: Compare independently extracted values across sources. Agreement within ranges is sufficient — exact equality is unlikely for empirical data.
 - **Computation**: Derive summary statistics (midpoint of range, percentage attribution) using `explain_calc()`.
 - **Verdict**: Empirical consensus proofs often land on PROVED (with unverified citations) because government and scientific websites frequently have formatting that prevents full quote verification.
+
+### Adapting for qualitative consensus proofs
+
+For claims where the evidence is "multiple authoritative sources agree that X is true/possible" — without a numeric threshold — adapt the template as follows:
+
+- **Claim type**: The claim is qualitative ("does the scientific literature support X?"). The formal threshold is not a number but a consensus criterion: "N of M authoritative sources explicitly state X."
+- **Imports**: You may not need `parse_number_from_quote` or other numeric extractors. The structural imports (`verify_extraction`, `verify_all_citations`, `compare`, `explain_calc`) are still needed.
+- **Extraction**: Instead of parsing numbers, verify that a specific keyword or phrase appears in each source quote. Use `verify_extraction("keyword", quote, fact_id)` — it works for strings, not just numbers. For example: `verify_extraction("reactivates", empirical_facts["source_a"]["quote"], "B1")`.
+- **FACT_REGISTRY**: B-type entries per source (one per authoritative reference). A-type entries for the logical conclusion (e.g., "A1: All 4 sources confirm reactivation is possible").
+- **CLAIM_FORMAL**: The operator may be "==" with threshold as a boolean or count: `"operator": ">=", "threshold": 3, "operator_note": "at least 3 of 4 sources must explicitly confirm the finding"`.
+- **Cross-checks**: Compare whether independently sourced quotes agree on the same qualitative finding. Agreement means the same concept is present, not necessarily the same wording.
+- **Adversarial**: Search for sources that explicitly dispute or qualify the consensus. Look for review articles that note exceptions or controversy.
+- **Verdict**: PROVED if all/most sources agree and no credible counter-evidence found. PARTIALLY VERIFIED if sources agree but with significant caveats. DISPROVED if authoritative sources explicitly contradict the claim.

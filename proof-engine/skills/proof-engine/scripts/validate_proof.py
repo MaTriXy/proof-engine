@@ -230,11 +230,16 @@ class ProofValidator:
 
     def check_extraction_verification(self):
         """Check that extracted values are verified, not just parsed."""
-        has_parse = bool(re.search(r'parse_date_from_quote|parse_number_from_quote|parse_percentage_from_quote', self.source))
+        has_parse = bool(re.search(
+            r'parse_date_from_quote|parse_number_from_quote|parse_percentage_from_quote|parse_range_from_quote',
+            self.source,
+        ))
         has_verify = bool(re.search(r'verify_extraction\s*\(', self.source))
 
         if has_parse and has_verify:
             self.passed.append("Contract: Extracted values verified via verify_extraction()")
+        elif has_verify and not has_parse:
+            self.passed.append("Contract: Custom extraction with verify_extraction() (no standard parse functions — qualitative or keyword-based proof)")
         elif has_parse and not has_verify:
             self.warnings.append(("Contract: Values parsed from quotes but verify_extraction() not called — extraction records may be incomplete", []))
         else:

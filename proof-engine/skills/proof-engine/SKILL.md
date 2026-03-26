@@ -67,6 +67,16 @@ Full Type B (empirical) verification requires **outbound HTTP access** from Pyth
 
 Type A (pure math) proofs have no network requirements — they run entirely offline.
 
+## Handling Paywalled Sources
+
+Many scientific papers and reports are behind paywalls. When a key source returns 403 or requires authentication:
+
+1. **Try the abstract URL** — PubMed (pubmed.ncbi.nlm.nih.gov), DOI resolver (doi.org), or Google Scholar often have abstracts with key findings. Cite the abstract URL instead.
+2. **Check for open-access versions** — many papers have preprints on arXiv, bioRxiv, medRxiv, or the author's institutional page.
+3. **Cite the abstract quote** — if the abstract contains the key finding, that's a valid citation. Note "cited from abstract; full text behind paywall" in the audit doc.
+4. **Find alternative sources** — if the claim is well-established, there are usually multiple sources. Prefer open-access ones.
+5. **Last resort** — if the paywalled source is essential and no alternative exists, cite it with whatever quote is publicly visible and mark as "Not verified (paywall)" in the audit doc. This does not invalidate the proof if other verified sources support the same finding.
+
 ## Core Concepts
 
 **Type A facts (Pure)**: Established entirely by code. The computation IS the verification. Use for math, logic, and derivations. Tools: `sympy` for symbolic math, plain Python for arithmetic.
@@ -92,7 +102,7 @@ See [Hardening Rules Reference](${CLAUDE_SKILL_DIR}/references/hardening-rules.m
 ## Workflow
 
 ### Step 1: Analyze the Claim
-Classify the claim: mathematical (Type A only), empirical (Type B only), or mixed. Identify ambiguous terms. Determine what would constitute proof AND disproof. Write a brief proof strategy and share it with the user before proceeding.
+Classify the claim: mathematical (Type A only), empirical (Type B only), or mixed. Identify ambiguous terms. Determine what would constitute proof AND disproof. If the claim has multiple parts (X AND Y, X BECAUSE Y), decompose into sub-claims — each gets its own entry in `sub_claims` with its own operator and threshold. Write a brief proof strategy and share it with the user before proceeding.
 
 If the claim is an opinion, value judgment, or has no verifiable answer (e.g., "Python is the best language"), do NOT attempt a proof. Explain why, and offer to prove a related factual claim instead.
 
@@ -102,6 +112,7 @@ Before proceeding, assess whether a formal proof adds value. Consider these guid
 - Are there canonical, publicly accessible sources?
 - Is there a clear disproof condition (what would make it false)?
 - Is the ambiguity surface manageable (few contested definitions)?
+- Is this a scientific/literature consensus claim? If so, the standard is "multiple authoritative sources agree" rather than a single numeric threshold — see "Adapting for qualitative consensus proofs" in hardening-rules.md.
 
 If fewer than 3 are true, consider whether a simpler factual summary would serve the user better than a full proof. If the user explicitly wants rigor, proceed anyway but note the limitations in the proof strategy.
 
@@ -114,7 +125,7 @@ When fetching source pages during research, save the page text for each citation
 Read [references/hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) first. Start from the template at the bottom of that file. Import and use the bundled scripts. The proof script must be self-contained: `python proof.py` produces the full output.
 
 Required structural elements in every proof script:
-- `CLAIM_FORMAL` dict with `operator_note` (Rule 4)
+- `CLAIM_FORMAL` dict with `operator_note` (Rule 4). For compound claims, a `sub_claims` list with per-sub-claim evaluation and a `conjunction` type (AND/OR/BECAUSE/IMPLIES)
 - `empirical_facts` dict with quotes but NO hand-typed values (Rule 1)
 - Imports from bundled scripts for verification (Rules 1, 2)
 - `date.today()` for time-dependent proofs (Rule 3)
@@ -175,7 +186,7 @@ Source: JSON summary `verdict`, `key_results`; impact analysis is author analysi
 
 #### proof_audit.md structure
 
-The verification-focused report. Contains everything a verifier needs to check the proof's machinery without running proof.py.
+The verification-focused report. Contains everything a verifier needs to check the proof's machinery without running proof.py. For proofs with more than 10 citations, group evidence and citation details by sub-claim rather than listing all citations linearly.
 
 Title line: `# Audit: [claim text]`
 
@@ -195,7 +206,7 @@ Section "Full Evidence Table": Two sub-sections:
 
 Section "Citation Verification Details": For each Type B citation, four fields — all from structured JSON fields, not parsed from prose:
 - Status: verified / partial / not_found / fetch_failed. Source: JSON summary `citations[fact_id].status`.
-- Method (only if verified or partial): full_quote / unicode_normalized / fragment / aggressive_normalization. Source: JSON summary `citations[fact_id].method` and `.coverage_pct`. Note: partial (fragment match) is a degraded result — present it distinctly from full verification.
+- Method (only if verified or partial): full_quote / unicode_normalized / fragment / aggressive_normalization. Source: JSON summary `citations[fact_id].method` and `.coverage_pct`. Note: `coverage_pct` is null for full_quote and unicode_normalized methods — only populated for fragment matches. Partial (fragment match) is a degraded result — present it distinctly from full verification.
 - Fetch mode: live / snapshot / wayback. Source: JSON summary `citations[fact_id].fetch_mode`. Indicates how the page was obtained.
 - Impact (only if NOT verified): Which conclusions in proof.md depend on this citation, and whether they have independent support. Source: author analysis (label as such).
 For pure-math proofs, omit this section.

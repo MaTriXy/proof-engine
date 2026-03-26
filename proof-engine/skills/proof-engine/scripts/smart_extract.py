@@ -216,15 +216,16 @@ def _find_char_diffs(page_fragment: str, quote: str, result: dict):
 # ---------------------------------------------------------------------------
 
 def verify_extraction(value: Any, quote: str, fact_id: str, description: str = "", strict: bool = True):
-    """Assert that an extracted value is plausibly from the quote text.
+    """Assert that an extracted value or keyword is plausibly from the quote text.
 
-    This is a sanity check — it verifies that the numeric value (or its string
-    representation) appears somewhere in the quote. It's not a proof that the
-    extraction is correct, but it catches cases where the extraction logic
-    returns a value that has nothing to do with the quote.
+    This is a sanity check — it verifies that the value (numeric or string)
+    appears somewhere in the quote. Works for numbers, dates, percentages,
+    and also for keywords/phrases in qualitative proofs. It's not a proof
+    that the extraction is correct, but it catches cases where the extraction
+    logic returns a value that has nothing to do with the quote.
 
     Args:
-        value: The extracted value (number, date, string).
+        value: The extracted value (number, date, string, keyword).
         quote: The original quote string.
         fact_id: Identifier for error messages.
         description: Optional human-readable description of what was extracted.
@@ -233,6 +234,12 @@ def verify_extraction(value: Any, quote: str, fact_id: str, description: str = "
 
     Returns:
         True if the value was found in the quote.
+
+    Examples:
+        # Numeric extraction
+        verify_extraction(1.1, "temperature rose 1.1 degrees", "B1")
+        # Keyword/qualitative extraction
+        verify_extraction("reactivates", "the virus reactivates under stress", "B2")
 
     Raises:
         ValueError: If strict=True and the value is not found in the quote.
