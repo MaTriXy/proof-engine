@@ -270,8 +270,18 @@ def verify_extraction(value: Any, quote: str, fact_id: str, description: str = "
             int_form if value == int(value) else "",
             f"{value:.1f}",
             f"{value:.2f}",
+            f"{value:.3f}",
             f"{value:,.0f}" if value == round(value) else "",
         ])
+        # Handle trailing-zero mismatch: Python's float→str drops trailing zeros
+        # (9.900 → 9.9), but the quote may keep them. Generate padded forms so
+        # "9.9" can match inside "9.900".
+        base = value_str
+        if "." in base:
+            for pad in range(1, 4):
+                padded = base + "0" * pad
+                if padded not in check_forms:
+                    check_forms.append(padded)
 
     # Normalize quote for comparison
     norm_quote = normalize_unicode(quote.lower())

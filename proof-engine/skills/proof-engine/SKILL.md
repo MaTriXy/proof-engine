@@ -360,8 +360,28 @@ empirical_facts = {
 
 - The `quote` field verifies the source's authority via `verify_all_citations()`
 - Parse table values with `parse_number_from_quote(fact["data_values"]["cpi_1913"], r"([\d.]+)", "B1_cpi_1913")`
+- **Do NOT call `verify_extraction()` on data_values** — it's circular (checking "9.883" appears in "9.883"). `verify_extraction()` is for checking values parsed from free-text quotes. For data_values, the cross-check across independent sources (Rule 6) is the verification.
 - Use `cross_check()` to compare values across independent sources
 - The audit doc should distinguish "source authority verified via quote" from "numeric data extracted from table"
+
+**Multiple extractions per source**: When a single source provides multiple data values, use sub-IDs in the extractions dict:
+
+```python
+extractions = {
+    "B1_cpi_1913": {
+        "value": str(cpi_1913_a),
+        "value_in_quote": True,  # parsed from data_values, not free-text
+        "quote_snippet": "data_values['cpi_1913']",
+    },
+    "B1_cpi_2024": {
+        "value": str(cpi_2024_a),
+        "value_in_quote": True,
+        "quote_snippet": "data_values['cpi_2024']",
+    },
+}
+```
+
+These sub-IDs (B1_cpi_1913, B1_cpi_2024) don't need to match FACT_REGISTRY keys — they are extraction-level detail within a single source fact.
 
 See hardening-rules.md "Citing structured/tabular data" for the full pattern.
 

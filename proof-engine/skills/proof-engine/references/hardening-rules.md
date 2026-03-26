@@ -701,5 +701,7 @@ empirical_facts = {
 
 - The `quote` field verifies the source's authority via `verify_all_citations()`
 - The `data_values` entries are parsed with `parse_number_from_quote(fact["data_values"]["cpi_1913"], r"([\d.]+)", "B1_cpi_1913")`
+- **Do NOT call `verify_extraction()` on data_values** — it's circular. Cross-check across independent sources (Rule 6) is the verification for table data.
 - The audit doc distinguishes "source authority verified via quote" from "numeric data extracted from table"
 - Use `cross_check()` from computations.py to compare values across sources with tolerance
+- For multiple values from one source, use sub-IDs in extractions: `B1_cpi_1913`, `B1_cpi_2024`
