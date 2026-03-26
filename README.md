@@ -145,6 +145,18 @@ Note: disproof is often easier than proof — a single counterexample or source 
 | "This painting is beautiful" | Subjective — no factual decomposition possible |
 | "The defendant is guilty" | Requires legal interpretation, not fact-checking |
 
+## How This Differs From...
+
+**Theorem provers (Lean, Coq, Isabelle)** — These prove mathematical theorems from axioms. Proof Engine verifies real-world claims against web sources and computation. Lean can prove the irrationality of sqrt(2); it cannot verify that a country's GDP grew by 5% last year. Different problem, different tool.
+
+**Probabilistic/Bayesian scorers** — The engine produces auditable pass/fail verdicts with full evidence trails, not confidence percentages. This is deliberate: a "73% confidence" score hides *why* it's 73%. The five-tier verdict system (PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED, PROVED with unverified citations) plus the complete audit trail lets reviewers see exactly which facts held and which didn't.
+
+**RAG pipelines** — RAG retrieves context to help an LLM generate an answer. This engine forces the LLM to *prove* its answer with re-runnable code and exact quotes. The output is a standalone Python script anyone can re-execute, not a chat response.
+
+## Security Model
+
+Proof scripts run in your existing agent environment (Claude Code, ChatGPT, etc.). The engine never uses `eval()` — computations use AST walking instead. `validate_proof.py` performs static analysis before execution, flagging rule violations. Code execution inherits whatever sandboxing your agent platform provides.
+
 ## The 7 Hardening Rules
 
 | Rule | Closes Failure Mode |
