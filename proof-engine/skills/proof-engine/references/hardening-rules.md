@@ -96,7 +96,7 @@ empirical_facts = {
 from scripts.verify_citations import verify_all_citations
 
 citation_results = verify_all_citations(empirical_facts)
-unverified = [k for k, v in citation_results.items() if v["verified"] is not True]
+unverified = [k for k, v in citation_results.items() if v["status"] != "verified"]
 ```
 
 **Critical normalization details**: Real web pages contain two categories of mismatch that break naive string matching:
@@ -337,7 +337,6 @@ Proof: [claim text]
 Generated: [date]
 """
 import json
-import re as _re
 import sys
 
 # Path to proof-engine scripts directory (the directory containing SKILL.md).
@@ -383,15 +382,24 @@ FACT_REGISTRY = {
 }
 
 # 3. EMPIRICAL FACTS — quotes only, NO hand-typed values (Rule 1)
+# Optional: include "snapshot" with pre-fetched page text for offline verification.
+# If Python has no outbound HTTP access (e.g., ChatGPT), fetch each source page
+# using your browsing capability and include the page text as the snapshot field.
 empirical_facts = {
-    "source_a": {"quote": "...", "url": "...", "source_name": "..."},
-    "source_b": {"quote": "...", "url": "...", "source_name": "..."},
+    "source_a": {
+        "quote": "...", "url": "...", "source_name": "...",
+        # "snapshot": "...full page text...",
+        # "snapshot_fetched_at": "2026-03-26T10:00:00Z",
+    },
+    "source_b": {
+        "quote": "...", "url": "...", "source_name": "...",
+    },
 }
 
 # 4. CITATION VERIFICATION (Rule 2)
-# NOTE: verify_all_citations prints per-citation results inline during execution.
-# These appear in stdout before the JSON summary block.
-citation_results = verify_all_citations(empirical_facts)
+# Fallback chain: live fetch → snapshot → Wayback (if opted in).
+# verify_all_citations returns structured dicts with status/method/coverage_pct.
+citation_results = verify_all_citations(empirical_facts, wayback_fallback=True)
 
 # 5. VALUE EXTRACTION — parsed from quotes (Rule 1)
 # NOTE: parse functions and verify_extraction print match status inline.
@@ -428,15 +436,14 @@ adversarial_checks = [
 # 11. VERDICT AND STRUCTURED OUTPUT
 # CONTRACT: __main__ must end with a JSON summary block containing all
 # structured fields that proof.md and proof_audit.md depend on.
-# The inline output from bundled scripts (above) provides human-readable
-# traces; the JSON block provides the structured data for report generation.
+# verify_citation now returns structured dicts — no message parsing needed.
 if __name__ == "__main__":
     # --- Verdict logic (adapt to claim structure) ---
     # All five levels must be considered:
     #   PROVED, PROVED (with unverified citations), DISPROVED,
     #   PARTIALLY VERIFIED, UNDETERMINED
     any_unverified = any(
-        v["verified"] is not True for v in citation_results.values()
+        cr["status"] != "verified" for cr in citation_results.values()
     )
     if claim_holds and not any_unverified:
         verdict = "PROVED"
@@ -452,71 +459,33 @@ if __name__ == "__main__":
     FACT_REGISTRY["A1"]["method"] = "compute_age()"
     FACT_REGISTRY["A1"]["result"] = str(age)
 
-    # --- Build normalized citation details ---
-    # CONTRACT: Citation fields are normalized here, not left as free-form
-    # message strings. This prevents the report layer from parsing prose.
+    # --- Build citation details from structured results (no message parsing) ---
     citation_detail = {}
     for fact_id, info in FACT_REGISTRY.items():
         key = info.get("key")
         if key and key in citation_results:
             cr = citation_results[key]
-            msg = cr["message"]
-            # Normalize status from verify_citation return values
-            if cr["verified"] is True:
-                status = "Verified"
-            elif cr["verified"] == "partial":
-                status = "Partially verified"
-            elif cr["verified"] is False:
-                status = "Not verified"
-            else:  # None
-                status = "Fetch failed"
-            # Extract method from message — must handle ALL verify_citation return paths.
-            # Default is "Unknown method" so unrecognized messages fail visibly
-            # rather than silently upgrading to "Full quote match".
-            coverage_pct = None
-            if "Full quote verified" in msg and "normalization" not in msg:
-                method = "Full quote match"
-            elif "after Unicode normalization" in msg:
-                method = "Full quote match after Unicode normalization"
-            elif "largely verified" in msg or ("words matched" in msg and status == "Verified"):
-                method = "Fragment match (high coverage)"
-                m = _re.search(r'(\d+)/(\d+)', msg)
-                if m:
-                    method = f"Fragment match ({m.group(1)}/{m.group(2)} words)"
-                    coverage_pct = round(int(m.group(1)) / int(m.group(2)) * 100, 1)
-            elif "words matched" in msg and status == "Partially verified":
-                method = "Fragment match (low coverage)"
-                m = _re.search(r'(\d+)/(\d+)', msg)
-                if m:
-                    method = f"Fragment match ({m.group(1)}/{m.group(2)} words)"
-                    coverage_pct = round(int(m.group(1)) / int(m.group(2)) * 100, 1)
-            elif "aggressive normalization" in msg:
-                method = "Aggressive normalization (verify manually)"
-            else:
-                method = "Unknown method"
             citation_detail[fact_id] = {
                 "source_key": key,
                 "source_name": empirical_facts[key].get("source_name", ""),
                 "url": empirical_facts[key].get("url", ""),
                 "quote": empirical_facts[key].get("quote", ""),
-                "status": status,
-                "method": method if status in ("Verified", "Partially verified") else None,
-                "coverage_pct": coverage_pct,
+                "status": cr["status"],
+                "method": cr["method"],
+                "coverage_pct": cr["coverage_pct"],
+                "fetch_mode": cr["fetch_mode"],
             }
 
     # --- Build extraction records ---
-    # CONTRACT: Structured per-fact extraction data using actual
-    # verify_extraction() return values, not hard-coded booleans.
-    # Adapt the entries below to match the actual extractions in this proof.
     extractions = {
         "B1": {
             "value": str(val_a),
-            "value_in_quote": val_a_in_quote,  # actual return from verify_extraction()
+            "value_in_quote": val_a_in_quote,
             "quote_snippet": empirical_facts["source_a"]["quote"][:80],
         },
         "B2": {
             "value": str(val_b),
-            "value_in_quote": val_b_in_quote,  # actual return from verify_extraction()
+            "value_in_quote": val_b_in_quote,
             "quote_snippet": empirical_facts["source_b"]["quote"][:80],
         },
     }
@@ -532,13 +501,11 @@ if __name__ == "__main__":
         "citations": citation_detail,
         "extractions": extractions,
         "cross_checks": [
-            # Adapt to actual cross-check variables
             {"description": "...", "values_compared": [str(val_a), str(val_b)], "agreement": val_a == val_b}
         ],
         "adversarial_checks": adversarial_checks,
         "verdict": verdict,
         "key_results": {
-            # Adapt to actual computed values
             "age": age,
             "threshold": CLAIM_FORMAL["threshold"],
             "operator": CLAIM_FORMAL["operator"],
@@ -556,6 +523,7 @@ The template above uses date/age variables as examples. For proofs where the cla
 
 - **Imports**: Use `parse_number_from_quote`, `parse_percentage_from_quote`, `parse_range_from_quote` instead of `parse_date_from_quote`. Drop `compute_age`, `DAYS_PER_GREGORIAN_YEAR`, `days_to_years`.
 - **FACT_REGISTRY**: Typically 3+ B-type entries (one per authoritative source) and 1-2 A-type entries for derived computations (averages, ratios).
+- **Snapshots**: For government and scientific sources that may block automated fetching, include `"snapshot"` with the pre-fetched page text. If Python has no outbound HTTP access, fetch each source page using your browsing capability and include it as the snapshot.
 - **Extraction**: Values are often ranges ("1.0°C to 2.0°C") — use `parse_range_from_quote()`. Call `verify_extraction()` on each extracted value.
 - **Cross-checks**: Compare independently extracted values across sources. Agreement within ranges is sufficient — exact equality is unlikely for empirical data.
 - **Computation**: Derive summary statistics (midpoint of range, percentage attribution) using `explain_calc()`.

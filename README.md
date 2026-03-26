@@ -20,6 +20,8 @@ LLMs have two weaknesses that make them unreliable for factual claims: they hall
 - **Offloading facts to citations** — every empirical claim must have a source, URL, and exact quote
 - **Offloading reasoning to code** — every computation is executable Python, not prose
 - **Enforcing 7 hardening rules** — closing specific failure modes where proof code looks correct but is silently wrong
+- **Offline-reproducible proofs** — embedded page snapshots let proofs run without network access
+- **Multi-mode verification** — live fetch, embedded snapshots, Wayback Machine archive, and PDF support
 
 The skill produces three outputs: a re-runnable `proof.py` script, a reader-facing `proof.md` summary with verdict, and a `proof_audit.md` with full verification details. Verdicts: PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED, or PROVED with unverified citations.
 

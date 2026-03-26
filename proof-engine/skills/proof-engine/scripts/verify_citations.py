@@ -12,6 +12,14 @@ The normalization pipeline handles real-world quirks discovered during testing:
   - Extra whitespace from tag stripping
   - Spaces before punctuation after tag removal
 
+Verification modes:
+  - Live fetch (default): fetches the URL and verifies against the response
+  - Snapshot fallback: if live fetch fails and a snapshot is provided, verifies
+    against the pre-fetched page text
+  - Wayback fallback (opt-in): if live and snapshot both fail, tries the
+    Wayback Machine archive
+  - PDF support: detects PDF responses and extracts text via pdfplumber/PyPDF2
+
 Usage as module:
     from scripts.verify_citations import verify_citation, verify_all_citations
 
@@ -36,6 +44,37 @@ try:
 except ImportError:
     from smart_extract import normalize_unicode, diagnose_mismatch
 
+
+# ---------------------------------------------------------------------------
+# Result builder
+# ---------------------------------------------------------------------------
+
+def _result(status, method=None, coverage_pct=None, fetch_error=None,
+            fetch_mode="live", message=""):
+    """Build a structured citation verification result.
+
+    Args:
+        status: "verified" | "partial" | "not_found" | "fetch_failed"
+        method: "full_quote" | "unicode_normalized" | "fragment" |
+                "aggressive_normalization" | None
+        coverage_pct: float for fragment matches, None otherwise
+        fetch_error: string if fetch_failed, None otherwise
+        fetch_mode: "live" | "snapshot" | "wayback"
+        message: human-readable description (for inline output)
+    """
+    return {
+        "status": status,
+        "method": method,
+        "coverage_pct": coverage_pct,
+        "fetch_error": fetch_error,
+        "fetch_mode": fetch_mode,
+        "message": message,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Text normalization
+# ---------------------------------------------------------------------------
 
 def normalize_text(text: str) -> str:
     """Normalize text for fragment matching.
@@ -75,20 +114,152 @@ def _extract_fragment(quote: str, min_words: int = 6) -> str:
     return ' '.join(words[:length])
 
 
+# ---------------------------------------------------------------------------
+# PDF text extraction
+# ---------------------------------------------------------------------------
+
+def _extract_pdf_text(content: bytes) -> str:
+    """Extract text from PDF bytes. Tries pdfplumber first, then PyPDF2.
+
+    Returns None if no PDF library is available or if extraction fails
+    for any reason (malformed PDF, empty content, etc.).
+    """
+    try:
+        import pdfplumber
+        import io
+        with pdfplumber.open(io.BytesIO(content)) as pdf:
+            return "\n".join(page.extract_text() or "" for page in pdf.pages)
+    except ImportError:
+        pass
+    except Exception:
+        pass  # Malformed PDF or extraction error — fall through to PyPDF2
+    try:
+        import PyPDF2
+        import io
+        reader = PyPDF2.PdfReader(io.BytesIO(content))
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    except ImportError:
+        pass
+    except Exception:
+        pass  # Malformed PDF or extraction error
+    return None  # No PDF library available or extraction failed
+
+
+# ---------------------------------------------------------------------------
+# Wayback Machine fallback
+# ---------------------------------------------------------------------------
+
+def _try_wayback(url: str, timeout: int = 15) -> str:
+    """Try fetching a URL from the Wayback Machine. Returns page text or None."""
+    wayback_url = f"https://web.archive.org/web/{url}"
+    try:
+        resp = requests.get(wayback_url, timeout=timeout,
+                            headers={"User-Agent": "proof-engine/1.0"},
+                            allow_redirects=True)
+        resp.raise_for_status()
+        return resp.text
+    except requests.exceptions.RequestException:
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Quote matching (shared logic for all fetch modes)
+# ---------------------------------------------------------------------------
+
+def _match_quote(page_text_raw: str, expected_quote: str, fact_id: str,
+                 fetch_mode: str = "live") -> dict:
+    """Try to match a quote against page text. Used by all verification modes.
+
+    Args:
+        page_text_raw: Raw page text (HTML or plain text, not yet normalized)
+        expected_quote: The quote to find
+        fact_id: Identifier for messages
+        fetch_mode: "live" | "snapshot" | "wayback" — passed through to result
+
+    Returns:
+        A result dict, or None if no match found at any level.
+    """
+    page_text = normalize_text(page_text_raw)
+    norm_quote = normalize_text(expected_quote)
+
+    # 1. Try full quote match first — this is the real guarantee
+    if norm_quote in page_text:
+        return _result("verified", "full_quote", fetch_mode=fetch_mode,
+                        message=f"Full quote verified for {fact_id}")
+
+    # 2. Run diagnostics for aggressive normalization (Unicode edge cases)
+    raw_page = re.sub(r'<[^>]+>', ' ', page_text_raw)
+    raw_page = ' '.join(raw_page.split())
+    diag = diagnose_mismatch(raw_page, expected_quote)
+
+    if diag["found"] and diag["method"] == "unicode_normalization":
+        return _result("verified", "unicode_normalized", fetch_mode=fetch_mode,
+                        message=f"Full quote verified for {fact_id} (after Unicode normalization)")
+
+    # 3. Fragment fallback
+    quote_words = norm_quote.split()
+    total_words = len(quote_words)
+    for min_w in [6, 5, 4]:
+        fragment = _extract_fragment(norm_quote, min_words=min_w)
+        if fragment in page_text:
+            word_count = len(fragment.split())
+            coverage = word_count / total_words if total_words > 0 else 0
+            coverage_pct = round(coverage * 100, 1)
+            if coverage >= 0.8:
+                return _result("verified", "fragment", coverage_pct=coverage_pct,
+                                fetch_mode=fetch_mode,
+                                message=f"Quote largely verified ({word_count}/{total_words} words matched) for {fact_id}")
+            else:
+                return _result("partial", "fragment", coverage_pct=coverage_pct,
+                                fetch_mode=fetch_mode,
+                                message=f"Only {word_count}/{total_words} quote words matched for {fact_id} — partial verification only")
+
+    if diag["found"]:
+        return _result("partial", "aggressive_normalization", fetch_mode=fetch_mode,
+                        message=f"Quote found via aggressive normalization ({diag['method']}) for {fact_id} — verify manually")
+
+    return None  # No match at any level
+
+
+# ---------------------------------------------------------------------------
+# Main verification function
+# ---------------------------------------------------------------------------
+
 def verify_citation(
     url: str,
     expected_quote: str,
     fact_id: str,
     timeout: int = 15,
-) -> tuple:
+    snapshot: str = None,
+    snapshot_fetched_at: str = None,
+    wayback_fallback: bool = False,
+) -> dict:
     """Fetch a URL and check whether the expected quote appears on the page.
 
+    Fallback chain: live fetch → snapshot → Wayback (if opted in).
+
+    Args:
+        url: The URL to fetch.
+        expected_quote: The quote text to look for.
+        fact_id: Identifier for messages.
+        timeout: Fetch timeout in seconds.
+        snapshot: Pre-fetched page text for offline verification.
+        snapshot_fetched_at: ISO 8601 timestamp of when snapshot was captured.
+        wayback_fallback: If True, try Wayback Machine when live+snapshot fail.
+
     Returns:
-        (True,      message) — full quote (or >=80% of words) found in page text
-        ("partial", message) — only a fragment matched; not full verification
-        (False,     message) — page fetched successfully but quote not found
-        (None,      message) — fetch failed (network error, HTTP error, timeout)
+        dict with keys: status, method, coverage_pct, fetch_error, fetch_mode, message
+        - status: "verified" | "partial" | "not_found" | "fetch_failed"
+        - method: "full_quote" | "unicode_normalized" | "fragment" |
+                  "aggressive_normalization" | None
+        - coverage_pct: float for fragment matches, None otherwise
+        - fetch_error: string if fetch_failed, None otherwise
+        - fetch_mode: "live" | "snapshot" | "wayback"
+        - message: human-readable description
     """
+    # --- 1. Try live fetch ---
+    live_page = None
+    fetch_error_msg = None
     try:
         resp = requests.get(
             url,
@@ -97,60 +268,83 @@ def verify_citation(
             allow_redirects=True,
         )
         resp.raise_for_status()
-    except requests.exceptions.Timeout:
-        return (None, f"Fetch failed for {fact_id}: Timeout after {timeout}s on {url}")
-    except requests.exceptions.ConnectionError as e:
-        return (None, f"Fetch failed for {fact_id}: Connection error on {url}: {e}")
-    except requests.exceptions.HTTPError as e:
-        return (None, f"Fetch failed for {fact_id}: HTTP {resp.status_code} on {url}")
-    except requests.exceptions.RequestException as e:
-        return (None, f"Fetch failed for {fact_id}: {e}")
 
-    page_text = normalize_text(resp.text)
-    norm_quote = normalize_text(expected_quote)
+        # Detect PDF
+        content_type = resp.headers.get("Content-Type", "")
+        is_pdf = "application/pdf" in content_type or url.lower().endswith(".pdf")
 
-    # 1. Try full quote match first — this is the real guarantee
-    if norm_quote in page_text:
-        return (True, f"Full quote verified for {fact_id}")
-
-    # 2. Run diagnostics for aggressive normalization (Unicode edge cases)
-    raw_page = re.sub(r'<[^>]+>', ' ', resp.text)  # strip HTML for diagnosis
-    raw_page = ' '.join(raw_page.split())
-    diag = diagnose_mismatch(raw_page, expected_quote)
-
-    if diag["found"] and diag["method"] == "unicode_normalization":
-        return (True, f"Full quote verified for {fact_id} (after Unicode normalization)")
-
-    # 3. Fragment fallback — explicitly reports partial match, does NOT claim full verification
-    quote_words = norm_quote.split()
-    total_words = len(quote_words)
-    for min_w in [6, 5, 4]:
-        fragment = _extract_fragment(norm_quote, min_words=min_w)
-        if fragment in page_text:
-            word_count = len(fragment.split())
-            coverage = word_count / total_words if total_words > 0 else 0
-            if coverage >= 0.8:
-                return (True, f"Quote largely verified ({word_count}/{total_words} words matched) for {fact_id}")
+        if is_pdf:
+            pdf_text = _extract_pdf_text(resp.content)
+            if pdf_text is None:
+                fetch_error_msg = f"PDF detected but no extraction library available (pip install pdfplumber)"
             else:
-                return ("partial", f"Only {word_count}/{total_words} quote words matched for {fact_id} — partial verification only")
+                live_page = pdf_text
+        else:
+            live_page = resp.text
 
-    if diag["found"]:
-        return ("partial", f"Quote found via aggressive normalization ({diag['method']}) for {fact_id} — verify manually")
+    except requests.exceptions.Timeout:
+        fetch_error_msg = f"Timeout after {timeout}s on {url}"
+    except requests.exceptions.ConnectionError as e:
+        fetch_error_msg = f"Connection error on {url}: {e}"
+    except requests.exceptions.HTTPError:
+        fetch_error_msg = f"HTTP {resp.status_code} on {url}"
+    except requests.exceptions.RequestException as e:
+        fetch_error_msg = f"{e}"
 
-    fragment = _extract_fragment(norm_quote, min_words=6)
-    diag_hint = f" Suggestion: {diag['suggestion']}" if diag.get("suggestion") else ""
-    return (False, f"Quote NOT found for {fact_id}. Searched: '{fragment[:60]}...'{diag_hint}")
+    # Try matching against live page
+    if live_page is not None:
+        result = _match_quote(live_page, expected_quote, fact_id, fetch_mode="live")
+        if result is not None:
+            return result
+        # Live fetch succeeded but quote not found
+        fragment = _extract_fragment(normalize_text(expected_quote), min_words=6)
+        return _result("not_found", fetch_mode="live",
+                        message=f"Quote NOT found for {fact_id}. Searched: '{fragment[:60]}...'")
+
+    # --- 2. Try snapshot fallback (deterministic, user-provided) ---
+    if snapshot:
+        result = _match_quote(snapshot, expected_quote, fact_id, fetch_mode="snapshot")
+        if result is not None:
+            return result
+        # Snapshot available but quote not in it
+        return _result("not_found", fetch_mode="snapshot",
+                        message=f"Quote NOT found in snapshot for {fact_id}")
+
+    # --- 3. Try Wayback Machine (opt-in, non-deterministic) ---
+    if wayback_fallback:
+        wayback_text = _try_wayback(url, timeout)
+        if wayback_text is not None:
+            result = _match_quote(wayback_text, expected_quote, fact_id, fetch_mode="wayback")
+            if result is not None:
+                return result
+            return _result("not_found", fetch_mode="wayback",
+                            message=f"Quote NOT found in Wayback archive for {fact_id}")
+
+    # --- 4. All methods exhausted ---
+    return _result("fetch_failed", fetch_error=fetch_error_msg,
+                    message=f"Fetch failed for {fact_id}: {fetch_error_msg}")
 
 
-def verify_all_citations(empirical_facts: dict) -> dict:
+# ---------------------------------------------------------------------------
+# Batch verification
+# ---------------------------------------------------------------------------
+
+def verify_all_citations(empirical_facts: dict, wayback_fallback: bool = False) -> dict:
     """Verify all empirical facts by fetching their citation URLs.
 
     Supports two formats per fact:
-      - Single-source: {"url": "...", "quote": "...", "source_name": "..."}
-      - Multi-source:  {"sources": [{"url": "...", "quote": "..."}, ...]}
+      - Single-source: {"url": "...", "quote": "...", "source_name": "...",
+                        "snapshot": "...", "snapshot_fetched_at": "..."}
+      - Multi-source:  {"sources": [{"url": "...", "quote": "...",
+                        "snapshot": "...", "snapshot_fetched_at": "..."}, ...]}
+
+    Args:
+        empirical_facts: Dict of fact_id → fact data.
+        wayback_fallback: If True, try Wayback Machine when live+snapshot fail.
 
     Returns:
-        dict of {check_id: {"verified": True/False/None, "message": str}}
+        dict of {check_id: result_dict} where result_dict has keys:
+        status, method, coverage_pct, fetch_error, fetch_mode, message
     """
     results = {}
 
@@ -162,40 +356,58 @@ def verify_all_citations(empirical_facts: dict) -> dict:
                 url = source.get("url", "")
                 quote = source.get("quote", "")
                 if not url or not quote:
-                    results[check_id] = {
-                        "verified": None,
-                        "message": f"Missing url or quote for {check_id}",
-                    }
+                    results[check_id] = _result(
+                        "fetch_failed",
+                        fetch_error=f"Missing url or quote for {check_id}",
+                        message=f"Missing url or quote for {check_id}",
+                    )
+                    _print_status(check_id, results[check_id])
                     continue
-                verified, message = verify_citation(url, quote, check_id)
-                results[check_id] = {"verified": verified, "message": message}
-                _print_status(check_id, verified, message)
+                result = verify_citation(
+                    url, quote, check_id,
+                    snapshot=source.get("snapshot"),
+                    snapshot_fetched_at=source.get("snapshot_fetched_at"),
+                    wayback_fallback=wayback_fallback,
+                )
+                results[check_id] = result
+                _print_status(check_id, result)
         else:
             # Single-source format
             url = fact.get("url", "")
             quote = fact.get("quote", "")
             if not url or not quote:
-                results[fact_id] = {
-                    "verified": None,
-                    "message": f"Missing url or quote for {fact_id}",
-                }
+                results[fact_id] = _result(
+                    "fetch_failed",
+                    fetch_error=f"Missing url or quote for {fact_id}",
+                    message=f"Missing url or quote for {fact_id}",
+                )
+                _print_status(fact_id, results[fact_id])
                 continue
-            verified, message = verify_citation(url, quote, fact_id)
-            results[fact_id] = {"verified": verified, "message": message}
-            _print_status(fact_id, verified, message)
+            result = verify_citation(
+                url, quote, fact_id,
+                snapshot=fact.get("snapshot"),
+                snapshot_fetched_at=fact.get("snapshot_fetched_at"),
+                wayback_fallback=wayback_fallback,
+            )
+            results[fact_id] = result
+            _print_status(fact_id, result)
 
     return results
 
 
-def _print_status(fact_id: str, verified, message: str):
-    if verified is True:
-        print(f"  [✓] {fact_id}: {message}")
-    elif verified == "partial":
-        print(f"  [~] {fact_id}: {message}")
-    elif verified is False:
-        print(f"  [✗] {fact_id}: {message}")
-    else:
-        print(f"  [?] {fact_id}: {message}")
+def _print_status(fact_id: str, result: dict):
+    status = result["status"]
+    msg = result["message"]
+    mode = result.get("fetch_mode", "live")
+    mode_tag = f" [{mode}]" if mode != "live" else ""
+    if status == "verified":
+        print(f"  [✓] {fact_id}{mode_tag}: {msg}")
+    elif status == "partial":
+        print(f"  [~] {fact_id}{mode_tag}: {msg}")
+    elif status == "not_found":
+        print(f"  [✗] {fact_id}{mode_tag}: {msg}")
+    else:  # fetch_failed
+        print(f"  [?] {fact_id}{mode_tag}: {msg}")
 
 
 # ---------------------------------------------------------------------------
@@ -208,6 +420,7 @@ if __name__ == "__main__":
     parser.add_argument("--url", help="URL to fetch")
     parser.add_argument("--quote", help="Expected quote text")
     parser.add_argument("--facts", help="Path to JSON file with empirical_facts dict")
+    parser.add_argument("--wayback", action="store_true", help="Enable Wayback Machine fallback")
     args = parser.parse_args()
 
     if args.facts:
@@ -216,12 +429,12 @@ if __name__ == "__main__":
         if not facts:
             print("ERROR: No empirical facts provided — nothing to verify.")
             sys.exit(1)
-        results = verify_all_citations(facts)
+        results = verify_all_citations(facts, wayback_fallback=args.wayback)
         if not results:
             print("ERROR: No citations found in facts — nothing was verified.")
             sys.exit(1)
-        all_ok = all(r["verified"] is True for r in results.values())
-        has_partial = any(r["verified"] == "partial" for r in results.values())
+        all_ok = all(r["status"] == "verified" for r in results.values())
+        has_partial = any(r["status"] == "partial" for r in results.values())
         if all_ok:
             print("\nAll citations verified.")
         elif has_partial:
@@ -230,9 +443,10 @@ if __name__ == "__main__":
             print("\nSome citations failed.")
         sys.exit(0 if all_ok else 1)
     elif args.url and args.quote:
-        verified, message = verify_citation(args.url, args.quote, "cli")
-        _print_status("cli", verified, message)
-        sys.exit(0 if verified else 1)
+        result = verify_citation(args.url, args.quote, "cli",
+                                  wayback_fallback=args.wayback)
+        _print_status("cli", result)
+        sys.exit(0 if result["status"] == "verified" else 1)
     else:
         parser.print_help()
         sys.exit(1)

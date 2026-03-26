@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-03-26
+
+### Added
+
+- Embedded page snapshots in `empirical_facts` for offline-reproducible proofs
+- Hybrid verification fallback chain: live fetch → snapshot → Wayback Machine
+- Wayback Machine fallback (opt-in via `wayback_fallback=True`)
+- PDF citation verification via pdfplumber/PyPDF2 (optional dependencies)
+- `fetch_mode` field in citation results: live / snapshot / wayback
+- Eval 4: snapshot-mode proof (Tokyo population)
+- Snapshot instructions for sandboxed environments (ChatGPT, cloud containers)
+
+### Changed
+
+- Proof template `__main__` reads structured dict fields directly — no message
+  string parsing, no `import re` needed
+- Citation verification details in proof_audit.md now include fetch_mode
+- Environment Requirements section expanded with fallback chain documentation
+
 ## [0.2.0] - 2026-03-25
 
 ### Added

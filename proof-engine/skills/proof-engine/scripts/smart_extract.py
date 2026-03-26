@@ -257,11 +257,10 @@ def verify_extraction(value: Any, quote: str, fact_id: str, description: str = "
 
     # Use word-boundary-aware matching to avoid false positives
     # (e.g., "1.1" matching inside "11.1" or "21.1")
-    import re as _re
     def _boundary_match(v, text):
         # (?<!\d\.?) = not preceded by digit or digit+dot
         # (?![.\d]) = not followed by dot or digit
-        return bool(_re.search(r'(?<![\d.])' + _re.escape(v) + r'(?![\d.])', text))
+        return bool(re.search(r'(?<![\d.])' + re.escape(v) + r'(?![\d.])', text))
 
     found = any(v and _boundary_match(v, norm_quote) for v in check_forms if v)
     desc = f" ({description})" if description else ""

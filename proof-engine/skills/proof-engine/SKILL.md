@@ -35,7 +35,7 @@ Import these instead of re-implementing verification logic. They are tested and 
 |--------|---------|---------------|
 | `${CLAUDE_SKILL_DIR}/scripts/extract_values.py` | Parse values FROM quote strings (Rule 1) | `parse_date_from_quote()`, `parse_number_from_quote()`, `parse_percentage_from_quote()`, `parse_range_from_quote()` |
 | `${CLAUDE_SKILL_DIR}/scripts/smart_extract.py` | Unicode normalization + LLM-assisted extraction utilities | `normalize_unicode()`, `verify_extraction()`, `diagnose_mismatch()`, `ExtractionRecord` |
-| `${CLAUDE_SKILL_DIR}/scripts/verify_citations.py` | Fetch URLs, verify quotes exist on page (Rule 2) | `verify_citation()`, `verify_all_citations()` |
+| `${CLAUDE_SKILL_DIR}/scripts/verify_citations.py` | Fetch URLs, verify quotes (live, snapshot, Wayback, PDF) (Rule 2) | `verify_citation()`, `verify_all_citations()` |
 | `${CLAUDE_SKILL_DIR}/scripts/computations.py` | Verified constants, formulas, and self-documenting output (Rule 7) | `compute_age()`, `compare()`, `explain_calc()`, `DAYS_PER_GREGORIAN_YEAR` |
 | `${CLAUDE_SKILL_DIR}/scripts/validate_proof.py` | Static analysis for rule compliance (pre-flight) | `ProofValidator(filepath).validate()` |
 
@@ -48,12 +48,22 @@ sys.path.insert(0, PROOF_ENGINE_ROOT)
 
 ## Environment Requirements
 
-Full Type B (empirical) verification requires **outbound HTTP access** from Python to fetch citation URLs. Without it, `verify_all_citations()` will fail to fetch pages, and the verdict degrades to "PROVED (with unverified citations)."
+Full Type B (empirical) verification requires **outbound HTTP access** from Python to fetch citation URLs. Without it, `verify_all_citations()` falls back through a chain: live fetch → embedded snapshot → Wayback Machine (if opted in).
 
-Three distinct fetch failure modes exist — do not treat them as equivalent:
-- **Quote not found on page** — the URL was fetched successfully but the quoted text isn't there. This is a proof issue (wrong quote or wrong URL).
-- **Fetch blocked by environment** — the runtime sandbox has no outbound network access (common in ChatGPT, some cloud containers). This is an environmental limitation, not an evidentiary problem. Note it in the audit doc as such.
-- **Transient network error** — timeout, DNS failure, rate limiting. May succeed on retry. Note as transient in the audit doc.
+**Workaround for sandboxed environments (ChatGPT, cloud containers):** During Step 2 (Gather Facts), fetch each source page using your browsing capability and include the page text as the `snapshot` field in `empirical_facts`. The proof script will verify quotes against these snapshots instead of live-fetching. The audit doc will show `fetch_mode: "snapshot"`.
+
+**Verification fallback chain:**
+1. **Live fetch** — try to fetch the URL directly. If successful, verify against live page.
+2. **Snapshot** — if live fetch fails and a `snapshot` field is present, verify against the pre-fetched text. This is deterministic and user-provided.
+3. **Wayback Machine** — if live and snapshot both fail and `wayback_fallback=True`, try the Wayback Machine archive. This is opt-in to avoid silently changing existing proof behavior.
+
+**Fetch result statuses** (in the structured return dict):
+- `verified` — quote found (full match or >=80% fragment coverage)
+- `partial` — only a fragment matched (degraded verification)
+- `not_found` — page fetched but quote not there (wrong quote or URL)
+- `fetch_failed` — could not obtain page text by any method
+
+**PDF citations:** When a URL returns a PDF, `verify_citation()` extracts text using `pdfplumber` or `PyPDF2` (optional dependencies). Install with `pip install pdfplumber` for PDF support.
 
 Type A (pure math) proofs have no network requirements — they run entirely offline.
 
@@ -97,6 +107,8 @@ If fewer than 3 are true, consider whether a simpler factual summary would serve
 
 ### Step 2: Gather Facts (Both Directions)
 Search for sources that SUPPORT the claim. Then search for sources that CONTRADICT it (adversarial — Rule 5). For empirical facts, find at least two independent sources (Rule 6). For math claims, identify the right tool (sympy, plain Python).
+
+When fetching source pages during research, save the page text for each citation. Include it as the `snapshot` field in `empirical_facts` so the proof is reproducible offline. This is especially important in sandboxed environments where Python cannot fetch URLs directly.
 
 ### Step 3: Write the Proof Code
 Read [references/hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) first. Start from the template at the bottom of that file. Import and use the bundled scripts. The proof script must be self-contained: `python proof.py` produces the full output.
@@ -181,10 +193,11 @@ Section "Full Evidence Table": Two sub-sections:
 - "Type A (Computed) Facts" — table with columns: ID, Fact, Method, Result. All fields from JSON summary `fact_registry` entries where `method` and `result` are present. Source: proof.py JSON summary.
 - "Type B (Empirical) Facts" — table with columns: ID, Fact, Source, URL, Quote, Status, Method. One row per source. Source: proof.py JSON summary `citations` (which has normalized `status` and `method` fields — not free-form messages). For pure-math proofs, omit.
 
-Section "Citation Verification Details": For each Type B citation, three fields — all from normalized JSON fields, not parsed from prose:
-- Status: Verified / Partially verified / Not verified / Fetch failed. Source: JSON summary `citations[fact_id].status`.
-- Method (only if Verified or Partially verified): Full quote match / Full quote match after Unicode normalization / Fragment match (N/M words, P% coverage). Source: JSON summary `citations[fact_id].method` and `.coverage_pct`. Note: Partially verified (fragment match) is a degraded result — present it distinctly from full verification.
-- Impact (only if NOT fully Verified): Which conclusions in proof.md depend on this citation, and whether they have independent support. Source: author analysis (label as such).
+Section "Citation Verification Details": For each Type B citation, four fields — all from structured JSON fields, not parsed from prose:
+- Status: verified / partial / not_found / fetch_failed. Source: JSON summary `citations[fact_id].status`.
+- Method (only if verified or partial): full_quote / unicode_normalized / fragment / aggressive_normalization. Source: JSON summary `citations[fact_id].method` and `.coverage_pct`. Note: partial (fragment match) is a degraded result — present it distinctly from full verification.
+- Fetch mode: live / snapshot / wayback. Source: JSON summary `citations[fact_id].fetch_mode`. Indicates how the page was obtained.
+- Impact (only if NOT verified): Which conclusions in proof.md depend on this citation, and whether they have independent support. Source: author analysis (label as such).
 For pure-math proofs, omit this section.
 
 Section "Computation Traces": The explain_calc() output showing symbolic expression, substituted values, and result for each computation step. Source: proof.py inline output (execution trace). This is the mechanical audit of all calculations — reproduce the explain_calc lines verbatim.
