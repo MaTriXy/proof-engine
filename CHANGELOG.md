@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-03-27
+
+### Changed
+
+- **SKILL.md restructured for progressive disclosure** — reduced from 4,638 to 1,374 words (70% reduction)
+- Detailed output specs moved to `references/output-specs.md` (read at Step 5)
+- Advanced patterns (Two-Phase Extraction, Table-Sourced Data) moved to `references/advanced-patterns.md`
+- Environment details, paywalled sources moved to `references/environment-and-sources.md`
+- Self-critique checklist moved to `references/self-critique-checklist.md` (read at Step 6)
+- Gotchas section promoted to top of SKILL.md (highest-signal content per Anthropic best practices)
+- New Reference Files Index section with "read when" triggers for progressive loading
+- Frontmatter: added `compatibility` and `license` fields, trimmed description to `[What] + [When] + [Capabilities]` format
+
+### Fixed
+
+- `bump-version.sh` sed pattern now matches unquoted YAML version field in SKILL.md (was silently failing since v0.3.0)
+- SKILL.md version field synced to actual version (was stuck at 1.0.0)
+
 ## [0.5.4] - 2026-03-27
 
 ### Added
