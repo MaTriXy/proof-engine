@@ -121,7 +121,7 @@ See [hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) for 
 ## Workflow
 
 ### Step 1: Analyze the Claim
-Classify: mathematical (Type A), empirical (Type B), or mixed. Identify ambiguous terms. Determine what constitutes proof AND disproof. For compound claims (X AND Y, X BECAUSE Y), decompose into sub-claims. Check if a worked example exists for similar claims (see `docs/examples/`). Write a brief proof strategy and share with the user before proceeding.
+Classify: mathematical (Type A), empirical (Type B), or mixed. Identify ambiguous terms. Determine what constitutes proof AND disproof. For compound claims (X AND Y, X BECAUSE Y), decompose into sub-claims. Write a brief proof strategy and share with the user before proceeding.
 
 If the claim is an opinion or has no verifiable answer, do NOT attempt a proof. Offer a related factual claim instead.
 
