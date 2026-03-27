@@ -23,7 +23,7 @@ LLMs have two weaknesses that make them unreliable for factual claims: they hall
 - **Offline-reproducible proofs** — embedded page snapshots let proofs run without network access
 - **Multi-mode verification** — live fetch, embedded snapshots, Wayback Machine archive, and PDF support
 
-The skill produces three outputs: a re-runnable `proof.py` script, a reader-facing `proof.md` summary with verdict, and a `proof_audit.md` with full verification details. Verdicts: PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED, or PROVED with unverified citations.
+The skill produces three outputs: a re-runnable `proof.py` script, a reader-facing `proof.md` summary with verdict, and a `proof_audit.md` with full verification details. Verdicts: PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED, PROVED with unverified citations, or DISPROVED with unverified citations.
 
 ## Installation
 
@@ -149,7 +149,7 @@ Note: disproof is often easier than proof — a single counterexample or source 
 
 **Theorem provers (Lean, Coq, Isabelle)** — These prove mathematical theorems from axioms. Proof Engine verifies real-world claims against web sources and computation. Lean can prove the irrationality of sqrt(2); it cannot verify that a country's GDP grew by 5% last year. Different problem, different tool.
 
-**Probabilistic/Bayesian scorers** — The engine produces auditable pass/fail verdicts with full evidence trails, not confidence percentages. This is deliberate: a "73% confidence" score hides *why* it's 73%. The five-tier verdict system (PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED, PROVED with unverified citations) plus the complete audit trail lets reviewers see exactly which facts held and which didn't.
+**Probabilistic/Bayesian scorers** — The engine produces auditable pass/fail verdicts with full evidence trails, not confidence percentages. This is deliberate: a "73% confidence" score hides *why* it's 73%. The six-tier verdict system (PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED, PROVED with unverified citations, DISPROVED with unverified citations) plus the complete audit trail lets reviewers see exactly which facts held and which didn't.
 
 **RAG pipelines** — RAG retrieves context to help an LLM generate an answer. This engine forces the LLM to *prove* its answer with re-runnable code and exact quotes. The output is a standalone Python script anyone can re-execute, not a chat response.
 

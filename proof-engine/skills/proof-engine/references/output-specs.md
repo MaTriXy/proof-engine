@@ -29,6 +29,7 @@ Section "Counter-Evidence Search": Results of adversarial checks — what counte
 Section "Conclusion": Restate verdict with the key numbers. Verdict-specific:
 - PROVED/DISPROVED: If any citations are not fully verified, state which conclusions depend on them and whether those conclusions are independently supported by verified sources.
 - PROVED (with unverified citations): Same as PROVED, but explicitly list the unverified citations and their impact.
+- DISPROVED (with unverified citations): Same as DISPROVED, but explicitly list the unverified citations and note whether the disproof depends solely on verified sources.
 - PARTIALLY VERIFIED: List which sub-claims were proved and which remain unverifiable, with reasons.
 - UNDETERMINED: State what specific evidence would be needed to resolve the claim.
 - If any cited source has credibility tier ≤ 2 (unclassified or flagged), add a note: "Note: [N] citation(s) come from unclassified or low-credibility sources. See Source Credibility Assessment in the audit trail."

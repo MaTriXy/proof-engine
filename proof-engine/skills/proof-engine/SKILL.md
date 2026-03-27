@@ -166,6 +166,7 @@ Before presenting results, run through the checklist in [self-critique-checklist
 | **PROVED** | All facts verified, logic valid, conclusion follows |
 | **PROVED (with unverified citations)** | Logic valid but some citation URLs couldn't be fetched |
 | **DISPROVED** | Verified counterexample or contradiction found |
+| **DISPROVED (with unverified citations)** | Counterexample found but some citations couldn't be fetched |
 | **PARTIALLY VERIFIED** | Some sub-claims proved, others unverifiable |
 | **UNDETERMINED** | Insufficient evidence either way |
 

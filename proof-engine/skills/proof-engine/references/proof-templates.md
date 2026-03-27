@@ -99,8 +99,12 @@ if __name__ == "__main__":
         verdict = "PROVED"
     elif claim_holds and any_unverified:
         verdict = "PROVED (with unverified citations)"
-    elif not claim_holds:
+    elif not claim_holds and not any_unverified:
         verdict = "DISPROVED"
+    elif not claim_holds and any_unverified:
+        verdict = "DISPROVED (with unverified citations)"
+    else:
+        verdict = "UNDETERMINED"
 
     FACT_REGISTRY["A1"]["method"] = "compute_age()"
     FACT_REGISTRY["A1"]["result"] = str(age)
@@ -256,8 +260,12 @@ if __name__ == "__main__":
         verdict = "PROVED"
     elif claim_holds and any_unverified:
         verdict = "PROVED (with unverified citations)"
-    elif not claim_holds:
+    elif not claim_holds and not any_unverified:
         verdict = "DISPROVED"
+    elif not claim_holds and any_unverified:
+        verdict = "DISPROVED (with unverified citations)"
+    else:
+        verdict = "UNDETERMINED"
 
     FACT_REGISTRY["A1"]["method"] = "compute_percentage_change(mode='decline')"
     FACT_REGISTRY["A1"]["result"] = f"{decline_a:.4f}%"
@@ -366,6 +374,7 @@ adversarial_checks = [
 # 6. VERDICT AND STRUCTURED OUTPUT
 if __name__ == "__main__":
     claim_holds = compare(primary_result, CLAIM_FORMAL["operator"], CLAIM_FORMAL["threshold"])
+    # Pure-math: no citations, so no unverified-citation variants needed
     verdict = "PROVED" if claim_holds else "DISPROVED"
 
     FACT_REGISTRY["A1"]["method"] = "..."

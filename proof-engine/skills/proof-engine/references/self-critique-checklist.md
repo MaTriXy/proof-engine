@@ -11,7 +11,7 @@ Read this at **Step 6** before presenting results.
 - [ ] proof.py `__main__` emits `=== PROOF SUMMARY (JSON) ===` block
 - [ ] JSON summary contains required keys: fact_registry (with method/result for A-types), claim_formal, adversarial_checks, verdict, key_results
 - [ ] For empirical proofs: JSON summary also contains citations (with normalized status/method/coverage_pct/credibility), extractions, cross_checks
-- [ ] For pure-math proofs: omit citations and extractions keys entirely. Use the pure-math template from hardening-rules.md.
+- [ ] For pure-math proofs: omit citations and extractions keys entirely. Use the pure-math template from proof-templates.md.
 - [ ] FACT_REGISTRY keys in JSON match IDs used in both report documents
 - [ ] Every fact ID in proof.md appears in JSON summary fact_registry and proof_audit.md evidence table
 - [ ] All three files are consistent with each other
