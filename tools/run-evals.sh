@@ -66,6 +66,31 @@ fi
 
 mkdir -p "$OUTPUT_DIR"
 
+# --- Portable timeout (macOS lacks GNU timeout) ---
+if command -v timeout >/dev/null 2>&1; then
+    TIMEOUT_CMD="timeout"
+elif command -v gtimeout >/dev/null 2>&1; then
+    TIMEOUT_CMD="gtimeout"
+else
+    # Pure bash fallback: run command in background, kill after N seconds
+    portable_timeout() {
+        local secs="$1"; shift
+        "$@" &
+        local cmd_pid=$!
+        (
+            sleep "$secs"
+            kill -TERM "$cmd_pid" 2>/dev/null
+        ) &
+        local watchdog_pid=$!
+        wait "$cmd_pid" 2>/dev/null
+        local exit_code=$?
+        kill "$watchdog_pid" 2>/dev/null
+        wait "$watchdog_pid" 2>/dev/null
+        return $exit_code
+    }
+    TIMEOUT_CMD="portable_timeout"
+fi
+
 # --- Slugify helper ---
 slugify() {
     echo "$1" | tr '[:upper:]' '[:lower:]' | tr -cs '[:alnum:]' '-' | head -c 50 | sed 's/-$//'
@@ -141,7 +166,7 @@ for i in "${!CLAIMS[@]}"; do
     (
         mkdir -p "$CLAIM_DIR"
         cd "$CLAIM_DIR"
-        if ! timeout "$TIMEOUT" "$SCRIPT_DIR/run-single-eval.sh" "$CLAIM_DIR" "$MODEL" "$CLAIM"; then
+        if ! $TIMEOUT_CMD "$TIMEOUT" "$SCRIPT_DIR/run-single-eval.sh" "$CLAIM_DIR" "$MODEL" "$CLAIM"; then
             echo "Timed out after ${TIMEOUT}s" > "$CLAIM_DIR/.failed"
             echo "[$(date '+%H:%M:%S')] TIMEOUT: $(basename "$CLAIM_DIR")"
         fi
