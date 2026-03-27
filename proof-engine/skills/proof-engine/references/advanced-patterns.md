@@ -27,7 +27,15 @@ Use `diagnose_mismatch(page_text, quote)` to understand WHY a quote fails verifi
 
 ## Table-Sourced Numeric Data
 
-For claims backed by HTML tables (CPI values, GDP figures, population data), the numeric values aren't in prose text that can be quoted. Use the `data_values` pattern:
+For claims backed by HTML tables (CPI values, GDP figures, population data), the numeric values aren't in prose text that can be quoted. Use the `data_values` pattern.
+
+**Choosing quotes for data-table pages**: Many aggregator sites are mostly tables with minimal prose. Page titles and JS-rendered headings often fail live verification. Strategies for picking quotes that survive:
+- Use static footer text (e.g., "Data sourced from U.S. Bureau of Labor Statistics")
+- Use the `<meta name="description">` content (often static HTML)
+- Use column headers or table captions that appear in raw HTML
+- If no stable prose exists, use `snapshot` mode or accept partial verification — the real verification is `verify_data_values()` confirming the numbers appear on the page
+
+**Verdict when quotes fail but data_values pass**: If `verify_all_citations()` returns `not_found` or `partial` for the quote, but `verify_data_values()` confirms all numeric values on the page, this is stronger evidence than it looks. The quote verification failing is a page-structure issue, not an accuracy issue. Note this in the adversarial checks and consider the data verified for verdict purposes — the verdict can still be `PROVED` if the data values are confirmed and cross-checked, even if the prose quote failed verification. Document the reasoning in the proof's verdict logic.
 
 ```python
 empirical_facts = {
