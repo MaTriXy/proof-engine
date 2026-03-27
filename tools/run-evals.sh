@@ -64,6 +64,11 @@ if [ ! -f "$CLAIMS_FILE" ]; then
     exit 1
 fi
 
+if [ "$PARALLEL" -lt 1 ] 2>/dev/null; then
+    echo "Error: --parallel must be >= 1 (got: $PARALLEL)" >&2
+    exit 1
+fi
+
 mkdir -p "$OUTPUT_DIR"
 
 # --- Portable timeout (macOS lacks GNU timeout) ---
@@ -72,14 +77,19 @@ if command -v timeout >/dev/null 2>&1; then
 elif command -v gtimeout >/dev/null 2>&1; then
     TIMEOUT_CMD="gtimeout"
 else
-    # Pure bash fallback: run command in background, kill after N seconds
+    # Pure bash fallback: run command in background, kill it and descendants on timeout
     portable_timeout() {
         local secs="$1"; shift
         "$@" &
         local cmd_pid=$!
         (
             sleep "$secs"
+            # Kill child processes first (descendants), then the main process
+            pkill -TERM -P "$cmd_pid" 2>/dev/null
             kill -TERM "$cmd_pid" 2>/dev/null
+            sleep 2
+            pkill -KILL -P "$cmd_pid" 2>/dev/null
+            kill -KILL "$cmd_pid" 2>/dev/null
         ) &
         local watchdog_pid=$!
         wait "$cmd_pid" 2>/dev/null
@@ -121,6 +131,7 @@ SKIPPED=0
 STARTED=0
 RUNNING_PIDS=()
 RUNNING_DIRS=()
+CLAIM_DIRS=()  # all claim dirs for this batch (for scoped aggregation)
 
 # --- Wait for a job slot to free up ---
 wait_for_slot() {
@@ -149,6 +160,8 @@ for i in "${!CLAIMS[@]}"; do
     SLUG="$(slugify "$CLAIM")"
     DIR_NAME="${NUM}-${SLUG}"
     CLAIM_DIR="$OUTPUT_DIR/$DIR_NAME"
+
+    CLAIM_DIRS+=("$CLAIM_DIR")
 
     # Idempotent: skip if .success marker exists (unless --force)
     # NOTE: .success means both phases completed. .failed or missing marker = retry.
@@ -205,7 +218,7 @@ SUMMARY="$OUTPUT_DIR/summary.md"
     FAILED_COUNT=0
     NO_ISSUES=0
 
-    for dir in "$OUTPUT_DIR"/*/; do
+    for dir in "${CLAIM_DIRS[@]}"; do
         [ -d "$dir" ] || continue
         dir_name="$(basename "$dir")"
 
@@ -252,13 +265,21 @@ SUMMARY="$OUTPUT_DIR/summary.md"
 
 } > "$SUMMARY"
 
-# --- Quick stats via grep across all feedback files ---
-# Use || true to prevent no-match grep from being fatal under pipefail
-BLOCKER_COUNT=$(grep -rl "Severity.*blocker" "$OUTPUT_DIR"/*/feedback.md 2>/dev/null | wc -l | tr -d ' ' || true)
-MAJOR_COUNT=$(grep -rl "Severity.*major" "$OUTPUT_DIR"/*/feedback.md 2>/dev/null | wc -l | tr -d ' ' || true)
-MINOR_COUNT=$(grep -rl "Severity.*minor" "$OUTPUT_DIR"/*/feedback.md 2>/dev/null | wc -l | tr -d ' ' || true)
+# --- Collect feedback files for this batch only ---
+BATCH_FEEDBACK_FILES=()
+for dir in "${CLAIM_DIRS[@]}"; do
+    [ -f "$dir/feedback.md" ] && BATCH_FEEDBACK_FILES+=("$dir/feedback.md")
+done
 
-# Default to 0 if empty (no feedback files at all)
+# --- Quick stats via grep across this batch's feedback files ---
+BLOCKER_COUNT=0
+MAJOR_COUNT=0
+MINOR_COUNT=0
+if [ ${#BATCH_FEEDBACK_FILES[@]} -gt 0 ]; then
+    BLOCKER_COUNT=$(grep -rl "Severity.*blocker" "${BATCH_FEEDBACK_FILES[@]}" 2>/dev/null | wc -l | tr -d ' ' || true)
+    MAJOR_COUNT=$(grep -rl "Severity.*major" "${BATCH_FEEDBACK_FILES[@]}" 2>/dev/null | wc -l | tr -d ' ' || true)
+    MINOR_COUNT=$(grep -rl "Severity.*minor" "${BATCH_FEEDBACK_FILES[@]}" 2>/dev/null | wc -l | tr -d ' ' || true)
+fi
 BLOCKER_COUNT="${BLOCKER_COUNT:-0}"
 MAJOR_COUNT="${MAJOR_COUNT:-0}"
 MINOR_COUNT="${MINOR_COUNT:-0}"
@@ -280,10 +301,14 @@ MINOR_COUNT="${MINOR_COUNT:-0}"
     # Top components by issue count
     echo "### Most-mentioned components"
     echo '```'
-    grep -h "^\- \*\*Component:\*\*" "$OUTPUT_DIR"/*/feedback.md 2>/dev/null \
-        | sed 's/.*Component:\*\* //' \
-        | sort | uniq -c | sort -rn \
-        || echo "(none)"
+    if [ ${#BATCH_FEEDBACK_FILES[@]} -gt 0 ]; then
+        grep -h "^\- \*\*Component:\*\*" "${BATCH_FEEDBACK_FILES[@]}" 2>/dev/null \
+            | sed 's/.*Component:\*\* //' \
+            | sort | uniq -c | sort -rn \
+            || echo "(none)"
+    else
+        echo "(none)"
+    fi
     echo '```'
 } >> "$SUMMARY"
 

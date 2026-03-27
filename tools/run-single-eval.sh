@@ -57,7 +57,7 @@ echo "[$(date '+%H:%M:%S')] Phase 1 done: $(basename "$OUTPUT_DIR")"
 read -r -d '' FEEDBACK_PROMPT << 'FEEDBACK_EOF' || true
 You just ran the proof-engine skill. You are now a QA tester filing bug reports — not writing a review. Be specific and critical. Vague praise is useless. "N/A" is better than "worked fine."
 
-Before answering, re-read the generated proof.py, proof.md, and proof_audit.md files in the current directory. Also re-run `python validate_proof.py proof.py` if you haven't already. Base your answers on what you observe in the actual files, not just your memory of writing them.
+Before answering, re-read the generated proof.py, proof.md, and proof_audit.md files in the current directory. Also re-run the validator on proof.py using its full path from the skill's scripts directory (the same path you used during the proof workflow). Base your answers on what you observe in the actual files and validator output, not just your memory of writing them.
 
 Only report issues the SKILL could fix. If the claim was inherently hard or ambiguous, that's not a skill issue.
 
@@ -108,6 +108,13 @@ claude -p \
 if [ $PHASE2_EXIT -ne 0 ]; then
     echo "[$(date '+%H:%M:%S')] Phase 2 FAILED (exit $PHASE2_EXIT): $(basename "$OUTPUT_DIR")"
     echo "Phase 2 failed with exit code $PHASE2_EXIT. Phase 1 succeeded — see phase1.log." > "$OUTPUT_DIR/.failed"
+    exit 0
+fi
+
+# Validate feedback.md has expected structure (at least one probe heading)
+if [ ! -s "$OUTPUT_DIR/feedback.md" ] || ! grep -q "^## Probe 1" "$OUTPUT_DIR/feedback.md" 2>/dev/null; then
+    echo "[$(date '+%H:%M:%S')] Phase 2 produced malformed feedback: $(basename "$OUTPUT_DIR")"
+    echo "Phase 2 exited 0 but feedback.md is empty or missing probe structure. Phase 1 succeeded." > "$OUTPUT_DIR/.failed"
     exit 0
 fi
 
