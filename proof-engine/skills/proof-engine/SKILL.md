@@ -49,8 +49,6 @@ Read these on demand, not all upfront.
 | [advanced-patterns.md](${CLAUDE_SKILL_DIR}/references/advanced-patterns.md) | When encountering complex quotes or table-sourced data |
 | [environment-and-sources.md](${CLAUDE_SKILL_DIR}/references/environment-and-sources.md) | When facing fetch failures, paywalls, or sandboxed environments |
 
-Worked examples: `docs/examples/purchasing-power-decline/` and `docs/examples/cortical-plasticity/` (relative to repo root).
-
 ## Bundled Scripts
 
 Import these instead of re-implementing verification logic.
