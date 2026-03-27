@@ -156,8 +156,8 @@ wait_for_slot() {
                 NEW_DIRS+=("${RUNNING_DIRS[$i]}")
             fi
         done
-        RUNNING_PIDS=("${NEW_PIDS[@]}")
-        RUNNING_DIRS=("${NEW_DIRS[@]}")
+        RUNNING_PIDS=(${NEW_PIDS[@]+"${NEW_PIDS[@]}"})
+        RUNNING_DIRS=(${NEW_DIRS[@]+"${NEW_DIRS[@]}"})
         if [ ${#RUNNING_PIDS[@]} -ge "$PARALLEL" ]; then
             sleep 2
         fi
