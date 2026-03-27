@@ -123,21 +123,32 @@ def parse_number_from_quote(quote: str, pattern: str = None, fact_id: str = "unk
             return result
         raise ValueError(f"{fact_id}: Pattern '{pattern}' not found in quote: '{quote[:80]}...'")
 
-    # Default: find all number-like tokens, prefer substantial ones
-    # (commas suggest a real number, not a footnote marker)
-    candidates = re.findall(r'[\d,]+\.?\d*', quote)
-    # Filter out empty or trivial matches
-    candidates = [c for c in candidates if c.strip(",. ")]
+    # Default: find all number-like tokens in one unified regex.
+    # The regex matches (in order of priority within alternation):
+    #   1. Comma-formatted integers: 13,988,129
+    #   2. Standard decimals: 3.14, 2023
+    #   3. Leading-zero-omitted decimals: .40, -.33 (common in statistics)
+    candidates = re.findall(r'-?[\d,]+\.?\d*|-?\.\d+', quote)
+    # Filter out empty or trivial matches (lone commas, lone dots)
+    candidates = [c for c in candidates if c.strip(",. ") and c not in (",", ".")]
 
-    # Prefer comma-formatted numbers or numbers with >2 digits
-    substantial = [c for c in candidates if "," in c or len(c.replace(",", "").replace(".", "")) > 2]
+    # Strip trailing/leading punctuation commas before classification
+    # (e.g. "2023," from "In 2023, ..." should not be treated as comma-formatted)
+    candidates = [c.strip(",") for c in candidates]
+    candidates = [c for c in candidates if c.strip(",. ") and c not in (",", ".")]
+
+    # Classify: substantial = comma-formatted (internal commas) or >2 digits (years, large numbers)
+    substantial = [c for c in candidates
+                   if "," in c or len(c.replace(",", "").replace(".", "").replace("-", "")) > 2]
+    # Prefer comma-formatted (true large numbers) over plain multi-digit integers
+    substantial.sort(key=lambda c: (0 if "," in c else 1))
     if substantial:
         raw = substantial[0].replace(",", "")
         result = float(raw)
         print(f"  {fact_id}: Parsed '{substantial[0]}' -> {result}")
         return result
 
-    # Fall back to first candidate
+    # Fall back to first candidate (could be LZO like .40, or a small int like 5)
     if candidates:
         raw = candidates[0].replace(",", "")
         result = float(raw)
