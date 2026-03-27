@@ -632,34 +632,184 @@ To disprove a claim (e.g., "Humans only use 10% of their brain"):
 
 ### Compound CLAIM_FORMAL
 
-For claims with multiple sub-claims (X AND Y, X BUT NOT Y):
+For claims with multiple sub-claims joined by AND. Each sub-claim gets its own confirmation list, source count, and `compare()` evaluation. The compound verdict aggregates sub-claim results.
+
+**When to use:** The claim contains AND or implies multiple independently verifiable conditions. Examples: "Israel withdrew from Gaza AND Hamas won the 2006 election," "Brain weight is 2% of body weight AND uses 20% of oxygen."
+
+**Not supported:** Negated sub-claims (X BUT NOT Y) require per-sub-claim `proof_direction`, which this template doesn't model. For claims with negated parts, decompose into separate proofs — one affirmative, one disproof — using the qualitative template's `proof_direction` field.
 
 ```python
+"""
+Proof: [compound claim text]
+Generated: [date]
+"""
+import json
+import sys
+
+PROOF_ENGINE_ROOT = "..."  # LLM fills with actual path
+sys.path.insert(0, PROOF_ENGINE_ROOT)
+
+from scripts.smart_extract import verify_extraction
+from scripts.verify_citations import verify_all_citations, build_citation_detail
+from scripts.computations import compare
+
+# 1. CLAIM INTERPRETATION (Rule 4)
+CLAIM_NATURAL = "..."
 CLAIM_FORMAL = {
     "subject": "...",
     "sub_claims": [
-        {"id": "SC1", "property": "...", "operator": ">=", "threshold": ..., "operator_note": "..."},
-        {"id": "SC2", "property": "...", "operator": ">", "threshold": ..., "operator_note": "..."},
+        {"id": "SC1", "property": "...", "operator": ">=", "threshold": 2, "operator_note": "..."},
+        {"id": "SC2", "property": "...", "operator": ">=", "threshold": 2, "operator_note": "..."},
     ],
-    "compound_operator": "AND",  # how sub-claims combine: AND | OR
+    "compound_operator": "AND",  # only AND is supported; OR claims should be decomposed into separate proofs
     "operator_note": "All sub-claims must hold for the compound claim to be PROVED",
 }
-```
 
-Verdict logic for compound claims:
+# 2. FACT REGISTRY
+FACT_REGISTRY = {
+    "B1": {"key": "sc1_source_a", "label": "SC1 source A: ..."},
+    "B2": {"key": "sc1_source_b", "label": "SC1 source B: ..."},
+    "B3": {"key": "sc2_source_a", "label": "SC2 source A: ..."},
+    "B4": {"key": "sc2_source_b", "label": "SC2 source B: ..."},
+    "A1": {"label": "SC1 source count", "method": None, "result": None},
+    "A2": {"label": "SC2 source count", "method": None, "result": None},
+}
 
-```python
-sc1_holds = compare(val_sc1, sc1["operator"], sc1["threshold"])
-sc2_holds = compare(val_sc2, sc2["operator"], sc2["threshold"])
+# 3. EMPIRICAL FACTS — grouped by sub-claim
+empirical_facts = {
+    "sc1_source_a": {"quote": "...", "url": "...", "source_name": "..."},
+    "sc1_source_b": {"quote": "...", "url": "...", "source_name": "..."},
+    "sc2_source_a": {"quote": "...", "url": "...", "source_name": "..."},
+    "sc2_source_b": {"quote": "...", "url": "...", "source_name": "..."},
+}
 
-# Compound verdict: all/none/mixed
+# 4. CITATION VERIFICATION (Rule 2)
+citation_results = verify_all_citations(empirical_facts, wayback_fallback=True)
+
+# 5. PER-SUB-CLAIM KEYWORD EXTRACTION
+sc1_confirmations = [
+    verify_extraction("keyword", empirical_facts["sc1_source_a"]["quote"], "B1"),
+    verify_extraction("keyword", empirical_facts["sc1_source_b"]["quote"], "B2"),
+]
+sc2_confirmations = [
+    verify_extraction("keyword", empirical_facts["sc2_source_a"]["quote"], "B3"),
+    verify_extraction("keyword", empirical_facts["sc2_source_b"]["quote"], "B4"),
+]
+
+# 6. PER-SUB-CLAIM EVALUATION — each uses compare()
+n_sc1 = sum(1 for c in sc1_confirmations if c)
+n_sc2 = sum(1 for c in sc2_confirmations if c)
+
+sc1_holds = compare(n_sc1, ">=", CLAIM_FORMAL["sub_claims"][0]["threshold"],
+                    label="SC1: " + CLAIM_FORMAL["sub_claims"][0]["property"])
+sc2_holds = compare(n_sc2, ">=", CLAIM_FORMAL["sub_claims"][1]["threshold"],
+                    label="SC2: " + CLAIM_FORMAL["sub_claims"][1]["property"])
+
+# 7. COMPOUND EVALUATION
 n_holding = sum([sc1_holds, sc2_holds])
-n_total = 2
-claim_holds = compare(n_holding, "==", n_total)  # True only if ALL hold
+n_total = len(CLAIM_FORMAL["sub_claims"])
+claim_holds = compare(n_holding, "==", n_total, label="compound: all sub-claims hold")
 
-if not claim_holds and n_holding > 0:
-    # Mixed — some hold, some don't → skip claim_holds verdict logic
-    verdict = "PARTIALLY VERIFIED"
+# 8. ADVERSARIAL CHECKS (Rule 5)
+adversarial_checks = [
+    {
+        "question": "...",
+        "verification_performed": "Searched for ...",
+        "finding": "...",
+        "breaks_proof": False,
+    },
+]
+
+# 9. VERDICT — handles mixed results and unverified citations
+if __name__ == "__main__":
+    any_unverified = any(
+        cr["status"] != "verified" for cr in citation_results.values()
+    )
+    any_breaks = any(ac.get("breaks_proof") for ac in adversarial_checks)
+
+    if any_breaks:
+        verdict = "UNDETERMINED"
+    elif not claim_holds and n_holding > 0:
+        # Mixed: some sub-claims hold, others don't.
+        # Citation status is noted in proof.md conclusion but doesn't change
+        # the verdict label — PARTIALLY VERIFIED already signals incompleteness.
+        verdict = "PARTIALLY VERIFIED"
+    elif claim_holds and not any_unverified:
+        verdict = "PROVED"
+    elif claim_holds and any_unverified:
+        verdict = "PROVED (with unverified citations)"
+    elif not claim_holds:
+        # No sub-claims met threshold. For source-counting proofs,
+        # this is insufficient evidence, not disproof.
+        # Citation status is noted in proof.md conclusion.
+        verdict = "UNDETERMINED"
+
+    FACT_REGISTRY["A1"]["method"] = f"sum(sc1_confirmations) = {n_sc1}"
+    FACT_REGISTRY["A1"]["result"] = str(n_sc1)
+    FACT_REGISTRY["A2"]["method"] = f"sum(sc2_confirmations) = {n_sc2}"
+    FACT_REGISTRY["A2"]["result"] = str(n_sc2)
+
+    citation_detail = build_citation_detail(FACT_REGISTRY, citation_results, empirical_facts)
+
+    # Build extractions from FACT_REGISTRY B-type entries
+    all_sc_data = [
+        (sc1_confirmations, [fid for fid in FACT_REGISTRY if fid.startswith("B") and FACT_REGISTRY[fid]["key"].startswith("sc1_")]),
+        (sc2_confirmations, [fid for fid in FACT_REGISTRY if fid.startswith("B") and FACT_REGISTRY[fid]["key"].startswith("sc2_")]),
+    ]
+    extractions = {}
+    for conf_list, fid_list in all_sc_data:
+        for j, fid in enumerate(fid_list):
+            confirmed = conf_list[j] if j < len(conf_list) else False
+            ef_key = FACT_REGISTRY[fid]["key"]
+            extractions[fid] = {
+                "value": "keyword confirmed" if confirmed else "keyword not found",
+                "value_in_quote": confirmed,
+                "quote_snippet": empirical_facts[ef_key]["quote"][:80] if ef_key in empirical_facts else "",
+            }
+
+    summary = {
+        "fact_registry": {fid: dict(info) for fid, info in FACT_REGISTRY.items()},
+        "claim_formal": CLAIM_FORMAL,
+        "claim_natural": CLAIM_NATURAL,
+        "citations": citation_detail,
+        "extractions": extractions,
+        "cross_checks": [
+            {"description": "SC1: independent source agreement",
+             "values_compared": [f"source {i+1}: {'confirms' if c else 'does not confirm'}"
+                                 for i, c in enumerate(sc1_confirmations)],
+             "agreement": all(sc1_confirmations) if sc1_confirmations else False},
+            {"description": "SC2: independent source agreement",
+             "values_compared": [f"source {i+1}: {'confirms' if c else 'does not confirm'}"
+                                 for i, c in enumerate(sc2_confirmations)],
+             "agreement": all(sc2_confirmations) if sc2_confirmations else False},
+        ],
+        "sub_claim_results": [
+            {"id": "SC1", "n_confirming": n_sc1,
+             "threshold": CLAIM_FORMAL["sub_claims"][0]["threshold"], "holds": sc1_holds},
+            {"id": "SC2", "n_confirming": n_sc2,
+             "threshold": CLAIM_FORMAL["sub_claims"][1]["threshold"], "holds": sc2_holds},
+        ],
+        "adversarial_checks": adversarial_checks,
+        "verdict": verdict,
+        "key_results": {
+            "n_holding": n_holding,
+            "n_total": n_total,
+            "claim_holds": claim_holds,
+        },
+    }
+
+    print("\n=== PROOF SUMMARY (JSON) ===")
+    print(json.dumps(summary, indent=2, default=str))
 ```
 
-Note: for mixed sub-results, set `verdict` directly to `"PARTIALLY VERIFIED"` rather than routing through the `claim_holds` → verdict logic, since the claim is neither fully proved nor fully disproved.
+**Key design points:**
+- `PARTIALLY VERIFIED` is checked BEFORE the `claim_holds` branches — mixed results short-circuit the verdict.
+- `UNDETERMINED` when no sub-claims meet threshold — for source-counting proofs, insufficient evidence is not disproof.
+- Per-sub-claim `compare()` calls use labels, so the computation trace is self-documenting.
+- `any_unverified` modifies PROVED → PROVED (with unverified citations). For PARTIALLY VERIFIED and UNDETERMINED, citation status is documented in proof.md's Conclusion section rather than changing the verdict label — those verdicts already signal incompleteness.
+- `sub_claim_results` in the JSON summary gives downstream tooling per-SC detail.
+- Only `AND` compounds are supported. For OR claims ("X or Y is true"), decompose into separate proofs — an OR compound where either sub-claim suffices is just two independent proofs.
+
+**Adapting for numeric compound claims:** Replace `verify_extraction()` with `parse_number_from_quote()` / `verify_data_values()` per the Numeric/Table template. The compound evaluation (steps 6-7) stays the same — only the per-sub-claim extraction (step 5) changes.
+
+**Sub-claims with no possible supporting sources:** Keep the sub-claim in `CLAIM_FORMAL["sub_claims"]` with its full structure — do not remove it from `n_total`. Set its `n_confirming` to 0 via an empty confirmations list (not a hardcoded literal). The compound verdict will naturally produce `PARTIALLY VERIFIED` (some hold, some don't) or `UNDETERMINED` (none hold). Removing a failing sub-claim from the denominator would change the claim's meaning and could turn a failing proof into a passing one. Document the sub-claim's failure and the evidence for it (e.g., adversarial findings) in the proof's adversarial_checks section.
