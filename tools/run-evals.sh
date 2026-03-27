@@ -187,11 +187,13 @@ for i in "${!CLAIMS[@]}"; do
     echo "[$STARTED/$TOTAL] Dispatching: $DIR_NAME"
 
     # Run worker in subshell from the claim directory, with timeout
+    # Pass "." as output dir since we cd into CLAIM_DIR first — avoids
+    # absolute path being interpreted relative to CWD and doubling up.
     (
         mkdir -p "$CLAIM_DIR"
         cd "$CLAIM_DIR"
-        if ! $TIMEOUT_CMD "$TIMEOUT" "$SCRIPT_DIR/run-single-eval.sh" "$CLAIM_DIR" "$MODEL" "$CLAIM"; then
-            echo "Timed out after ${TIMEOUT}s" > "$CLAIM_DIR/.failed"
+        if ! $TIMEOUT_CMD "$TIMEOUT" "$SCRIPT_DIR/run-single-eval.sh" "." "$MODEL" "$CLAIM"; then
+            echo "Timed out after ${TIMEOUT}s" > ".failed"
             echo "[$(date '+%H:%M:%S')] TIMEOUT: $(basename "$CLAIM_DIR")"
         fi
     ) &

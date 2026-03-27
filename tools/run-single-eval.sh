@@ -34,7 +34,7 @@ echo "$CLAIM" > "$OUTPUT_DIR/claim.txt"
 # Generate session ID for two-phase conversation
 SESSION_ID="$(uuidgen | tr '[:upper:]' '[:lower:]')"
 
-echo "[$(date '+%H:%M:%S')] Starting: $(basename "$OUTPUT_DIR")"
+echo "[$(date '+%H:%M:%S')] Starting: $(basename "$(pwd)")"
 
 # --- Phase 1: Run the proof ---
 PHASE1_EXIT=0
@@ -48,12 +48,12 @@ claude -p \
     || PHASE1_EXIT=$?
 
 if [ $PHASE1_EXIT -ne 0 ]; then
-    echo "[$(date '+%H:%M:%S')] Phase 1 FAILED (exit $PHASE1_EXIT): $(basename "$OUTPUT_DIR")"
+    echo "[$(date '+%H:%M:%S')] Phase 1 FAILED (exit $PHASE1_EXIT): $(basename "$(pwd)")"
     echo "Phase 1 failed with exit code $PHASE1_EXIT. See phase1.log for details." > "$OUTPUT_DIR/.failed"
     exit 0  # exit 0 so orchestrator's wait doesn't fail
 fi
 
-echo "[$(date '+%H:%M:%S')] Phase 1 done: $(basename "$OUTPUT_DIR")"
+echo "[$(date '+%H:%M:%S')] Phase 1 done: $(basename "$(pwd)")"
 
 # --- Phase 2: Collect feedback ---
 read -r -d '' FEEDBACK_PROMPT << 'FEEDBACK_EOF' || true
@@ -108,7 +108,7 @@ claude -p \
     || PHASE2_EXIT=$?
 
 if [ $PHASE2_EXIT -ne 0 ]; then
-    echo "[$(date '+%H:%M:%S')] Phase 2 FAILED (exit $PHASE2_EXIT): $(basename "$OUTPUT_DIR")"
+    echo "[$(date '+%H:%M:%S')] Phase 2 FAILED (exit $PHASE2_EXIT): $(basename "$(pwd)")"
     echo "Phase 2 failed with exit code $PHASE2_EXIT. Phase 1 succeeded — see phase1.log." > "$OUTPUT_DIR/.failed"
     exit 0
 fi
@@ -121,11 +121,11 @@ for n in 1 2 3 4 5 6 7; do
     fi
 done
 if [ ! -s "$OUTPUT_DIR/feedback.md" ] || [ -n "$MISSING_PROBES" ]; then
-    echo "[$(date '+%H:%M:%S')] Phase 2 produced malformed feedback: $(basename "$OUTPUT_DIR")"
+    echo "[$(date '+%H:%M:%S')] Phase 2 produced malformed feedback: $(basename "$(pwd)")"
     echo "Phase 2 exited 0 but feedback.md is missing probe headings:$MISSING_PROBES. Phase 1 succeeded." > "$OUTPUT_DIR/.failed"
     exit 0
 fi
 
 # Mark success — this is the idempotency marker (NOT feedback.md)
 touch "$OUTPUT_DIR/.success"
-echo "[$(date '+%H:%M:%S')] Done: $(basename "$OUTPUT_DIR")"
+echo "[$(date '+%H:%M:%S')] Done: $(basename "$(pwd)")"
