@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2026-03-27
+
+### Added
+
+- `verify_data_values(url, data_values, fact_id)` — fetches the source page and confirms each data_value string appears in the page text. Closes the verification gap where table-sourced numeric values were never checked against the live page.
+- Step 1 now suggests checking worked examples for similar claims
+- Adversarial checks documentation clarified: use past tense in `verification_performed` to signal these are Step 2 research results, not runtime operations
+
+### Changed
+
+- data_values workflow: `verify_data_values()` replaces blind trust in LLM-extracted table data
+- Template in hardening-rules.md PATH B now shows `verify_data_values()` call before parsing
+
 ## [0.6.0] - 2026-03-27
 
 ### Changed

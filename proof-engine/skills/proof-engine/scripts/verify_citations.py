@@ -418,6 +418,79 @@ def verify_all_citations(empirical_facts: dict, wayback_fallback: bool = False) 
     return results
 
 
+def verify_data_values(url: str, data_values: dict, fact_id: str,
+                       timeout: int = 15, snapshot: str = None,
+                       wayback_fallback: bool = False) -> dict:
+    """Verify that data_values strings appear on the source page.
+
+    For table-sourced data, the quote verifies the source's authority, but
+    the actual numeric values (stored in data_values) are never checked
+    against the page. This function fills that gap — it fetches the page
+    and confirms each value string appears in the page text.
+
+    Args:
+        url: The source URL to fetch.
+        data_values: Dict of {key: value_string}, e.g. {"cpi_1913": "9.883"}.
+        fact_id: Identifier for messages.
+        timeout: Fetch timeout in seconds.
+        snapshot: Pre-fetched page text for offline verification.
+        wayback_fallback: If True, try Wayback Machine as fallback.
+
+    Returns:
+        dict of {key: {"found": bool, "value": str, "fetch_mode": str}}
+    """
+    # Get page text using the same fallback chain as verify_citation
+    page_text = None
+    fetch_mode = "live"
+    fetch_error = None
+
+    try:
+        resp = requests.get(url, timeout=timeout,
+                            headers={"User-Agent": "proof-engine/1.0"},
+                            allow_redirects=True)
+        resp.raise_for_status()
+        content_type = resp.headers.get("Content-Type", "")
+        if "application/pdf" in content_type or url.lower().endswith(".pdf"):
+            page_text = _extract_pdf_text(resp.content)
+        else:
+            page_text = resp.text
+    except requests.exceptions.RequestException as e:
+        fetch_error = str(e)
+
+    if page_text is None and snapshot:
+        page_text = snapshot
+        fetch_mode = "snapshot"
+
+    if page_text is None and wayback_fallback:
+        page_text = _try_wayback(url, timeout)
+        if page_text:
+            fetch_mode = "wayback"
+
+    if page_text is None:
+        results = {}
+        for key, val in data_values.items():
+            results[key] = {"found": False, "value": val, "fetch_mode": "fetch_failed",
+                            "error": fetch_error or "could not obtain page text"}
+            print(f"  [?] {fact_id}.{key}: fetch failed — cannot verify '{val}' on page")
+        return results
+
+    # Normalize page text for matching
+    norm_page = normalize_text(page_text)
+
+    results = {}
+    for key, val in data_values.items():
+        val_str = str(val).strip()
+        # Check if the value string appears in the normalized page
+        found = val_str.lower() in norm_page
+        results[key] = {"found": found, "value": val_str, "fetch_mode": fetch_mode}
+        if found:
+            print(f"  [✓] {fact_id}.{key}: '{val_str}' found on page [{fetch_mode}]")
+        else:
+            print(f"  [✗] {fact_id}.{key}: '{val_str}' NOT found on page [{fetch_mode}]")
+
+    return results
+
+
 def build_citation_detail(fact_registry: dict, citation_results: dict,
                           empirical_facts: dict) -> dict:
     """Build the citation_detail dict for the JSON summary.

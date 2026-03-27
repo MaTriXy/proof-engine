@@ -44,7 +44,15 @@ empirical_facts = {
 
 - The `quote` field verifies the source's authority via `verify_all_citations()`
 - Parse table values with `parse_number_from_quote(fact["data_values"]["cpi_1913"], r"([\d.]+)", "B1_cpi_1913")`
-- **Do NOT call `verify_extraction()` on data_values** — it's circular (checking "9.883" appears in "9.883"). `verify_extraction()` is for checking values parsed from free-text quotes. For data_values, the cross-check across independent sources (Rule 6) is the verification.
+- **Do NOT call `verify_extraction()` on data_values** — it's circular. Instead, call `verify_data_values()` to confirm each value appears on the source page:
+  ```python
+  dv_results_a = verify_data_values(
+      url=empirical_facts["source_a"]["url"],
+      data_values=empirical_facts["source_a"]["data_values"],
+      fact_id="B1",
+  )
+  ```
+  This fetches the page and checks that each value string (e.g., "9.883") appears in the page text. If the site returns 403, it falls back to snapshot/Wayback like `verify_citation()`.
 - Use `cross_check()` to compare values across independent sources
 - The audit doc should distinguish "source authority verified via quote" from "numeric data extracted from table"
 

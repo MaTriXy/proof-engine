@@ -32,7 +32,7 @@ These are the highest-value lessons from field testing. Read before writing any 
 - **Don't restate the proof as an adversarial check**: "70 years after 1948 is 2018, and 2026 > 2018" catches nothing. Search for counter-evidence.
 - **Handle Unicode in citations**: Real web pages use en-dashes, curly quotes, ring-above vs degree, non-breaking spaces. `verify_citations.py` handles this automatically.
 - **`explain_calc()` vs `compute_*()`**: Use named functions (`compute_percentage_change()`, `compute_age()`) when they match your computation — they self-document. Use `explain_calc()` for ad-hoc expressions. Don't wrap a `compute_*()` call in `explain_calc()`.
-- **Don't call `verify_extraction()` on data_values**: It's circular. The cross-check across independent sources (Rule 6) is the verification for table data.
+- **Don't call `verify_extraction()` on data_values**: It's circular. Instead, call `verify_data_values(url, data_values, fact_id)` to confirm each value string appears on the source page, then cross-check across sources (Rule 6).
 - **Index base mismatches**: Economic data from different aggregators may use different base periods. If `cross_check()` flags a large disagreement, check whether sources use different scaling. Document the base period in source_name.
 - **Dynamic/JS-rendered sites**: Some aggregators (officialdata.org, in2013dollars.com) render via JavaScript. Live fetch gets raw HTML, causing low fragment coverage. Prefer static-content aggregators (rateinflation.com, inflationdata.com).
 - **`cross_check()` for data_values**: Use the full signature: `cross_check(val_a, val_b, tolerance=0.05, mode="absolute", label="CPI 1913")`. `mode="relative"` is useful when values span different magnitudes.
@@ -59,7 +59,7 @@ Import these instead of re-implementing verification logic.
 |--------|---------|---------------|
 | `scripts/extract_values.py` | Parse values FROM quote strings (Rule 1) | `parse_date_from_quote()`, `parse_number_from_quote()`, `parse_percentage_from_quote()` |
 | `scripts/smart_extract.py` | Unicode normalization + extraction utilities | `normalize_unicode()`, `verify_extraction()`, `diagnose_mismatch()` |
-| `scripts/verify_citations.py` | Fetch URLs, verify quotes (Rule 2) | `verify_citation()`, `verify_all_citations()`, `build_citation_detail()` |
+| `scripts/verify_citations.py` | Fetch URLs, verify quotes (Rule 2) | `verify_citation()`, `verify_all_citations()`, `build_citation_detail()`, `verify_data_values()` |
 | `scripts/computations.py` | Verified constants, formulas, self-documenting output (Rule 7) | `compute_age()`, `compare()`, `explain_calc()`, `cross_check()`, `compute_percentage_change()` |
 | `scripts/source_credibility.py` | Domain credibility from URL (offline). Called automatically by `verify_all_citations()`. | `assess_credibility(url)` |
 | `scripts/validate_proof.py` | Static analysis for rule compliance | `ProofValidator(filepath).validate()` |
@@ -79,6 +79,8 @@ explain_calc(expr_str, scope, label=None) -> object
 
 # verify_citations.py
 build_citation_detail(fact_registry, citation_results, empirical_facts) -> dict
+verify_data_values(url, data_values, fact_id, timeout=15, snapshot=None) -> dict
+#   Fetches page and confirms each value string appears. Returns {key: {found, value, fetch_mode}}
 ```
 
 **Import pattern:**
@@ -119,7 +121,7 @@ See [hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) for 
 ## Workflow
 
 ### Step 1: Analyze the Claim
-Classify: mathematical (Type A), empirical (Type B), or mixed. Identify ambiguous terms. Determine what constitutes proof AND disproof. For compound claims (X AND Y, X BECAUSE Y), decompose into sub-claims. Write a brief proof strategy and share with the user before proceeding.
+Classify: mathematical (Type A), empirical (Type B), or mixed. Identify ambiguous terms. Determine what constitutes proof AND disproof. For compound claims (X AND Y, X BECAUSE Y), decompose into sub-claims. Check if a worked example exists for similar claims (see `docs/examples/`). Write a brief proof strategy and share with the user before proceeding.
 
 If the claim is an opinion or has no verifiable answer, do NOT attempt a proof. Offer a related factual claim instead.
 
@@ -131,7 +133,7 @@ Guiding questions:
 ### Step 2: Gather Facts (Both Directions)
 Search for sources that SUPPORT the claim, then sources that CONTRADICT it (adversarial — Rule 5). Find at least two independent sources (Rule 6). For math claims, plan two independent computation approaches.
 
-**Adversarial work happens once, here.** The `adversarial_checks` list in proof code encodes these results — it documents what you searched for, not a second round.
+**Adversarial work happens once, here.** The `adversarial_checks` list in proof code records what you found — it's documentation of Step 2 research, not code that runs searches at proof execution time. Use past tense in `verification_performed` (e.g., "Searched for counter-evidence...") to make this clear.
 
 ### Step 3: Write the Proof Code
 Read [hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md). Start from the proof template near the end. The proof script must be self-contained: `python proof.py` produces the full output.

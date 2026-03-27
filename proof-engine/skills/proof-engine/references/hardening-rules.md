@@ -361,7 +361,7 @@ from datetime import date
 
 # --- STRUCTURAL IMPORTS (always needed) ---
 from scripts.smart_extract import normalize_unicode, verify_extraction
-from scripts.verify_citations import verify_all_citations, build_citation_detail
+from scripts.verify_citations import verify_all_citations, build_citation_detail, verify_data_values
 from scripts.computations import compare, explain_calc
 
 # --- CLAIM-SPECIFIC IMPORTS (adapt to your proof) ---
@@ -455,6 +455,10 @@ val_b = parse_date_from_quote(empirical_facts["source_b"]["quote"], "source_b")
 val_b_in_quote = verify_extraction(val_b, empirical_facts["source_b"]["quote"], "B2")
 
 # Example using PATH B (data_values) — shown here commented:
+# dv_results_a = verify_data_values(empirical_facts["source_a"]["url"],
+#     empirical_facts["source_a"]["data_values"], "B1")
+# dv_results_b = verify_data_values(empirical_facts["source_b"]["url"],
+#     empirical_facts["source_b"]["data_values"], "B2")
 # cpi_1913_a = parse_number_from_quote(empirical_facts["source_a"]["data_values"]["cpi_1913"], r"([\d.]+)", "B1_cpi_1913")
 # cpi_2024_a = parse_number_from_quote(empirical_facts["source_a"]["data_values"]["cpi_2024"], r"([\d.]+)", "B1_cpi_2024")
 # cpi_1913_b = parse_number_from_quote(empirical_facts["source_b"]["data_values"]["cpi_1913"], r"([\d.]+)", "B2_cpi_1913")
