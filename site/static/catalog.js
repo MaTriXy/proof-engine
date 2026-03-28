@@ -21,10 +21,18 @@
             return '<span class="tag">' + escapeHtml(t) + '</span>';
         }).join(" ");
         var badgeClass = BADGE_CLASSES[p.verdict_category] || "badge-undetermined";
-        return '<a href="' + escapeHtml(p.url) + '" style="text-decoration:none;color:inherit;">' +
+        var sourceHtml = '';
+        if (p.source_names && p.source_names.length > 0) {
+            var extra = p.source_names_extra > 0 ? ' +' + p.source_names_extra + ' more' : '';
+            sourceHtml = '<div class="source-line">Sources: ' + p.source_names.map(escapeHtml).join(', ') + extra + '</div>';
+        } else if (p.has_citations === false) {
+            sourceHtml = '<div class="source-line">Pure computation — no external sources</div>';
+        }
+        return '<a href="' + escapeHtml(p.url) + '" class="card-link">' +
             '<div class="proof-card"><h3>' + escapeHtml(p.claim) + '</h3>' +
             '<div class="meta"><span class="badge ' + badgeClass + '">' + escapeHtml(p.verdict) + '</span> ' +
-            tags + ' <span class="date">' + escapeHtml(p.date) + '</span></div></div></a>';
+            tags + ' <span class="date">' + escapeHtml(p.date) + '</span></div>' +
+            sourceHtml + '</div></a>';
     }
 
     function escapeHtml(s) {
@@ -47,7 +55,7 @@
 
         list.innerHTML = filtered.map(renderCard).join("");
         if (filtered.length === 0) {
-            list.innerHTML = '<p style="color:var(--text-secondary);">No proofs match your filters.</p>';
+            list.innerHTML = '<p class="empty-state">No proofs match your filters.</p>';
         }
     }
 
@@ -72,7 +80,7 @@
             applyFilters();
         })
         .catch(function () {
-            list.innerHTML = '<p style="color:var(--text-secondary);">Failed to load proofs.</p>';
+            list.innerHTML = '<p class="empty-state">Failed to load proofs.</p>';
         });
 
     search.addEventListener("input", applyFilters);
