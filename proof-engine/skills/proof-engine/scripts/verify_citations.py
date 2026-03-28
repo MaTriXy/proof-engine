@@ -495,9 +495,11 @@ def build_citation_detail(fact_registry: dict, citation_results: dict,
                           empirical_facts: dict) -> dict:
     """Build the citation_detail dict for the JSON summary.
 
-    This replaces the ~15-line boilerplate loop that appears in every proof's
-    __main__ block. It maps FACT_REGISTRY entries to their citation results
-    and empirical fact metadata.
+    Maps FACT_REGISTRY entries to their citation results.
+
+    Single-source: one entry keyed by fact_id.
+    Multi-source: one entry per sub-source keyed {fact_id}_source_{N},
+    preserving the "one row per source — no aggregation" output contract.
 
     Args:
         fact_registry: The proof's FACT_REGISTRY dict.
@@ -505,24 +507,58 @@ def build_citation_detail(fact_registry: dict, citation_results: dict,
         empirical_facts: The proof's empirical_facts dict.
 
     Returns:
-        dict of {fact_id: citation_detail} for Type B facts only.
+        dict of citation details for Type B facts.
     """
     detail = {}
     for fact_id, info in fact_registry.items():
         key = info.get("key")
-        if key and key in citation_results:
+        if not key:
+            continue
+        ef = empirical_facts.get(key, {})
+
+        if key in citation_results:
+            # Single-source: direct match
             cr = citation_results[key]
             detail[fact_id] = {
                 "source_key": key,
-                "source_name": empirical_facts[key].get("source_name", ""),
-                "url": empirical_facts[key].get("url", ""),
-                "quote": empirical_facts[key].get("quote", ""),
+                "source_name": ef.get("source_name", ""),
+                "url": ef.get("url", ""),
+                "quote": ef.get("quote", ""),
                 "status": cr["status"],
                 "method": cr.get("method", ""),
                 "coverage_pct": cr.get("coverage_pct"),
                 "fetch_mode": cr.get("fetch_mode", ""),
                 "credibility": cr.get("credibility"),
             }
+        else:
+            # Multi-source: {key}_source_N keys from verify_all_citations()
+            prefix = f"{key}_source_"
+            sub_keys = []
+            for k in citation_results:
+                if k.startswith(prefix):
+                    try:
+                        idx = int(k[len(prefix):])
+                        sub_keys.append((idx, k))
+                    except ValueError:
+                        continue
+            sub_keys.sort(key=lambda pair: pair[0])
+            if sub_keys:
+                sources = ef.get("sources", [])
+                source_name = ef.get("source_name", "")
+                for idx, sk in sub_keys:
+                    cr = citation_results[sk]
+                    src = sources[idx] if idx < len(sources) else {}
+                    detail[f"{fact_id}_source_{idx}"] = {
+                        "source_key": sk,
+                        "source_name": source_name,
+                        "url": src.get("url", ""),
+                        "quote": src.get("quote", ""),
+                        "status": cr["status"],
+                        "method": cr.get("method", ""),
+                        "coverage_pct": cr.get("coverage_pct"),
+                        "fetch_mode": cr.get("fetch_mode", ""),
+                        "credibility": cr.get("credibility"),
+                    }
     return detail
 
 

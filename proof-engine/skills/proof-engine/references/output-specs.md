@@ -17,9 +17,9 @@ Section "Key Findings": 3-4 bullet points with the decisive numbers that justify
 
 Section "Claim Interpretation": CLAIM_FORMAL in prose. State the natural-language claim, the formal interpretation, the operator choice with rationale. Expand acronyms on first use (e.g., "greenhouse gases (GHGs)"). Source: JSON summary `claim_formal` and `claim_natural`.
 
-Section "Evidence Summary": Table with columns ID, Fact, Verified. IDs and labels from JSON summary `fact_registry`.
+Section "Evidence Summary": Table with columns ID, Fact, Verified. IDs and labels from JSON summary `fact_registry`. Multi-source sub-entries (`{fact_id}_source_{N}`) inherit their label from the parent `fact_registry` entry, appending the source index.
 - Type A facts: Verified = "Computed"
-- Type B facts: Verified = "Yes", "No", or "Partial" with brief reason for No/Partial (e.g., "No (URL returned 403)"). Derive from JSON summary `citations[fact_id].status`.
+- Type B facts: Verified = "Yes", "No", or "Partial" with brief reason for No/Partial (e.g., "No (URL returned 403)"). Derive from JSON summary `citations[fact_id].status`. For multi-source facts, sub-entries are keyed `{fact_id}_source_{N}` — render one row per sub-entry.
 - Each source is its own fact row — no aggregation
 
 Section "Proof Logic": Narrative explanation of the reasoning chain. Every key number must reference its fact ID inline, e.g., "Human activities account for ~95.5% of observed warming (B1, B3)." When multiple facts establish the same claim, note the redundancy: "Israel was founded on May 14, 1948 (B1, B2 — independently sourced)." Sub-claims get their own sub-sections if the proof has multiple parts. Source: author analysis.
@@ -53,12 +53,13 @@ Section "Fact Registry": FACT_REGISTRY showing ID-to-key mapping. Source: proof.
 Section "Full Evidence Table": Two sub-sections:
 
 - "Type A (Computed) Facts" — table with columns: ID, Fact, Method, Result. All fields from JSON summary `fact_registry` entries where `method` and `result` are present. Source: proof.py JSON summary.
-- "Type B (Empirical) Facts" — table with columns: ID, Fact, Source, URL, Quote, Status, Method, Credibility. One row per source. Source: proof.py JSON summary `citations` (which has normalized `status` and `method` fields — not free-form messages). The Credibility column shows "Tier N (type)" from `citations[fact_id].credibility`. For pure-math proofs, omit.
+- "Type B (Empirical) Facts" — table with columns: ID, Fact, Source, URL, Quote, Status, Method, Credibility. One row per source. Source: proof.py JSON summary `citations` (which has normalized `status` and `method` fields — not free-form messages). The Credibility column shows "Tier N (type)" from `citations[fact_id].credibility`. For pure-math proofs, omit. Multi-source facts produce `{fact_id}_source_{N}` keys; render each as its own row.
 
 Section "Citation Verification Details": For each Type B citation, four fields — all from structured JSON fields, not parsed from prose:
 - Status: verified / partial / not_found / fetch_failed. Source: JSON summary `citations[fact_id].status`.
 - Method (only if verified or partial): full_quote / unicode_normalized / fragment / aggressive_normalization. Source: JSON summary `citations[fact_id].method` and `.coverage_pct`. Note: `coverage_pct` is null for full_quote and unicode_normalized methods — only populated for fragment matches. Partial (fragment match) is a degraded result — present it distinctly from full verification.
 - Fetch mode: live / snapshot / wayback. Source: JSON summary `citations[fact_id].fetch_mode`. Indicates how the page was obtained.
+For multi-source facts, citation detail entries are keyed `{fact_id}_source_{N}` instead of `{fact_id}`. The same fields apply to each sub-entry.
 - Impact (only if NOT verified): Which conclusions in proof.md depend on this citation, and whether they have independent support. Source: author analysis (label as such).
 For pure-math proofs, omit this section.
 
@@ -68,7 +69,7 @@ Section "Independent Source Agreement (Rule 6)": Cross-check details — which v
 
 Section "Adversarial Checks (Rule 5)": Full records with questions, searches performed, findings, and whether each breaks the proof. Source: proof.py JSON summary `adversarial_checks`.
 
-Section "Source Credibility Assessment": Table with columns: Fact ID, Domain, Type, Tier, Note. Source: JSON summary `citations[fact_id].credibility`. If any source has tier ≤ 1 (flagged unreliable or satire), add a note explaining why it was cited and whether the claim depends solely on it. Tier scale: 5=government/intergovernmental, 4=academic/peer-reviewed, 3=major news or established reference, 2=unclassified, 1=flagged unreliable. For pure-math proofs, omit.
+Section "Source Credibility Assessment": Table with columns: Fact ID, Domain, Type, Tier, Note. Source: JSON summary `citations[fact_id].credibility`. For multi-source facts, use `citations[{fact_id}_source_{N}].credibility` for each sub-source. If any source has tier ≤ 1 (flagged unreliable or satire), add a note explaining why it was cited and whether the claim depends solely on it. Tier scale: 5=government/intergovernmental, 4=academic/peer-reviewed, 3=major news or established reference, 2=unclassified, 1=flagged unreliable. For pure-math proofs, omit.
 
 Section "Extraction Records": For each extracted value — fact ID, extracted value, whether value was found in quote. Source: JSON summary `extractions[fact_id]` (value, value_in_quote, quote_snippet). Plus: extraction method and normalization narrative. Source: author analysis (label as such). For pure-math proofs, omit.
 
@@ -88,7 +89,7 @@ For pure-math proofs, mark Rules 1, 2, and 6 as "N/A — pure computation, no em
 
 ## Consistency rules
 
-- Every fact ID in proof.md must appear in the JSON summary's `fact_registry` and in proof_audit.md's evidence table
+- Every fact ID in proof.md must appear in the JSON summary's `fact_registry` and in proof_audit.md's evidence table. Exception: multi-source citations produce `{fact_id}_source_{N}` sub-entries in `citations` and the evidence table that derive from the parent `fact_registry` entry. These sub-IDs do not appear in `fact_registry` itself.
 - Verification statuses in proof.md must be derivable from JSON summary `citations[].status` (normalized field, not parsed from message)
 - The verdict and key numbers must be identical across proof.md, proof_audit.md, and the JSON summary
 - All Type A facts in proof_audit.md must have method/result from JSON summary `fact_registry` entries
