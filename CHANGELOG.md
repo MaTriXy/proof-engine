@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.10.0] - Unreleased
+## [1.0.0] - 2026-03-28
 
 ### Added
 
@@ -15,6 +15,20 @@ All notable changes to this project will be documented in this file.
   - `llms.txt` agent entry point for AI agents to discover and interact with the catalog
   - PR-based community proof submissions with CI validation
   - Methodology page generated from DESIGN.md and hardening rules
+- **Site visual refresh** — "Forensic Terminal x Dark Scholar" theme
+  - JetBrains Mono typography for UI elements, Georgia serif for claim text
+  - Warm slate card design with rounded corners and source line previews
+  - Structured evidence tables with clickable source links on proof detail pages
+  - Linked Source Credibility and Extraction Records audit tables
+  - Verdict symbol prefixes (checkmark/X/half-circle/?) scoped to detail page banners
+  - Q.E.D. tombstone favicon and touch icons
+  - GitHub Octocat icon in navigation (replaces text link)
+  - Google Analytics 4 integration
+  - Responsive breakpoints for mobile (640px) and tablet (768px)
+  - Landing page stats: Proved/Disproved counts replace ambiguous "Fully Resolved %"
+  - Source names on proof cards (top 3 cited sources with "+N more" overflow)
+  - Pure computation proofs labeled "Pure computation — no external sources"
+  - All inline styles removed from templates and JavaScript
 - **Absence-of-Evidence Proof Template** — new template for claims about absence of published evidence, with `search_registry` data structure, `verify_search_registry()` verification, Type S facts in FACT_REGISTRY, and `SUPPORTED` verdict
 - **SUPPORTED verdict** — 7th and 8th verdicts (`SUPPORTED`, `SUPPORTED (with unverified citations)`) for absence-of-evidence proofs where the epistemic claim is inherently weaker than deductive proof. Blue badge, own catalog filter.
 - **Academic citation normalization** — `normalize_text()` now strips inline reference markers (`<sup>[1]</sup>`, `<a class="xref">[1,2]</a>`) from PMC and journal HTML before quote matching, fixing false-negative citation verification on academic sources
