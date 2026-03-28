@@ -78,6 +78,12 @@ Download [`proof-engine.zip`](https://github.com/yaniv-golan/proof-engine/releas
 - **Project-level**: `.agents/skills/` in your project root
 - **User-level**: `~/.agents/skills/`
 
+## Published Proofs
+
+Browse verified proofs at **[yaniv-golan.github.io/proof-engine](https://yaniv-golan.github.io/proof-engine/)** — a searchable catalog of claims that have been formally proved or disproved, with full audit trails. AI agents can fetch structured proof data via the [JSON API](https://yaniv-golan.github.io/proof-engine/index.json).
+
+Want to contribute? See [how to submit a proof](https://yaniv-golan.github.io/proof-engine/submit/).
+
 ## Usage
 
 The skill auto-activates when you ask to prove, verify, or fact-check a claim. Examples:
