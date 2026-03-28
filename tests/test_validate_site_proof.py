@@ -31,7 +31,7 @@ def test_absence_proof_requires_search_registry():
         "key_results": {},
         "generator": {"name": "proof-engine", "version": "0.11.0", "repo": "test", "generated_at": "2026-03-28"},
     }
-    errors = validate_json_structure(data)
+    errors, _warnings = validate_json_structure(data)
     assert any("search_registry" in e for e in errors)
 
 
@@ -45,7 +45,7 @@ def test_non_absence_proof_no_search_registry_ok():
         "key_results": {},
         "generator": {"name": "proof-engine", "version": "0.11.0", "repo": "test", "generated_at": "2026-03-28"},
     }
-    errors = validate_json_structure(data)
+    errors, _warnings = validate_json_structure(data)
     assert not any("search_registry" in e for e in errors)
 
 
@@ -65,7 +65,7 @@ def test_absence_proof_search_metadata_validated():
         },
         "generator": {"name": "proof-engine", "version": "0.11.0", "repo": "test", "generated_at": "2026-03-28"},
     }
-    errors = validate_json_structure(data)
+    errors, _warnings = validate_json_structure(data)
     assert any("missing authored field" in e for e in errors)
 
 
@@ -83,7 +83,7 @@ def test_supported_verdict_accepted():
         }},
         "generator": {"name": "proof-engine", "version": "0.11.0", "repo": "test", "generated_at": "2026-03-28"},
     }
-    errors = validate_json_structure(data)
+    errors, _warnings = validate_json_structure(data)
     assert not any("Unknown verdict" in e for e in errors)
 
 

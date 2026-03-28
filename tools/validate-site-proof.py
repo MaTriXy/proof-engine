@@ -7,10 +7,17 @@ import re
 import subprocess
 import sys
 import tempfile
+import typing
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from tools.lib.verdict import VERDICT_TAXONOMY
+
+# Import ProofData to get the known keys for unknown-key detection
+sys.path.insert(0, str(Path(__file__).parent.parent / "proof-engine" / "skills" / "proof-engine" / "scripts"))
+from proof_types import ProofData
+
+KNOWN_JSON_KEYS = set(typing.get_type_hints(ProofData).keys())
 
 REQUIRED_JSON_KEYS = ["fact_registry", "claim_formal", "claim_natural",
                       "verdict", "key_results", "generator"]
@@ -27,6 +34,16 @@ SEARCH_REGISTRY_AUTHORED_KEYS = [
 
 def validate_json_structure(proof_data):
     errors = []
+    warnings = []
+
+    # Check for unknown keys not in ProofData TypedDict
+    unknown_keys = set(proof_data.keys()) - KNOWN_JSON_KEYS
+    for key in sorted(unknown_keys):
+        warnings.append(
+            f"proof.json contains unknown key '{key}' — "
+            f"add it to ProofData in proof_types.py to silence this warning"
+        )
+
     for key in REQUIRED_JSON_KEYS:
         if key not in proof_data:
             errors.append(f"proof.json missing required key: {key}")
@@ -58,7 +75,7 @@ def validate_json_structure(proof_data):
                 if field not in entry:
                     errors.append(f"search_registry[{key}] missing authored field: {field}")
 
-    return errors
+    return errors, warnings
 
 
 def run_proof_and_extract_json(proof_py_path):
@@ -134,7 +151,9 @@ def main():
         sys.exit(1)
 
     proof_data = json.loads(proof_json_path.read_text())
-    errors.extend(validate_json_structure(proof_data))
+    struct_errors, struct_warnings = validate_json_structure(proof_data)
+    errors.extend(struct_errors)
+    warnings.extend(struct_warnings)
 
     # 2. Provenance check (skipped with --structural-only)
     if not structural_only:
