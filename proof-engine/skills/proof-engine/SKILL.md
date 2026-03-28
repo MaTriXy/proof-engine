@@ -110,7 +110,9 @@ For environment-specific details (Claude Code, ChatGPT, sandboxed), paywalled so
 
 **Type B facts (Empirical)**: Established by citation. Each MUST have: source name, working URL, exact quote. Reputable sources only.
 
-**Every proof has three parts**: (1) Fact Registry — numbered facts tagged Type A or B, (2) Proof Logic — a self-contained Python script, (3) Verdict — one of the five levels below.
+**Type S facts (Search)**: For absence-of-evidence proofs. Each database search is documented with a clickable `search_url`. The tool confirms the URL is accessible but cannot verify the result count — that's author-reported and reproducible by a human reviewer. This weaker trust boundary is reflected in the SUPPORTED verdict (never PROVED).
+
+**Every proof has three parts**: (1) Fact Registry — numbered facts tagged Type A, B, or S, (2) Proof Logic — a self-contained Python script, (3) Verdict — one of the levels below.
 
 ## The 7 Hardening Rules
 
