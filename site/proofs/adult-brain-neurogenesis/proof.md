@@ -32,8 +32,8 @@
 | B4 | Nardou et al. 2023: Psychedelics reopen social reward learning critical period in adult mice | Yes |
 | B5 | Ribic 2020: Abundant evidence for lifelong experience-dependent plasticity in adult sensory cortex | Yes |
 | B6 | Patton et al. 2018: Thalamocortical plasticity does not disappear but becomes gated in adults | Yes |
-| A1 | Count of independent reopening methods confirmed | Computed: 5 |
-| A2 | Does evidence support permanent closure? | Computed: No |
+| A1 | Count of independent reopening methods confirmed | Computed: 5 methods found |
+| A2 | Does evidence support permanent closure? | Computed: No — reopening demonstrated |
 
 ## Proof Logic
 

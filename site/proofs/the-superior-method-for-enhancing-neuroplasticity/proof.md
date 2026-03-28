@@ -37,7 +37,7 @@
 | B2 | Cardoso et al. 2024 systematic review — aerobic exercise and neuroplasticity (Int J Exercise Science) | Yes |
 | B3 | Marzbani et al. 2016 comprehensive review — neurofeedback efficacy limitations (Basic Clin Neurosci) | Yes |
 | B4 | Orndorff-Plunkett et al. 2017 — neurofeedback versus sham controls (Brain Sciences) | Yes |
-| A1 | Count of independent sources rejecting neurofeedback-as-superior claim | Computed: 4 |
+| A1 | Count of independent sources rejecting neurofeedback-as-superior claim | Computed: 4 sources reject claim |
 
 ---
 

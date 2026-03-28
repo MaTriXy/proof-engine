@@ -36,7 +36,7 @@
 | B1 | Moreno-Jiménez et al. 2019, *Nature Medicine* — thousands of immature neurons identified in human dentate gyrus up to the 9th decade | Yes |
 | B2 | Kempermann et al. 2018, *Cell Stem Cell* — 18-author consensus review; no reason to abandon adult-generated neurons across the life span | Yes |
 | B3 | Llorens-Martín et al. 2021, *Journal of Neuroscience* — AHN is a robust phenomenon in the human hippocampus during physiological and pathologic aging | Yes |
-| A1 | Count of independent sources confirming adult neurogenesis in humans (n\_confirming) | Computed: 3 |
+| A1 | Count of independent sources confirming adult neurogenesis in humans | Computed: 3 sources confirmed |
 
 *Source: proof.py JSON summary*
 

@@ -42,9 +42,9 @@
 | B3 | Simply Psychology: Patient H.M. Case Study — early life memories — SC3 | No (URL returned content but quote not matched) |
 | B4 | BrainFacts.org: Patient Zero — What We Learned from H.M. — SC2 | Yes |
 | B5 | Wikipedia: Anterograde amnesia — H.M. childhood memories — SC3 | Yes |
-| A1 | SC1 confirming source count (anterograde amnesia for new episodic memories) | Computed: 2 |
-| A2 | SC2 confirming source count (skill/procedural learning preserved) | Computed: 2 |
-| A3 | SC3 confirming source count (early-life retrograde memories intact) | Computed: 2 |
+| A1 | SC1 confirming source count (anterograde amnesia for new episodic memories) | Computed: 2 sources confirmed |
+| A2 | SC2 confirming source count (skill/procedural learning preserved) | Computed: 2 sources confirmed |
+| A3 | SC3 confirming source count (early-life retrograde memories intact) | Computed: 2 sources confirmed |
 | A4 | All three sub-claims meet threshold (compound claim holds) | Computed: True |
 
 *Source: proof.py JSON summary*
