@@ -180,7 +180,7 @@ Before presenting results, run through the checklist in [self-critique-checklist
 | **SUPPORTED (with unverified citations)** | Absence threshold met but corroborating citations couldn't be fetched |
 | **DISPROVED** | Verified counterexample or contradiction found |
 | **DISPROVED (with unverified citations)** | Counterexample found but some citations couldn't be fetched |
-| **PARTIALLY VERIFIED** | Some sub-claims proved, others unverifiable or disproved |
+| **PARTIALLY VERIFIED** | Some sub-claims met threshold, others did not — Conclusion states whether each failing SC lacked evidence or was contradicted |
 | **UNDETERMINED** | Insufficient evidence either way |
 
 **Threshold guidance for source-counting proofs:** The default `threshold: 3` means 3 independently verified sources must confirm the claim. Use `threshold: 2` only when the domain has few authoritative sources (e.g., a single landmark study replicated once). Always document the threshold choice in `operator_note`. Never set `threshold: 1` — a single source is not consensus.
@@ -190,3 +190,11 @@ Before presenting results, run through the checklist in [self-critique-checklist
 Strong for crisp, auditable, bounded claims; weak for open-ended, normative, or predictive claims. The key limit is **formalizable vs fuzzy** — a claim works if it decomposes into extractable facts and a clear rule for proof/disproof.
 
 Disproof is often easier (single counterexample suffices). The engine struggles with: deep original mathematics beyond sympy, broad causal inference, competing definitions, and large literature synthesis. Citation verification confirms quote presence, not semantic entailment — the adversarial check (Rule 5) mitigates this.
+
+## Edge Cases
+
+**Fictitious source attributions:** If a claim attributes data to a specific source that doesn't contain that data (e.g., "according to the 1947 British census" when no such census exists), treat it as a compound claim: (SC1) the numeric value is correct, (SC2) the stated source contains it. Prove SC1 from the actual source, and note the attribution error in `operator_note` and adversarial checks. The verdict reflects both sub-claims.
+
+**Partial-period data:** If a claim covers a time range but the best sources only cover part of it (e.g., claim says 1994-2023, sources cover 1994-2020), document the gap in `operator_note`. For **cumulative nonnegative totals** (e.g., total aid disbursed, cumulative emissions), if the partial-period sum already exceeds the claim's threshold, prove it with a logical extension: "If S₂₀ > T and the quantity is monotonically nondecreasing (cumulative total cannot shrink), then S₂₃ ≥ S₂₀ > T." State the monotonicity assumption explicitly using `explain_calc()`. This shortcut does NOT apply to averages, rates, percentages, or rolling metrics — for those, the missing-period values could decrease the aggregate, and you must either find full-period sources or return `UNDETERMINED` with an explanation of what data is missing.
+
+**Source doesn't contain claimed constant:** If a claim says "per [Source]" but that source doesn't publish the specific constant (e.g., "CODATA values for solar mass" when CODATA doesn't list solar mass), document the substitution in `operator_note`: which source you actually used, why it's authoritative, and how it relates to the claimed source.
