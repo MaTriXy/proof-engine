@@ -125,6 +125,14 @@ def extract_verdict_from_conclusion(proof_md_path):
         sections[heading.lower()] = text[start:end].strip()
 
     conclusion = sections.get("conclusion", "")
+    # First try to match the explicit "**Verdict: X**" declaration
+    verdict_decl = re.search(r"\*\*Verdict:\s*(.+?)\*\*", conclusion)
+    if verdict_decl:
+        declared = verdict_decl.group(1).strip()
+        for verdict in sorted(VERDICT_TAXONOMY.keys(), key=len, reverse=True):
+            if verdict in declared:
+                return verdict
+    # Fall back to searching the full conclusion text
     for verdict in sorted(VERDICT_TAXONOMY.keys(), key=len, reverse=True):
         if verdict in conclusion:
             return verdict

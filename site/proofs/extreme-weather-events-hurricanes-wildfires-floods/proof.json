@@ -1,0 +1,183 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "source_gfdl",
+      "label": "NOAA GFDL: Atlantic hurricane frequency partly driven by aerosol changes, not solely greenhouse gases"
+    },
+    "B2": {
+      "key": "source_usgs",
+      "label": "USGS: urbanization independently increases the size and frequency of floods"
+    },
+    "B3": {
+      "key": "source_pnasnexus",
+      "label": "PNAS Nexus: wildfire risk is a confluence of climate change AND development (WUI expansion)"
+    },
+    "B4": {
+      "key": "source_ipcc",
+      "label": "IPCC AR6 Ch.11: attribution cites greenhouse gases, aerosol emissions, AND land-use changes as separate human influences"
+    },
+    "A1": {
+      "label": "Count of independent sources confirming non-climate drivers of extreme weather",
+      "method": "count(citations with status in ('verified', 'partial')) = 4",
+      "result": "4"
+    }
+  },
+  "claim_formal": {
+    "subject": "Extreme weather events (hurricanes, wildfires, floods)",
+    "property": "causal attribution of increased frequency and intensity",
+    "operator": ">=",
+    "operator_note": "The claim is a conjunction of four sub-claims: (SC1) extreme weather events have increased in frequency; (SC2) they have increased in intensity; (SC3) the change is 'dramatic'; (SC4) climate change is the *sole* cause. A conjunction is false when any conjunct is false. SC4 is the clearest falsifier: if scientific literature identifies ANY non-climate factor as a contributing cause, the claim is disproved. This proof tests SC4 by counting independent authoritative sources that explicitly document non-climate drivers of extreme weather (aerosol forcing, urbanization, land use change, fire suppression history). Threshold: 3 independent sources confirming non-climate drivers suffices to disprove SC4. SC1 is also only partially true: global hurricane frequency has not clearly increased (NOAA GFDL). SC2 and SC3 have stronger support for some event types.",
+    "threshold": 3,
+    "proof_direction": "disprove"
+  },
+  "claim_natural": "Extreme weather events (hurricanes, wildfires, floods) have become dramatically more frequent and intense solely because of climate change.",
+  "citations": {
+    "B1": {
+      "source_key": "source_gfdl",
+      "source_name": "NOAA Geophysical Fluid Dynamics Laboratory (GFDL) \u2014 Global Warming and Hurricanes",
+      "url": "https://www.gfdl.noaa.gov/global-warming-and-hurricanes/",
+      "quote": "the increase in tropical storm frequency in the Atlantic basin since the 1970s has been at least partly driven by decreases in aerosols from human activity and volcanic forcing.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "noaa.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B2": {
+      "source_key": "source_usgs",
+      "source_name": "U.S. Geological Survey (USGS) Fact Sheet FS-076-03 \u2014 Effects of Urban Development on Floods",
+      "url": "https://pubs.usgs.gov/fs/fs07603/",
+      "quote": "Urbanization generally increases the size and frequency of floods and may expose communities to increasing flood hazards.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "usgs.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B3": {
+      "source_key": "source_pnasnexus",
+      "source_name": "PNAS Nexus \u2014 Wildfire risk management in the era of climate change (2024)",
+      "url": "https://academic.oup.com/pnasnexus/article/3/5/pgae151/7665998",
+      "quote": "Wildfire risk lies in the confluence of climate change and development in the WUI",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "wayback",
+      "credibility": {
+        "domain": "oup.com",
+        "source_type": "academic",
+        "tier": 4,
+        "flags": [],
+        "note": "Known academic/scholarly publisher"
+      }
+    },
+    "B4": {
+      "source_key": "source_ipcc",
+      "source_name": "IPCC Sixth Assessment Report (AR6) Working Group I \u2014 Chapter 11: Weather and Climate Extreme Events",
+      "url": "https://www.ipcc.ch/report/ar6/wg1/chapter/chapter-11/",
+      "quote": "Evidence of observed changes in extremes and their attribution to human influence (including greenhouse gas and aerosol emissions and land-use changes) has strengthened since AR5",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "ipcc.ch",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Known government/intergovernmental organization"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "the increase in tropical storm frequency in the Atlantic basin since the 1970s h"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Urbanization generally increases the size and frequency of floods and may expose"
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Wildfire risk lies in the confluence of climate change and development in the WU"
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Evidence of observed changes in extremes and their attribution to human influenc"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Multiple independent institutions consulted (NOAA, USGS, PNAS Nexus, IPCC)",
+      "n_sources_consulted": 4,
+      "n_sources_verified": 4,
+      "sources": {
+        "source_gfdl": "verified",
+        "source_usgs": "verified",
+        "source_pnasnexus": "verified",
+        "source_ipcc": "verified"
+      },
+      "independence_note": "Sources are from four distinct institutions: NOAA (federal agency), USGS (federal agency), PNAS Nexus (peer-reviewed journal), and IPCC (intergovernmental scientific body). Each addresses a different event type (hurricanes, floods, wildfires, general attribution), confirming the finding is not institution-specific."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Does any mainstream scientific organization claim climate change is the *sole* cause of extreme weather?",
+      "verification_performed": "Searched IPCC AR6 Chapter 11, NOAA, NASA, and WMO statements for language claiming 'solely', 'only', or 'exclusively' climate change drives extreme weather. IPCC AR6 consistently lists 'greenhouse gas and aerosol emissions and land-use changes' as separate contributing human influences. NOAA GFDL explicitly names aerosol changes and natural variability as distinct factors. No mainstream scientific body uses the word 'solely' in attributing extreme weather to climate change alone.",
+      "finding": "No major scientific organization claims climate change is the sole cause. All authoritative sources identify multiple drivers. This confirms SC4 is false and strengthens the disproof.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is SC1 (frequency increase) fully true for all three event types?",
+      "verification_performed": "Reviewed NOAA GFDL on global hurricane frequency: 'global tropical cyclone frequency timeseries do not show evidence for significant rising trends.' Also: 'after adjusting for a likely under-count of hurricanes in the pre-satellite era there is essentially no long-term trend in hurricane counts.' IPCC AR6 confirms heavy precipitation and heat extremes have increased globally. Wildfire burned area has increased in western US and globally. Flood frequency shows regional variation with urbanization as a major driver.",
+      "finding": "SC1 is only partially true. Global hurricane COUNT has NOT clearly increased \u2014 a direct contradiction of 'more frequent' for that event type. Heat extremes, heavy precipitation, and wildfire area have increased. This is an additional reason the claim fails beyond SC4.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could 'solely' be charitably interpreted as 'primarily' rather than 'exclusively'?",
+      "verification_performed": "Linguistic analysis: 'solely' in standard English means 'only' or 'exclusively'. Example: 'I did this solely for you' means no other motive exists. Merriam-Webster: 'solely' = 'without another; only'. The claim says events became more frequent/intense 'solely because of climate change', leaving no room for other causes under any standard reading.",
+      "finding": "Even the most charitable reading of 'solely' means 'exclusively.' Reinterpreting it as 'primarily' would change the claim's content, not clarify it. The disproof stands under any standard linguistic interpretation.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could aerosol forcing and land-use changes themselves be caused by climate change, making them indirect effects rather than separate causes?",
+      "verification_performed": "Examined the logical structure: aerosol reductions (clean air regulations), urbanization, and WUI expansion are human socioeconomic and policy choices independent of greenhouse gas warming. NOAA GFDL explicitly lists 'aerosols from human activity' as a separate forcing distinct from greenhouse gas warming. Urbanization is driven by population growth and economic development. These are not consequences of climate change.",
+      "finding": "Aerosol policy changes, urbanization, and WUI development are independent human activities not caused by greenhouse gas warming. They are genuinely separate causal factors, not indirect effects of climate change. The 'solely' qualifier remains falsified.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_confirmed_non_climate_sources": 4,
+    "threshold": 3,
+    "operator": ">=",
+    "claim_holds": true,
+    "sc4_falsified": true,
+    "sc1_frequency_fully_true": false,
+    "sc1_note": "Global hurricane frequency has not clearly increased (NOAA GFDL)",
+    "proof_direction": "disprove"
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

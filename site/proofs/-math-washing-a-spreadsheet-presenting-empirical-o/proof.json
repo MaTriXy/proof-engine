@@ -1,0 +1,147 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "source_britannica_popper",
+      "label": "Britannica: Popper's falsifiability criterion \u2014 scientific validity requires falsifiability"
+    },
+    "B2": {
+      "key": "source_sep_scientific_method",
+      "label": "Stanford Encyclopedia of Philosophy: scientific method requires reasoning beyond observation"
+    },
+    "B3": {
+      "key": "source_catalog_of_bias",
+      "label": "Catalog of Bias: data-dredging is a recognized methodological distortion in science"
+    },
+    "A1": {
+      "label": "Count of authoritative sources confirming math-washing is not valid scientific practice",
+      "method": "count(verified citations) = 3",
+      "result": "3 sources confirmed (threshold: 3)"
+    }
+  },
+  "claim_formal": {
+    "subject": "Math washing (presenting empirical spreadsheet observations as universal theorems)",
+    "property": "constitutes valid scientific practice",
+    "operator": ">=",
+    "operator_note": "'Valid scientific practice' is interpreted as methodology meeting the standards recognized by the scientific community: specifically, the hypothetico-deductive model requiring hypothesis formation, falsifiability, and controlled testing. The DISPROOF threshold is 3 independent authoritative sources that confirm that presenting empirical observations alone as universal theorems\u2014without hypothesis formation, testing for falsifiability, and independent replication\u2014violates these standards. 'Universal theorem' is interpreted in the strict sense: a claim that holds without exception for all instances, not merely a statistical regularity or empirical generalization. A threshold of 3 is used to require broad expert consensus; a single contrary source would be insufficient.",
+    "threshold": 3,
+    "proof_direction": "disprove"
+  },
+  "claim_natural": "\"Math washing\" a spreadsheet (presenting empirical observations as universal theorems) is valid scientific practice.",
+  "citations": {
+    "B1": {
+      "source_key": "source_britannica_popper",
+      "source_name": "Encyclopaedia Britannica \u2014 criterion of falsifiability",
+      "url": "https://www.britannica.com/topic/criterion-of-falsifiability",
+      "quote": "a theory is genuinely scientific only if it is possible in principle to establish that it is false.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "britannica.com",
+        "source_type": "reference",
+        "tier": 3,
+        "flags": [],
+        "note": "Established reference source"
+      }
+    },
+    "B2": {
+      "source_key": "source_sep_scientific_method",
+      "source_name": "Stanford Encyclopedia of Philosophy \u2014 scientific method",
+      "url": "https://plato.stanford.edu/entries/scientific-method/",
+      "quote": "In addition to careful observation, then, scientific method requires a logic as a system of reasoning for properly arranging, but also inferring beyond, what is known by observation.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "stanford.edu",
+        "source_type": "academic",
+        "tier": 4,
+        "flags": [],
+        "note": "Academic domain (.edu)"
+      }
+    },
+    "B3": {
+      "source_key": "source_catalog_of_bias",
+      "source_name": "Catalog of Bias \u2014 data-dredging bias",
+      "url": "https://catalogofbias.org/biases/data-dredging-bias/",
+      "quote": "A distortion that arises from presenting the results of unplanned statistical tests as if they were a fully prespecified course of analyses.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "catalogofbias.org",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "a theory is genuinely scientific only if it is possible in principle to establis"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "In addition to careful observation, then, scientific method requires a logic as "
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "A distortion that arises from presenting the results of unplanned statistical te"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Multiple independent authoritative sources consulted (Britannica, SEP, Catalog of Bias)",
+      "n_sources_consulted": 3,
+      "n_sources_verified": 3,
+      "sources": {
+        "source_britannica_popper": "verified",
+        "source_sep_scientific_method": "verified",
+        "source_catalog_of_bias": "verified"
+      },
+      "independence_note": "Sources are from different institutions and traditions: encyclopedic philosophy (Britannica), academic philosophy reference (Stanford Encyclopedia), and medical/scientific methodology catalog (Oxford-affiliated Catalog of Bias). Each addresses a distinct failure mode of math-washing: falsifiability failure (B1), insufficiency of observation alone (B2), and data-dredging distortion (B3)."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Is there a scientific tradition that validates presenting inductive generalizations from data as universal laws without further testing?",
+      "verification_performed": "Searched 'defense inductive reasoning empirical observations sufficient universal scientific laws' and 'Bacon inductivism valid science pattern observation'. Found inductivism (Bacon's model) as a candidate defense.",
+      "finding": "Even Bacon's inductivism \u2014 the strongest defense of inductive science \u2014 requires systematic collection, replication, and elimination of observer bias before generalizing. Naive inductivism has been largely discredited in philosophy of science (Popper, 1934; Hempel, 1965). More importantly, no form of inductivism endorses presenting patterns as universal 'theorems' (a term implying deductive necessity) rather than empirical generalizations.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Does Exploratory Data Analysis (EDA) validate presenting spreadsheet patterns as scientific findings?",
+      "verification_performed": "Searched 'Tukey exploratory data analysis purpose hypothesis generation not confirmation'. Reviewed EDA methodology documentation.",
+      "finding": "EDA (Tukey 1977) is an explicitly hypothesis-generating practice, not hypothesis-confirming. Tukey's framework is designed to produce candidate hypotheses for subsequent testing, not to generate universal theorems. This supports the disproof: the EDA literature itself distinguishes pattern-finding from universal claims.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could 'math washing' be valid in limited empirical domains like actuarial science, empirical economics, or physics phenomenology?",
+      "verification_performed": "Searched 'stylized facts empirical economics vs universal law', 'actuarial science empirical observation universal theorem'. Reviewed terminology used in empirical economic methodology.",
+      "finding": "Empirical economics explicitly distinguishes between 'stylized facts' (regularities observed in data) and 'economic laws' or theorems. Kaldor (1961) introduced 'stylized facts' precisely because observed patterns in data do NOT constitute universal theorems without theoretical grounding. Even in phenomenological physics, empirical regularities (e.g., Kepler's laws) were only elevated to scientific law status after being derived from deeper theoretical principles (Newton's mechanics). No domain endorses presenting data patterns as universal theorems directly.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_confirmed": 3,
+    "threshold": 3,
+    "operator": ">=",
+    "claim_holds": true,
+    "proof_direction": "disprove"
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

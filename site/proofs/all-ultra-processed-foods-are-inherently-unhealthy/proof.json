@@ -1,0 +1,266 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "sc1_nhs",
+      "label": "SC1: NHS \u2014 explicitly names UPFs acceptable in a healthy diet"
+    },
+    "B2": {
+      "key": "sc1_harvard",
+      "label": "SC1: Harvard T.H. Chan Nutrition Source \u2014 some UPFs may be useful"
+    },
+    "B3": {
+      "key": "sc1_gibney",
+      "label": "SC1: Gibney 2019 (Curr Dev Nutr) \u2014 no good/bad foods, only diets"
+    },
+    "B4": {
+      "key": "sc2_nhs",
+      "label": "SC2: NHS \u2014 recommends 'eating less' not complete avoidance"
+    },
+    "B5": {
+      "key": "sc2_who",
+      "label": "SC2: WHO Healthy Diet fact sheet \u2014 'limit' not 'avoid completely'"
+    },
+    "B6": {
+      "key": "sc2_harvard",
+      "label": "SC2: Harvard \u2014 UPF use is consumer choice, pros and cons"
+    },
+    "A1": {
+      "label": "SC1 verified disproof source count",
+      "method": "count(SC1 verified disproof citations >= 3)",
+      "result": "3"
+    },
+    "A2": {
+      "label": "SC2 verified disproof source count",
+      "method": "count(SC2 verified disproof citations >= 3)",
+      "result": "3"
+    }
+  },
+  "claim_formal": {
+    "subject": "Ultra-processed foods (NOVA Group 4 classification)",
+    "proof_direction": "disprove",
+    "sub_claims": [
+      {
+        "id": "SC1",
+        "property": "Every food classified as ultra-processed (NOVA Group 4) is inherently harmful regardless of context, quantity, or individual nutrient composition",
+        "operator": ">=",
+        "threshold": 3,
+        "proof_direction": "disprove",
+        "operator_note": "'All UPFs are inherently unhealthy' is a universal claim: every NOVA Group 4 food is harmful by its nature. Logically, one credible counterexample disproves a universal. Threshold set to 3 (\u22653 independent authoritative sources that explicitly reject this universal framing or identify UPFs acceptable in a healthy diet) to require genuine multi-source consensus, not isolated dissent."
+      },
+      {
+        "id": "SC2",
+        "property": "Authoritative health bodies recommend complete avoidance of all ultra-processed foods (i.e., no UPF should ever be consumed by anyone)",
+        "operator": ">=",
+        "threshold": 3,
+        "proof_direction": "disprove",
+        "operator_note": "'Should be avoided completely' is read as an absolute, context-free recommendation. To disprove it, we need \u22653 independent authoritative health bodies or peer-reviewed sources whose actual guidance is reduction or limitation \u2014 not elimination \u2014 and/or that explicitly allow some UPFs in a healthy diet. If major health bodies consistently say 'eat less,' 'limit,' or 'some UPFs can be included in a healthy diet,' the absolute avoidance claim is refuted."
+      }
+    ],
+    "compound_operator": "AND",
+    "operator_note": "The original claim is compound: (SC1 AND SC2). Both must hold for the claim to be true. To disprove the compound AND claim, disproving either SC1 or SC2 is logically sufficient. This proof disproves both sub-claims independently."
+  },
+  "claim_natural": "All ultra-processed foods are inherently unhealthy and should be avoided completely.",
+  "citations": {
+    "B1": {
+      "source_key": "sc1_nhs",
+      "source_name": "NHS (UK National Health Service) \u2014 What are processed foods?",
+      "url": "https://www.nhs.uk/live-well/eat-well/how-to-eat-a-balanced-diet/what-are-processed-foods/",
+      "quote": "Some ultra-processed foods can be included in a healthy diet \u2013 such as wholemeal sliced bread, wholegrain or higher fibre breakfast cereals or baked beans.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nhs.uk",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    },
+    "B2": {
+      "source_key": "sc1_harvard",
+      "source_name": "Harvard T.H. Chan School of Public Health \u2014 The Nutrition Source: Processed Foods",
+      "url": "https://nutritionsource.hsph.harvard.edu/processed-foods/",
+      "quote": "some products may be a useful addition to a healthful diet",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "harvard.edu",
+        "source_type": "academic",
+        "tier": 4,
+        "flags": [],
+        "note": "Academic domain (.edu)"
+      }
+    },
+    "B3": {
+      "source_key": "sc1_gibney",
+      "source_name": "Gibney MJ (2019), Ultra-Processed Foods: Definitions and Policy Issues, Current Developments in Nutrition, PMC6389637",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6389637/",
+      "quote": "there are good and bad diets, not good and bad foods",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B4": {
+      "source_key": "sc2_nhs",
+      "source_name": "NHS (UK National Health Service) \u2014 What are processed foods?",
+      "url": "https://www.nhs.uk/live-well/eat-well/how-to-eat-a-balanced-diet/what-are-processed-foods/",
+      "quote": "Most people would probably benefit from eating less ultra-processed foods that are high in saturated fat, salt or sugar.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nhs.uk",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    },
+    "B5": {
+      "source_key": "sc2_who",
+      "source_name": "World Health Organization \u2014 Healthy Diet Fact Sheet",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
+      "quote": "Foods high in unhealthy fats, free sugars and sodium should be limited.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "who.int",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Known government/intergovernmental organization"
+      }
+    },
+    "B6": {
+      "source_key": "sc2_harvard",
+      "source_name": "Harvard T.H. Chan School of Public Health \u2014 The Nutrition Source: Processed Foods",
+      "url": "https://nutritionsource.hsph.harvard.edu/processed-foods/",
+      "quote": "the use of processed and even ultra-processed foods is the choice of the consumer, and there are pros and cons that come with each type",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "harvard.edu",
+        "source_type": "academic",
+        "tier": 4,
+        "flags": [],
+        "note": "Academic domain (.edu)"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Some ultra-processed foods can be included in a healthy diet \u2013 such as wholemeal"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "some products may be a useful addition to a healthful diet"
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "there are good and bad diets, not good and bad foods"
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Most people would probably benefit from eating less ultra-processed foods that a"
+    },
+    "B5": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Foods high in unhealthy fats, free sugars and sodium should be limited."
+    },
+    "B6": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "the use of processed and even ultra-processed foods is the choice of the consume"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "SC1 disproof: multiple independent authoritative sources consulted",
+      "n_sources_consulted": 3,
+      "n_sources_verified": 3,
+      "sources": {
+        "sc1_nhs": "verified",
+        "sc1_harvard": "verified",
+        "sc1_gibney": "verified"
+      },
+      "independence_note": "NHS (UK government health body), Harvard T.H. Chan (US academic), Gibney 2019 in peer-reviewed journal (Current Developments in Nutrition) \u2014 independent institutions across different countries and sectors."
+    },
+    {
+      "description": "SC2 disproof: multiple independent authoritative sources consulted",
+      "n_sources_consulted": 3,
+      "n_sources_verified": 3,
+      "sources": {
+        "sc2_nhs": "verified",
+        "sc2_who": "verified",
+        "sc2_harvard": "verified"
+      },
+      "independence_note": "NHS (UK), WHO (international UN agency), Harvard T.H. Chan (US academic) \u2014 three independent institutions across jurisdictions and sectors."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Do any major health authorities support complete avoidance of all UPFs?",
+      "verification_performed": "Searched for 'WHO ultra-processed foods avoid completely,' 'NHS avoid all ultra-processed foods,' 'USDA dietary guidelines ultra-processed avoid completely,' and reviewed Brazil 2014 Dietary Guidelines (origin of NOVA classification). Also checked AAP (American Academy of Pediatrics) infant formula guidance.",
+      "finding": "No major health authority (WHO, NHS, CDC, USDA, AAP, BNF) recommends complete avoidance of all UPFs. Brazil's 2014 Dietary Guidelines say 'Avoid ultra-processed foods' but this is primarily a cultural/culinary preference statement and is explicitly contested by other nutrition bodies. The AAP continues to recommend infant formula (NOVA Group 4) for infants who cannot breastfeed, directly contradicting any universal avoidance directive.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Do observational studies show ALL UPF consumption is harmful, even at low levels?",
+      "verification_performed": "Reviewed Rico-Camp\u00e0 et al. (BMJ 2019, PMC6538973) \u2014 largest-cited UPF mortality cohort study. Searched for 'ultra-processed food dose-response mortality low consumption' and 'ultra-processed food health benefit study.' Also reviewed Elizabeth et al. (Nutrients 2020, PMC7399967) systematic review.",
+      "finding": "Rico-Camp\u00e0 et al. (BMJ 2019) found higher all-cause mortality in the highest quartile (\u22654 servings/day) vs lowest quartile \u2014 a dose-dependent, not absolute, association. The lowest-quartile group had best outcomes while still consuming some UPFs. Authors explicitly note inability to rule out residual confounding. Elizabeth et al. (Nutrients 2020) reviewed 43 studies; all associations were at population/dietary-pattern level, not individual-product level. No peer-reviewed study demonstrates that any dose of any UPF is inherently harmful.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is the NOVA 'ultra-processed' category scientifically coherent enough to support a universal health claim?",
+      "verification_performed": "Searched 'NOVA classification criticism reliability,' 'ultra-processed food definition controversy,' and reviewed Gibney 2019 (PMC6389637). Checked whether infant formula is classified as UPF under NOVA.",
+      "finding": "Gibney 2019 (PMC6389637) documents that NOVA classifies all commercially produced infant formula as ultra-processed and 'to be avoided,' yet 'no study has been undertaken to explore the implications of such a policy for this vulnerable group.' Harvard Nutrition Source states 'NOVA has been criticized for being too general in classifying certain foods, causing confusion.' The NOVA Group 4 category spans diet sodas, iron-fortified infant cereals, wholemeal sliced bread, and infant formula \u2014 a heterogeneous group that undermines any universal health claim.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Do NOVA originators themselves claim all UPFs are 'inherently' harmful?",
+      "verification_performed": "Reviewed Monteiro et al. 2018 NOVA food classification paper and PAHO/WHO-aligned guidance. Searched 'Monteiro ultra-processed inherently unhealthy.'",
+      "finding": "NOVA proponents (Monteiro et al.) argue that processing itself may cause harm beyond nutrient composition and advocate strong policy restrictions. However, their peer-reviewed papers phrase findings as population-level associations, not absolute per-food determinations. The 'inherently unhealthy' framing \u2014 implying harm regardless of quantity or context \u2014 exceeds what even the strongest pro-NOVA researchers assert in the literature.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "sc1_n_confirmed": 3,
+    "sc1_threshold": 3,
+    "sc1_disproved": true,
+    "sc2_n_confirmed": 3,
+    "sc2_threshold": 3,
+    "sc2_disproved": true,
+    "both_sub_claims_disproved": true,
+    "compound_claim_disproved": true
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

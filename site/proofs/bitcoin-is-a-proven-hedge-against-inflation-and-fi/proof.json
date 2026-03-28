@@ -1,0 +1,180 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "sc1_bedel",
+      "label": "SC1 counter-evidence: Bitcoin returned -64.8% in 2022 \u2014 the worst inflation year since 1981 (Bedel Financial Advisors)"
+    },
+    "B2": {
+      "key": "sc1_cpi",
+      "label": "SC1 context: US CPI peaked at 9.1% in June 2022 \u2014 largest year-over-year increase since November 1981 (Bedel Financial Advisors)"
+    },
+    "B3": {
+      "key": "sc1_smales",
+      "label": "SC1 academic finding: cryptocurrencies are not a viable alternative to gold for inflation hedging (Smales 2024, Accounting & Finance)"
+    },
+    "B4": {
+      "key": "sc2_venezuela",
+      "label": "SC2 partial context: Venezuelan citizens use crypto amid hyperinflation and currency collapse (AINFP)"
+    },
+    "A1": {
+      "label": "SC1 computation: count of verified counter-evidence sources for Bitcoin-as-inflation-hedge claim (any >=1 disproves 'proven')",
+      "method": "count verified SC1 counter-evidence sources in {sc1_bedel, sc1_cpi, sc1_smales}",
+      "result": "3 verified (>= 1 needed to disprove 'proven' status for SC1)"
+    },
+    "A2": {
+      "label": "SC2 computation: count of verified support sources versus 'proven' threshold of 3",
+      "method": "count verified SC2 support sources vs threshold of 3",
+      "result": "1 verified (< 3 = not proven for SC2)"
+    }
+  },
+  "claim_formal": {
+    "subject": "Bitcoin",
+    "property": "proven (consistent, empirically reliable) hedge against both (SC1) ordinary consumer-price-index (CPI) inflation and (SC2) fiat currency collapse or hyperinflation",
+    "operator": "==",
+    "operator_note": "'Proven' is interpreted strictly: requires consistent, documented empirical performance under the claimed conditions with no verified counterexamples. The claim is a conjunction (SC1 AND SC2): both sub-claims must be proven. SC1 proof direction is FALSIFICATION \u2014 one verified counterexample (Bitcoin declining during a period of high CPI inflation) is sufficient to disprove the 'proven' designation for SC1. SC2 proof direction is CONSENSUS \u2014 requires >= 3 independent verified sources establishing Bitcoin reliably protects value during fiat collapse; having found only partial evidence (stablecoins preferred over Bitcoin in hyperinflationary economies), SC2 does not reach 'proven' status. The compound claim holds only if BOTH SC1 and SC2 are individually proven.",
+    "threshold": true,
+    "sub_claims": {
+      "SC1": "Bitcoin is a proven hedge against ordinary CPI inflation",
+      "SC2": "Bitcoin is a proven hedge against fiat currency collapse / hyperinflation"
+    }
+  },
+  "claim_natural": "Bitcoin is a proven hedge against inflation and fiat currency collapse.",
+  "citations": {
+    "B1": {
+      "source_key": "sc1_bedel",
+      "source_name": "Bedel Financial Advisors \u2014 Inflation Hedge in 2022: Bitcoin vs. Gold",
+      "url": "https://www.bedelfinancial.com/inflation-hedge-in-2022-bitcoin-vs-gold",
+      "quote": "bitcoin ended the year down an abysmal -64.8%, while gold ended the year relatively flat, down about -0.7%",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "bedelfinancial.com",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    },
+    "B2": {
+      "source_key": "sc1_cpi",
+      "source_name": "Bedel Financial Advisors \u2014 Inflation Hedge in 2022: Bitcoin vs. Gold (CPI peak data)",
+      "url": "https://www.bedelfinancial.com/inflation-hedge-in-2022-bitcoin-vs-gold",
+      "quote": "By June, the 12-month CPI was up to 9.1%. This was the largest year-over-year increase since November 1981",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "bedelfinancial.com",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    },
+    "B3": {
+      "source_key": "sc1_smales",
+      "source_name": "IDEAS/RepEC \u2014 Smales (2024), Accounting & Finance: Cryptocurrency as an alternative inflation hedge?",
+      "url": "https://ideas.repec.org/a/bla/acctfi/v64y2024i2p1589-1611.html",
+      "quote": "cryptocurrencies do not currently offer investors a viable alternative to gold for hedging inflation",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "repec.org",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    },
+    "B4": {
+      "source_key": "sc2_venezuela",
+      "source_name": "AINFP \u2014 How Venezuelans Use Crypto Amid Hyperinflation",
+      "url": "https://ainfp.org/how-venezuelans-use-crypto-amid-hyperinflation",
+      "quote": "Annual inflation at 229% in May 2025 and the currency losing over 70% of its value since January",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "ainfp.org",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "bitcoin ended the year down an abysmal -64.8%, while gold ended the year relativ"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "By June, the 12-month CPI was up to 9.1%. This was the largest year-over-year in"
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "cryptocurrencies do not currently offer investors a viable alternative to gold f"
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Annual inflation at 229% in May 2025 and the currency losing over 70% of its val"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "SC1 cross-check: real-world 2022 data (Bedel Financial) independently corroborated by peer-reviewed academic consensus (Smales 2024, Accounting & Finance)",
+      "values_compared": [
+        "Bedel Financial (2022): Bitcoin -64.8% while CPI peaked at 9.1%",
+        "Smales (2024): cryptocurrencies not a viable gold alternative for hedging inflation"
+      ],
+      "agreement": true,
+      "note": "Both independently confirm Bitcoin failed as an inflation hedge. Sources are independent: one financial advisory (real-world data), one peer-reviewed academic study (econometric analysis)."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Does any academic study confirm Bitcoin as a reliable, consistent inflation hedge?",
+      "verification_performed": "Searched Google Scholar and PubMed Central for 'Bitcoin inflation hedge' peer-reviewed studies. Found Bouri et al. (2021) in Finance Research Letters (PMC/NCB PMC8995501) which concluded 'Bitcoin appreciates against inflation or inflation expectation shocks, confirming its inflation-hedging property claimed by investors.' Also reviewed MDPI Axioms 11/7/339 on high-adoption countries.",
+      "finding": "Several studies using data primarily from 2010\u20132020 find some inflation-hedging signal in Bitcoin. However, Smales (2024) \u2014 using a longer, post-COVID series \u2014 finds the effect 'only significant for short-term inflation expectations' and 'only when inflation or market-implied inflation expectations are below 2%,' meaning Bitcoin hedges inflation precisely when no hedge is needed. The 2022 real-world test invalidated earlier positive findings: Bitcoin fell 65% during the worst US inflation in 40 years.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could Bitcoin's long-term appreciation (from <$1 in 2009 to >$10,000+) constitute an inflation hedge?",
+      "verification_performed": "Searched for 'Bitcoin long-term inflation-adjusted returns' and 'inflation hedge definition finance'. Reviewed academic definitions of an inflation hedge: an asset whose returns co-move positively with inflation, providing purchasing power protection during inflationary episodes.",
+      "finding": "Long-term appreciation does not establish an asset as an inflation hedge in the financial-economics sense. A hedge must reliably co-move with inflation during inflationary episodes. Bitcoin's 2022 performance (down 65% during peak inflation) demonstrates that its long-run appreciation coexists with sharp declines during the very periods a hedge would be needed. High-volatility assets with strong long-run trends (e.g., equities, real estate) are not classified as inflation hedges for the same reason.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Does Bitcoin adoption in Argentina (276% inflation in 2024) support SC2 (fiat collapse hedge)?",
+      "verification_performed": "Searched 'Argentina Bitcoin crypto adoption hyperinflation 2024' and reviewed Chainalysis 2023 Geography of Cryptocurrency report. Found Argentina among top global crypto adopters during its 2024 inflation crisis.",
+      "finding": "Argentina and Venezuela both show elevated crypto adoption during fiat crises. However, the dominant instruments are dollar-pegged stablecoins (USDT, USDC) rather than Bitcoin itself. In Venezuela, 'USDT' is the everyday transaction currency ('Binance dollars') while Bitcoin plays a secondary role. In Argentina, stablecoins dominate daily transactions. Bitcoin's own extreme volatility (capable of -50% in a single month) makes it a poor store of value during economic crises where price stability is paramount. This weakens the 'Bitcoin specifically' component of SC2.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "sc1_counter_evidence_verified": 3,
+    "sc2_support_verified": 1,
+    "sc2_proven_threshold": 3,
+    "sc1_verdict": "DISPROVED",
+    "sc2_verdict": "UNDETERMINED",
+    "claim_holds": false
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

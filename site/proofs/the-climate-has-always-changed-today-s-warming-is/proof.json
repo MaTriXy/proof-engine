@@ -1,0 +1,267 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "sc1_source_a",
+      "label": "SC1: NOAA Climate.gov Q&A \u2014 natural glacial-interglacial cycles on 100,000-year timescales"
+    },
+    "B2": {
+      "key": "sc1_source_b",
+      "label": "SC1: NOAA NCEI \u2014 natural climate forcing mechanisms (solar and volcanic)"
+    },
+    "B3": {
+      "key": "sc2_source_a",
+      "label": "SC2 disproof: IPCC AR6 (2021) \u2014 current changes unprecedented in thousands of years"
+    },
+    "B4": {
+      "key": "sc2_source_b",
+      "label": "SC2 disproof: NASA Earth Observatory \u2014 2024 was 1.47\u00b0C above pre-industrial baseline"
+    },
+    "B5": {
+      "key": "sc2_source_c",
+      "label": "SC2 disproof: NOAA Climate.gov \u2014 atmospheric CO2 higher than any point in human history"
+    },
+    "B6": {
+      "key": "sc2_source_d",
+      "label": "SC2 disproof: NOAA NCEI \u2014 temperatures increased at unprecedented rate over 50 years"
+    },
+    "A1": {
+      "label": "SC1: confirmed source count (natural variability)",
+      "method": "count(SC1 verified citations) = 2",
+      "result": "2 independent sources confirmed"
+    },
+    "A2": {
+      "label": "SC2: confirmed disproof source count (warming IS unusual)",
+      "method": "count(SC2 disproof verified citations) = 4",
+      "result": "4 independent sources confirmed warming IS unusual"
+    }
+  },
+  "claim_formal": {
+    "subject": "current global warming",
+    "sub_claims": [
+      {
+        "id": "SC1",
+        "property": "Earth's climate has undergone documented natural changes (glacial/interglacial cycles, natural forcings) throughout geological history",
+        "operator": ">=",
+        "threshold": 2,
+        "proof_direction": "affirm",
+        "operator_note": "SC1 is universally accepted \u2014 natural climate variability is real and well-documented. True if at least 2 independent authoritative sources confirm natural climate cycles and forcings. This sub-claim is not in dispute."
+      },
+      {
+        "id": "SC2",
+        "property": "today's warming is not unusual or alarming (i.e., falls within the range of natural variability)",
+        "operator": ">=",
+        "threshold": 3,
+        "proof_direction": "disprove",
+        "operator_note": "SC2 is the contentious part of the claim. A disproof requires at least 3 independent authoritative sources establishing that current warming IS unprecedented or unusual \u2014 directly contradicting the sub-claim's 'not unusual' assertion. Threshold of 3 chosen because the domain has many authoritative independent sources (IPCC, NASA, NOAA) and strong scientific consensus, so high source count is achievable. If threshold is met, SC2 is DISPROVED (the 'not unusual or alarming' claim is false)."
+      }
+    ],
+    "compound_operator": "AND",
+    "operator_note": "The compound claim asserts both SC1 (natural variability is real) AND SC2 (today's warming is not unusual). Both must hold for the claim to be PROVED. If SC1 is proved but SC2 is disproved, the verdict is PARTIALLY VERIFIED: the climate does indeed always change, but that historical variability does not imply today's warming is within natural bounds."
+  },
+  "claim_natural": "The climate has always changed \u2014 today's warming is not unusual or alarming.",
+  "citations": {
+    "B1": {
+      "source_key": "sc1_source_a",
+      "source_name": "NOAA Climate.gov \u2014 Has Earth warmed and cooled naturally throughout history? (Climate Q&A)",
+      "url": "https://www.climate.gov/news-features/climate-qa/hasnt-earth-warmed-and-cooled-naturally-throughout-history",
+      "quote": "Yes. Earth has experienced cold periods (informally referred to as \"ice ages,\" or \"glacials\") and warm periods (\"interglacials\") on roughly 100,000-year cycles for at least the last 1 million years",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "climate.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B2": {
+      "source_key": "sc1_source_b",
+      "source_name": "NOAA NCEI \u2014 Climate Change in the Context of Paleoclimate",
+      "url": "https://www.ncei.noaa.gov/news/climate-change-context-paleoclimate",
+      "quote": "Natural climate variations are a result of forcings, factors that drive the climate system to change. These forcings include solar and volcanic activity.",
+      "status": "partial",
+      "method": "aggressive_normalization",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "noaa.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B3": {
+      "source_key": "sc2_source_a",
+      "source_name": "IPCC \u2014 AR6 Working Group I Press Release (August 2021)",
+      "url": "https://www.ipcc.ch/2021/08/09/ar6-wg1-20210809-pr/",
+      "quote": "Many of the changes observed in the climate are unprecedented in thousands, if not hundreds of thousands of years",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "ipcc.ch",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Known government/intergovernmental organization"
+      }
+    },
+    "B4": {
+      "source_key": "sc2_source_b",
+      "source_name": "NASA Earth Observatory \u2014 2024 Was the Warmest Year on Record",
+      "url": "https://science.nasa.gov/earth/earth-observatory/2024-was-the-warmest-year-on-record-153806/",
+      "quote": "Earth in 2024 was about 1.47 degrees Celsius (2.65 degrees Fahrenheit) warmer than the 1850-1900 average",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nasa.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B5": {
+      "source_key": "sc2_source_c",
+      "source_name": "NOAA Climate.gov \u2014 Climate Change: Atmospheric Carbon Dioxide",
+      "url": "https://www.climate.gov/news-features/understanding-climate/climate-change-atmospheric-carbon-dioxide",
+      "quote": "Carbon dioxide levels today are higher than at any point in human history.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "climate.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B6": {
+      "source_key": "sc2_source_d",
+      "source_name": "NOAA NCEI \u2014 Climate Change in the Context of Paleoclimate",
+      "url": "https://www.ncei.noaa.gov/news/climate-change-context-paleoclimate",
+      "quote": "Temperatures have increased over the last 50 years at an unprecedented rate.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "noaa.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Yes. Earth has experienced cold periods (informally referred to as \"ice ages,\" o"
+    },
+    "B2": {
+      "value": "partial",
+      "value_in_quote": true,
+      "quote_snippet": "Natural climate variations are a result of forcings, factors that drive the clim"
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Many of the changes observed in the climate are unprecedented in thousands, if n"
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Earth in 2024 was about 1.47 degrees Celsius (2.65 degrees Fahrenheit) warmer th"
+    },
+    "B5": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Carbon dioxide levels today are higher than at any point in human history."
+    },
+    "B6": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Temperatures have increased over the last 50 years at an unprecedented rate."
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "SC1 independent sources (natural variability)",
+      "n_sources_consulted": 2,
+      "n_sources_verified": 2,
+      "sources": {
+        "sc1_source_a": "verified",
+        "sc1_source_b": "partial"
+      },
+      "independence_note": "Both SC1 sources are NOAA-family (climate.gov and NCEI) \u2014 same upstream authority, independently published pages. Provides corroboration but weaker than inter-agency independence."
+    },
+    {
+      "description": "SC2 disproof independent sources (warming is unprecedented)",
+      "n_sources_consulted": 4,
+      "n_sources_verified": 4,
+      "sources": {
+        "sc2_source_a": "verified",
+        "sc2_source_b": "verified",
+        "sc2_source_c": "verified",
+        "sc2_source_d": "verified"
+      },
+      "independence_note": "SC2 disproof spans three independent organizations: IPCC (intergovernmental body, 234 scientists from 65 countries), NASA (Goddard Institute for Space Studies), and NOAA (two pages from NCEI and climate.gov). These organizations maintain independent datasets and arrive at convergent conclusions."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Does the Medieval Warm Period (MWP, ~900\u20131200 AD) show that current warming is within natural bounds?",
+      "verification_performed": "Searched for 'Medieval Warm Period global temperature comparison current warming' and 'MWP warmer than today scientific evidence'. Reviewed IPCC AR6 paleoclimate chapter findings and Mann et al. reconstructions.",
+      "finding": "The MWP was a real regional warming (predominantly North Atlantic/Europe) but paleoclimate reconstructions consistently show global MWP temperatures were lower than current levels. IPCC AR6 WG1 states: 'The global nature and magnitude of current warmth is unprecedented in the context of the last 2000 years' (high confidence). The MWP does not establish that today's warming is within natural bounds globally.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Are there credible scientific sources that argue today's warming is within natural variability ranges?",
+      "verification_performed": "Searched for 'climate scientists natural variability explanation current warming', 'Roy Spencer Judith Curry natural climate warming', and 'scientific papers rejecting anthropogenic warming 2020 2021 2022'. Reviewed arguments from Spencer, Curry, and Lindzen.",
+      "finding": "A small minority of climate scientists (Spencer, Curry, Lindzen) have argued that natural variability plays a larger role than IPCC consensus states. However, their analyses do not claim warming is 'not unusual' \u2014 they debate attribution and sensitivity, not the existence or magnitude of the trend. Spencer's UAH satellite dataset, often cited by skeptics, itself shows a warming trend of ~0.15\u00b0C/decade since 1979. No credible scientific source claims current CO2 (422+ ppm) or warming rate (~1.47\u00b0C above pre-industrial) is within the natural Holocene variability range.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could urban heat island (UHI) effects or station biases explain the observed warming as a measurement artifact rather than real warming?",
+      "verification_performed": "Searched for 'urban heat island effect global temperature record bias correction', 'Berkeley Earth temperature UHI adjustment', and NOAA station homogenization methodology.",
+      "finding": "Berkeley Earth's independent analysis (Rohde et al. 2013) specifically accounted for UHI effects and found it explains less than 0.1\u00b0C of the ~1.5\u00b0C observed warming. Ocean temperature records (sea surface temperatures, Argo floats) \u2014 which are unaffected by UHI \u2014 show the same warming trend, ruling out land-station bias as the primary explanation. UHI does not account for observed warming.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Does the logical structure of the claim (climate has always changed, THEREFORE today's warming is not unusual) hold?",
+      "verification_performed": "Analyzed the logical structure: the premise (climate changes naturally) does not entail the conclusion (current change is within natural bounds). This is a non sequitur. Past natural changes occurred at different rates and magnitudes; their existence does not bound present or future change.",
+      "finding": "The argument form is logically invalid. Natural climate variability confirms that forcing can drive large climate changes \u2014 but this does not show current forcing is natural or current rates are within historical norms. The IPCC AR6 explicitly addresses this: past natural changes are well-understood and cannot explain the post-industrial warming.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "PARTIALLY VERIFIED",
+  "key_results": {
+    "sc1_confirmed_sources": 2,
+    "sc1_threshold": 2,
+    "sc1_holds": true,
+    "sc1_verdict": "PROVED (with unverified citations)",
+    "sc2_disproof_confirmed_sources": 4,
+    "sc2_threshold": 3,
+    "sc2_disproof_holds": true,
+    "sc2_claim_holds": false,
+    "sc2_verdict": "DISPROVED",
+    "compound_claim_holds": false
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

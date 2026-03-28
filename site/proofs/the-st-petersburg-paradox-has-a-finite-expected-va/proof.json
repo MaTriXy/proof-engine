@@ -1,0 +1,138 @@
+{
+  "fact_registry": {
+    "A1": {
+      "label": "SC1: EV term (1/2)^n * 2^n = 1 for every n; series = sum of infinitely many 1s",
+      "method": "algebraic: (1/2)^n * 2^n = 1^n = 1 for all n >= 1",
+      "result": "All terms = 1.0 (verified n=1..20); series = sum of infinity 1s"
+    },
+    "A2": {
+      "label": "SC1 cross-check: partial sums grow as N (unbounded), confirming divergence",
+      "method": "partial sum: sum_{k=1}^{N} 1 = N (unbounded)",
+      "result": "10-term sum=10.0, 20-term sum=20.0 (grows as N)"
+    },
+    "A3": {
+      "label": "SC2: E[ln(2^N)] = ln(2) * sum(n*(1/2)^n) = ln(2)*2 = 2*ln(2) (finite)",
+      "method": "E[ln(2^N)] = ln(2) * sum(n*(1/2)^n) = ln(2) * 2 = 2*ln(2)",
+      "result": "E[U] = 1.386294 = 2*ln(2); CE = exp(E[U]) = $4.000000"
+    },
+    "A4": {
+      "label": "SC2 cross-check: generating function confirms sum(n*(1/2)^n) = 2",
+      "method": "generating function: sum(n*x^n) = x/(1-x)^2 at x=1/2",
+      "result": "sum(n*(1/2)^n) = 2.0 (confirms = 2)"
+    },
+    "B1": {
+      "key": "source_wiki",
+      "label": "Wikipedia: St. Petersburg paradox \u2014 game rules and infinite expected value"
+    },
+    "B2": {
+      "key": "source_sep",
+      "label": "Stanford Encyclopedia of Philosophy \u2014 Bernoulli utility resolution"
+    }
+  },
+  "claim_formal": {
+    "subject": "St. Petersburg game",
+    "property": "expected monetary value (SC1) and rational certainty equivalent (SC2)",
+    "operator": "AND",
+    "operator_note": "The claim makes two assertions: (SC1) the expected monetary value E[X] is finite, AND (SC2) a rational person should pay only a finite amount. SC1 requires the series sum_{n>=1} (1/2^n)*2^n to converge to a finite number. SC2 requires decision theory (expected utility) to yield a finite certainty equivalent. The overall claim is DISPROVED because SC1 is false: the EV series diverges to infinity. SC2 is true \u2014 under Bernoulli's (1738) log utility, the certainty equivalent = $4 (initial wealth assumed zero) \u2014 but this does not save the compound claim because the correct resolution involves expected *utility*, not expected *value*."
+  },
+  "claim_natural": "The St. Petersburg paradox has a finite expected value that a rational person should be willing to pay.",
+  "citations": {
+    "B1": {
+      "source_key": "source_wiki",
+      "source_name": "Wikipedia: St. Petersburg paradox",
+      "url": "https://en.wikipedia.org/wiki/St._Petersburg_paradox",
+      "quote": "The expected payoff of the lottery game is infinite",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "wikipedia.org",
+        "source_type": "reference",
+        "tier": 3,
+        "flags": [],
+        "note": "Established reference source"
+      }
+    },
+    "B2": {
+      "source_key": "source_sep",
+      "source_name": "Stanford Encyclopedia of Philosophy: St. Petersburg Paradox",
+      "url": "https://plato.stanford.edu/entries/paradox-stpetersburg/",
+      "quote": "the logarithm of the monetary amount, which entails that improbable but large monetary prizes will contribute less to the expected utility of the game than more probable but smaller monetary amounts",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "stanford.edu",
+        "source_type": "academic",
+        "tier": 4,
+        "flags": [],
+        "note": "Academic domain (.edu)"
+      }
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "SC1: partial sum check \u2014 N-term sum = N (confirms unbounded growth)",
+      "values_compared": [
+        "10.0",
+        "10.0",
+        "20.0",
+        "20.0"
+      ],
+      "agreement": true
+    },
+    {
+      "description": "SC2: numerical convergence of 10000-term partial sum to analytical 2*ln(2)",
+      "values_compared": [
+        "1.38629436",
+        "1.38629436"
+      ],
+      "agreement": true
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Is there a mathematical framework where the standard St. Petersburg EV is finite?",
+      "verification_performed": "Searched 'St. Petersburg paradox finite expected value' and 'St. Petersburg standard game EV convergent'. Found no credible source claiming the standard game (unlimited flips, payoff = 2^n) has finite EV. Bounded-payoff and finite-wealth-cap variants are different games.",
+      "finding": "No peer-reviewed source claims standard St. Petersburg EV is finite. The divergence (EV = infinity) is mathematical consensus. Claim's premise 'finite expected value' is false for the standard game.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could 'expected value' in the claim mean 'expected utility' or 'certainty equivalent'?",
+      "verification_performed": "Analyzed the claim language: 'finite expected value that a rational person should be willing to pay'. In standard probability/economics usage, 'expected value' is a defined technical term = E[X] = sum p_i * x_i. Searched for alternative readings, found none in standard literature.",
+      "finding": "Even under the most charitable reading \u2014 'finite value that rational persons should pay' \u2014 the claim incorrectly calls it an 'expected value'. The correct term for the finite quantity is 'certainty equivalent' (= $4 under log utility) or 'expected utility' (= 2*ln(2)). The claim's terminology is wrong.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Does Menger's (1934) super-St.-Petersburg paradox undermine SC2?",
+      "verification_performed": "Searched 'Menger 1934 super St. Petersburg paradox log utility unbounded'. Found Menger showed that for any unbounded utility function U, a game with payoff exp(2^n) produces infinite E[U]. Log utility is not a general solution.",
+      "finding": "Menger's result does NOT break SC2. SC2 only claims that the STANDARD St. Petersburg game (payoff = 2^n) has a finite certainty equivalent ($4) under log utility. This holds. Menger's game has a different payoff structure and is a separate paradox. SC2 is limited to the standard game.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is log utility the only framework giving finite willingness to pay for the standard game?",
+      "verification_performed": "Searched 'St. Petersburg paradox CRRA utility solution' and 'risk aversion St. Petersburg finite certainty equivalent'. Found that any utility function with relative risk aversion coefficient gamma > 0 gives a finite CE for the standard game. Log utility (gamma=1) is Bernoulli's original.",
+      "finding": "Log utility is not unique \u2014 any risk-averse utility (CRRA with gamma > 0) gives a finite CE for the standard game. This STRENGTHENS SC2: the conclusion (finite rational willingness to pay) is robust across multiple frameworks. Only the precise dollar amount ($4) is specific to Bernoulli's log utility with zero initial wealth.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "sc1_ev_diverges": true,
+    "sc1_ev_is_finite": false,
+    "sc1_description": "EV = sum(1, 1, 1, ...) = infinity",
+    "sc2_expected_utility": 1.386294,
+    "sc2_certainty_equivalent_dollars": 4.0,
+    "sc2_rational_wtp_is_finite": true,
+    "overall_claim_holds": false,
+    "note": "SC1 is DISPROVED (EV is infinite). SC2 is PROVED ($4 rational WTP under Bernoulli log utility). The claim's framing is wrong: the resolution is via expected *utility*, not expected *value*."
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}
