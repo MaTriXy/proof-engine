@@ -35,12 +35,12 @@ jobs:
       - name: Install dependencies
         run: pip install Jinja2 Markdown PyYAML bleach
 
-      - name: Validate all proofs (defense-in-depth)
+      - name: Validate all proofs (structural only — provenance checked in PR)
         run: |
           for dir in site/proofs/*/; do
             [ -f "$dir/proof.json" ] || continue
             echo "=== Validating $dir ==="
-            python tools/validate-site-proof.py "$dir"
+            python tools/validate-site-proof.py --structural-only "$dir"
           done
 
       - name: Build site

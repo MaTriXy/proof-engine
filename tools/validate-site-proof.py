@@ -96,11 +96,14 @@ def extract_verdict_from_conclusion(proof_md_path):
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: validate-site-proof.py <proof-dir>", file=sys.stderr)
+    structural_only = "--structural-only" in sys.argv
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+
+    if not args:
+        print("Usage: validate-site-proof.py [--structural-only] <proof-dir>", file=sys.stderr)
         sys.exit(1)
 
-    proof_dir = Path(sys.argv[1])
+    proof_dir = Path(args[0])
     errors = []
     warnings = []
 
@@ -114,17 +117,18 @@ def main():
     proof_data = json.loads(proof_json_path.read_text())
     errors.extend(validate_json_structure(proof_data))
 
-    # 2. Provenance check
-    proof_py_path = proof_dir / "proof.py"
-    if proof_py_path.exists():
-        regenerated, err = run_proof_and_extract_json(proof_py_path)
-        if err:
-            errors.append(f"Provenance check failed: {err}")
-        elif regenerated:
-            diffs = compare_invariant_fields(proof_data, regenerated)
-            errors.extend(diffs)
-    else:
-        errors.append("proof.py not found")
+    # 2. Provenance check (skipped with --structural-only)
+    if not structural_only:
+        proof_py_path = proof_dir / "proof.py"
+        if proof_py_path.exists():
+            regenerated, err = run_proof_and_extract_json(proof_py_path)
+            if err:
+                errors.append(f"Provenance check failed: {err}")
+            elif regenerated:
+                diffs = compare_invariant_fields(proof_data, regenerated)
+                errors.extend(diffs)
+        else:
+            errors.append("proof.py not found")
 
     # 3. Verdict cross-check
     proof_md_path = proof_dir / "proof.md"
