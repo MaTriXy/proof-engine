@@ -2,7 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.9.0] - Unreleased
+## [0.10.0] - Unreleased
+
+### Added
+
+- GitHub Pages site for publishing verified proofs ([yaniv-golan.github.io/proof-engine](https://yaniv-golan.github.io/proof-engine/))
+  - Searchable proof catalog with client-side filtering
+  - Machine-readable JSON API (`index.json` + per-proof `proof.json`)
+  - Schema.org ClaimReview JSON-LD for search engine discoverability
+  - PR-based community proof submissions with CI validation
+  - Methodology page generated from DESIGN.md and hardening rules
+
+## [0.9.0] - 2026-03-28
 
 ### Added
 
