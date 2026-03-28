@@ -77,6 +77,7 @@ def test_build_produces_output(site_fixture):
     assert (output / "proofs" / "test-claim" / "proof.json").exists()
     assert (output / "proofs" / "test-claim" / "proof.py").exists()
     assert (output / "proofs" / "test-claim" / "proof_audit.md").exists()
+    assert (output / "llms.txt").exists()
 
 
 def test_index_json_structure(site_fixture):
@@ -236,3 +237,46 @@ def test_base_url_without_trailing_slash(site_fixture):
     assert "Sitemap: https://example.com/proof-engine/sitemap.xml" in robots
     html = (output / "index.html").read_text()
     assert '<link rel="canonical" href="https://example.com/proof-engine/">' in html
+
+
+def test_llms_txt_at_root(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    llms = (site_fixture / "_site" / "llms.txt").read_text()
+    assert llms.startswith("# Proof Engine")
+    assert "https://example.com/proof-engine/catalog/" in llms
+    assert "https://example.com/proof-engine/index.json" in llms
+    assert "https://example.com/proof-engine/submit/" in llms
+    assert "https://example.com/proof-engine/methodology/" in llms
+    assert "https://github.com/yaniv-golan/proof-engine#installation" in llms
+    assert "proof.py" in llms
+    assert "proof.md" in llms
+    assert "proof_audit.md" in llms
+    assert "proof.json" in llms
+
+
+def test_llms_txt_urls_with_root_base_url(site_fixture):
+    result = _run_build(site_fixture, base_url="/")
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    llms = (site_fixture / "_site" / "llms.txt").read_text()
+    assert "https://example.com/catalog/" in llms
+    assert "https://example.com/index.json" in llms
+    assert "/proof-engine/" not in llms
+
+
+def test_landing_page_has_ai_agents_link(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "index.html").read_text()
+    assert 'href="/proof-engine/llms.txt"' in html
+    assert "AI Agents" in html
+    assert "cta-row" in html
+
+
+def test_submit_page_has_ai_agents_section(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "submit" / "index.html").read_text()
+    assert "AI Agents" in html
+    assert "https://example.com/proof-engine/llms.txt" in html
+    assert "copy-btn" in html
