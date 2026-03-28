@@ -24,7 +24,7 @@ PROOFS_PER_TAG_PAGE = 50
 
 METHODOLOGY_SECTIONS_FROM_DESIGN = [
     "The core idea",
-    "Two types of facts, two verification strategies",
+    "Three types of facts, three verification strategies",
     "Separation of concerns",
     "Structured verdicts, not confidence scores",
     "The 7 hardening rules",
