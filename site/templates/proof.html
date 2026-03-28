@@ -2,8 +2,11 @@
 
 {% block title %}{{ proof.proof_data.claim_natural | truncate(80) }} — Proof Engine{% endblock %}
 
+{% block meta_description %}{{ proof.verdict.raw }}: {{ proof.proof_data.claim_natural | truncate(120) }} — verified by Proof Engine{% endblock %}
+
+{% block og_title %}{{ proof.proof_data.claim_natural }}{% endblock %}
+
 {% block head_extra %}
-<link rel="canonical" href="{{ canonical_url }}">
 <script type="application/ld+json">
 {{ json_ld | safe }}
 </script>

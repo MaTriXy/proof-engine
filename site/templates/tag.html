@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}{{ tag }} — Proof Engine{% endblock %}
+{% block title %}{{ tag }}{% if current_page > 1 %} (Page {{ current_page }}){% endif %} — Proof Engine{% endblock %}
+
+{% block meta_description %}{{ total }} verified proofs tagged '{{ tag }}'{% if current_page > 1 %} (Page {{ current_page }}){% endif %} — Proof Engine{% endblock %}
 
 {% block content %}
 <h1 style="font-size: 22px; margin-bottom: 16px;">Tag: {{ tag }}</h1>
