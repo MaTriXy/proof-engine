@@ -631,6 +631,37 @@ class ProofValidator:
         else:
             self.passed.append("Verdict: verdict assignment has conditional branches with fallback")
 
+    def check_proof_direction(self):
+        """Check that proof_direction is present when disproof logic is used.
+
+        The qualitative template uses CLAIM_FORMAL.get("proof_direction") == "disprove"
+        to flip the verdict. If proof_direction is missing, the get() silently returns
+        None, and the verdict defaults to the affirm path — a 180-degree flip.
+        """
+        # Match any code that reads proof_direction:
+        #   - is_disproof = CLAIM_FORMAL.get("proof_direction") == "disprove"
+        #   - if CLAIM_FORMAL.get("proof_direction") == "disprove":
+        #   - is_disproof = ... "proof_direction" ...
+        uses_disproof_logic = bool(re.search(
+            r'''\.get\(\s*["']proof_direction["']\s*\)|'''
+            r'''(?:is_disproof|proof_direction)\s*=.*(?:disprove|proof_direction)''',
+            self.source,
+        ))
+        has_proof_direction_key = bool(re.search(
+            r'''["']proof_direction["']\s*:''',
+            self.source,
+        ))
+
+        if uses_disproof_logic and not has_proof_direction_key:
+            self.issues.append((
+                "Verdict: Code references proof_direction but CLAIM_FORMAL has no "
+                "\"proof_direction\" key — verdict will silently default to affirm "
+                "(PROVED instead of DISPROVED)",
+                [],
+            ))
+        elif uses_disproof_logic and has_proof_direction_key:
+            self.passed.append("Verdict: proof_direction present in CLAIM_FORMAL")
+
     # ------------------------------------------------------------------
     # Run all checks
     # ------------------------------------------------------------------
@@ -655,6 +686,7 @@ class ProofValidator:
         self.check_claim_holds_computed()
         self.check_unused_imports()
         self.check_verdict_branches()
+        self.check_proof_direction()
 
         # Print report
         print(f"Validating: {self.filename}")

@@ -574,3 +574,110 @@ if __name__ == "__main__":
     passed = v.passed
     # Should count 2 unique domains, not 3 keys
     assert any("2" in p and "unique" in p.lower() for p in passed)
+
+
+# ---------------------------------------------------------------------------
+# proof_direction presence check (check_proof_direction)
+# ---------------------------------------------------------------------------
+
+def _validate_proof_direction(source_code: str) -> ProofValidator:
+    """Write source to temp file, run proof_direction check, return validator."""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
+        f.write(source_code)
+        f.flush()
+        v = ProofValidator(f.name)
+        v.check_proof_direction()
+    os.unlink(f.name)
+    return v
+
+
+DISPROOF_WITH_DIRECTION = '''
+CLAIM_FORMAL = {
+    "subject": "10% brain myth",
+    "property": "consensus rejection count",
+    "operator": ">=",
+    "threshold": 3,
+    "proof_direction": "disprove",
+    "operator_note": "At least 3 verified sources rejecting the claim",
+}
+is_disproof = CLAIM_FORMAL.get("proof_direction") == "disprove"
+verdict = "DISPROVED" if is_disproof else "PROVED"
+'''
+
+DISPROOF_MISSING_DIRECTION = '''
+CLAIM_FORMAL = {
+    "subject": "10% brain myth",
+    "property": "consensus rejection count",
+    "operator": ">=",
+    "threshold": 3,
+    "operator_note": "At least 3 verified sources rejecting the claim",
+}
+is_disproof = CLAIM_FORMAL.get("proof_direction") == "disprove"
+verdict = "DISPROVED" if is_disproof else "PROVED"
+'''
+
+DISPROOF_INLINE_GET_MISSING_DIRECTION = '''
+CLAIM_FORMAL = {
+    "subject": "10% brain myth",
+    "property": "consensus rejection count",
+    "operator": ">=",
+    "threshold": 3,
+    "operator_note": "At least 3 verified sources rejecting the claim",
+}
+if CLAIM_FORMAL.get("proof_direction") == "disprove":
+    verdict = "DISPROVED"
+else:
+    verdict = "PROVED"
+'''
+
+AFFIRM_NO_DIRECTION_OK = '''
+CLAIM_FORMAL = {
+    "subject": "neurogenesis",
+    "property": "consensus source count",
+    "operator": ">=",
+    "threshold": 3,
+    "operator_note": "At least 3 verified sources",
+}
+claim_holds = compare(n, ">=", 3)
+verdict = "PROVED" if claim_holds else "UNDETERMINED"
+'''
+
+PURE_MATH_NO_DIRECTION_OK = '''
+CLAIM_FORMAL = {
+    "subject": "100000th prime",
+    "property": "value",
+    "operator": "==",
+    "threshold": 1299709,
+    "operator_note": "Exact equality",
+}
+claim_holds = compare(result, "==", 1299709)
+verdict = "PROVED" if claim_holds else "DISPROVED"
+'''
+
+
+def test_proof_direction_present_passes():
+    v = _validate_proof_direction(DISPROOF_WITH_DIRECTION)
+    assert len(v.issues) == 0
+
+
+def test_proof_direction_missing_with_disproof_logic_fails():
+    v = _validate_proof_direction(DISPROOF_MISSING_DIRECTION)
+    assert len(v.issues) > 0
+    assert any("proof_direction" in str(iss) for iss in v.issues)
+
+
+def test_proof_direction_missing_inline_get_fails():
+    """Direct .get("proof_direction") without key in CLAIM_FORMAL should fail."""
+    v = _validate_proof_direction(DISPROOF_INLINE_GET_MISSING_DIRECTION)
+    assert len(v.issues) > 0
+    assert any("proof_direction" in str(iss) for iss in v.issues)
+
+
+def test_affirm_proof_no_direction_passes():
+    v = _validate_proof_direction(AFFIRM_NO_DIRECTION_OK)
+    assert len(v.issues) == 0
+
+
+def test_pure_math_no_direction_passes():
+    v = _validate_proof_direction(PURE_MATH_NO_DIRECTION_OK)
+    assert len(v.issues) == 0
