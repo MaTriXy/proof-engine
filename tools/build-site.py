@@ -9,6 +9,7 @@ import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from xml.sax.saxutils import escape as xml_escape
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -118,8 +119,8 @@ def main():
     args = parse_args()
     site_dir = Path(args.site_dir)
     output_dir = Path(args.output_dir)
-    base_url = args.base_url
-    site_url = args.site_url
+    base_url = args.base_url if args.base_url.endswith("/") else args.base_url + "/"
+    site_url = args.site_url.rstrip("/")
 
     if output_dir.exists():
         shutil.rmtree(output_dir)
@@ -256,7 +257,7 @@ def main():
                 sitemap_urls.append(f"{site_url}{base_url}tags/{tag}/page/{page_num}/")
 
     # sitemap.xml
-    sitemap_entries = "\n".join(f"  <url><loc>{url}</loc></url>" for url in sitemap_urls)
+    sitemap_entries = "\n".join(f"  <url><loc>{xml_escape(url)}</loc></url>" for url in sitemap_urls)
     sitemap_xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

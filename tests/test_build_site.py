@@ -222,3 +222,17 @@ def test_seo_outputs_with_root_base_url(site_fixture):
     assert "<url><loc>https://example.com/proofs/test-claim/</loc></url>" in sitemap
     html = (output / "index.html").read_text()
     assert '<link rel="canonical" href="https://example.com/">' in html
+
+
+def test_base_url_without_trailing_slash(site_fixture):
+    """base_url without trailing slash should produce the same URLs as with."""
+    result = _run_build(site_fixture, base_url="/proof-engine")
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    output = site_fixture / "_site"
+    sitemap = (output / "sitemap.xml").read_text()
+    assert "<url><loc>https://example.com/proof-engine/</loc></url>" in sitemap
+    assert "<url><loc>https://example.com/proof-engine/catalog/</loc></url>" in sitemap
+    robots = (output / "robots.txt").read_text()
+    assert "Sitemap: https://example.com/proof-engine/sitemap.xml" in robots
+    html = (output / "index.html").read_text()
+    assert '<link rel="canonical" href="https://example.com/proof-engine/">' in html
