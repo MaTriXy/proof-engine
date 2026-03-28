@@ -5,6 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Proof Engine{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Open-source verifiable proofs. Every fact cited, every calculation re-runnable.{% endblock %}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.meta_description() }}{% endblock %}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:type" content="{{ og_type | default('website') }}">
+    <meta property="og:site_name" content="Proof Engine">
     <link rel="stylesheet" href="{{ base_url }}static/style.css">
     {% block head_extra %}{% endblock %}
 </head>
