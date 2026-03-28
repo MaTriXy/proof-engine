@@ -22,10 +22,17 @@ All notable changes to this project will be documented in this file.
 - **Qualitative gotchas** in SKILL.md — 4 new gotchas for qualitative and absence proofs
 - Validator: Rule 2 and Rule 6 now support `search_registry` for absence proofs
 - `validate-site-proof.py`: absence proofs require `search_registry`; authored search metadata validated for completeness; dynamic verdict list in error messages
+- SKILL.md: edge-case guidance for fictitious source attributions, partial-period data, and missing constants
+- proof-templates.md: open-problem and proof-by-contradiction adaptation notes
+- SKILL.md: actionable WebFetch paraphrasing gotcha
 
 ### Fixed
 
 - README: updated Claude Desktop installation instructions with correct marketplace flow
+- Validator: detect missing `proof_direction` key in disproof proofs (silent 180° verdict flip)
+- Validator: warn when compound sub-claim has fewer than 2 sources (prefix-based heuristic)
+- Validator: require call site for `verify_all_citations` / `verify_data_values` / `verify_search_registry` (import alone no longer satisfies Rule 2 or unused-import check)
+- Source credibility: add missing academic domains (IOPscience, A&A, AMS, AIP, etc.) and reference domains (BrainFacts, SimplyPsychology, Snopes, etc.)
 
 ## [0.9.0] - 2026-03-28
 
