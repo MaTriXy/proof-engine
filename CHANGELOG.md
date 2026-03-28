@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.9.0] - Unreleased
+## [0.10.0] - Unreleased
 
 ### Added
 
@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file.
   - Schema.org ClaimReview JSON-LD for search engine discoverability
   - PR-based community proof submissions with CI validation
   - Methodology page generated from DESIGN.md and hardening rules
+
+## [0.9.0]
+
+### Added
+
 - **Generator signature** on all proof artifacts: JSON summary includes `generator` block (`name`, `version`, `repo`, `generated_at`); proof.md and proof_audit.md end with a footer line. Version is read at runtime from `VERSION` file in the skill directory.
 - `build_citation_detail()` now handles multi-source empirical facts — emits `{fact_id}_source_{N}` entries for facts with a `sources` list, preserving "one row per source" contract.
 - Validator: `check_table_data_integrity()` — enforces correct table-data verification patterns:
