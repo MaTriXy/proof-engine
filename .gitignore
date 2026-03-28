@@ -7,7 +7,7 @@ dist/
 build/
 .env
 docs/superpowers/
-eval-results/
+eval-results*/
 proofs/
 !site/proofs/
 docs/internal/
