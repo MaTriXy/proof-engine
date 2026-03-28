@@ -31,7 +31,7 @@ sedi() {
 sedi "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" "$ROOT/proof-engine/.claude-plugin/plugin.json"
 sedi "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" "$ROOT/.cursor-plugin/plugin.json"
 sedi "s/version: .*/version: \"$VERSION\"/" "$ROOT/proof-engine/skills/proof-engine/SKILL.md"
-sedi "s/__PROOF_ENGINE_VERSION__/$VERSION/g" "$ROOT/proof-engine/skills/proof-engine/references/proof-templates.md"
+sedi "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/g" "$ROOT/proof-engine/skills/proof-engine/references/proof-templates.md"
 
 echo "Version $VERSION applied to:"
 echo "  proof-engine/.claude-plugin/plugin.json"
