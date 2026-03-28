@@ -95,10 +95,10 @@ def load_proof(proof_dir: Path) -> dict:
             tags = [canonicalize_tag(t) for t in meta["tags"]]
         else:
             tags = auto_tag(proof_data["claim_natural"])
-        featured = meta.get("featured", False)
+        featured = meta.get("featured", proof_data.get("featured", False))
     else:
         tags = auto_tag(proof_data["claim_natural"])
-        featured = False
+        featured = proof_data.get("featured", False)
 
     # Citation count
     citations = proof_data.get("citations")
