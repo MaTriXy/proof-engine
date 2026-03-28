@@ -1,0 +1,264 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "pizzorusso_2002",
+      "label": "Pizzorusso et al. 2002: ChABC degrades PNNs and reactivates OD plasticity in adult rats"
+    },
+    "B2": {
+      "key": "hensch_bilimoria_2012",
+      "label": "Hensch & Bilimoria 2012: Multiple methods reopen critical period windows in adult brain"
+    },
+    "B3": {
+      "key": "gervain_2013",
+      "label": "Gervain et al. 2013: VPA (HDAC inhibitor) reopens critical-period learning of absolute pitch in adult humans"
+    },
+    "B4": {
+      "key": "nardou_2023",
+      "label": "Nardou et al. 2023: Psychedelics reopen social reward learning critical period in adult mice"
+    },
+    "B5": {
+      "key": "ribic_2020",
+      "label": "Ribic 2020: Abundant evidence for lifelong experience-dependent plasticity in adult sensory cortex"
+    },
+    "B6": {
+      "key": "patton_2018",
+      "label": "Patton et al. 2018: Thalamocortical plasticity does not disappear but becomes gated in adults"
+    },
+    "A1": {
+      "label": "Count of independent methods demonstrated to reopen critical periods in adults",
+      "method": "Count of confirmed reopening methods from independent sources",
+      "result": "5"
+    },
+    "A2": {
+      "label": "Assessment: Does evidence support permanent closure?",
+      "method": "Boolean evaluation: n_reopening_methods == 0",
+      "result": "False (found 5 methods) \u2192 sub-claim A DISPROVED"
+    }
+  },
+  "claim_formal": {
+    "subject": "Critical periods of cortical plasticity in mammalian brains",
+    "property": "permanence of closure and adult reorganization capacity",
+    "sub_claims": {
+      "A": {
+        "description": "Critical periods close permanently (cannot be reopened)",
+        "operator": "==",
+        "operator_note": "'Permanently' is interpreted as absolute irreversibility: no known intervention (pharmacological, environmental, genetic, or otherwise) can reopen a closed critical period to restore juvenile-level plasticity. This is the natural reading of 'permanently'. If even one method can reopen critical periods, this sub-claim is DISPROVED.",
+        "threshold": "true (no reopening possible)"
+      },
+      "B": {
+        "description": "Adult brain is largely incapable of experience-dependent reorganization comparable to juvenile levels",
+        "operator": "==",
+        "operator_note": "'Largely incapable' allows some residual adult plasticity but claims it cannot reach magnitudes 'comparable to' juvenile levels under any conditions. 'Comparable' is interpreted as 'similar in magnitude or mechanism' \u2014 not necessarily identical. If interventions can restore adult plasticity to juvenile-like levels, this sub-claim is DISPROVED.",
+        "threshold": "true (no comparable reorganization achievable)"
+      }
+    },
+    "operator": "AND",
+    "operator_note": "The claim asserts BOTH permanence AND incapability. The claim is true only if both sub-claims hold. If either is disproved, the overall claim is disproved."
+  },
+  "claim_natural": "Critical periods of heightened cortical plasticity close permanently after early development, rendering the adult brain largely incapable of experience-dependent reorganization comparable to juvenile levels.",
+  "citations": {
+    "B1": {
+      "source_key": "pizzorusso_2002",
+      "source_name": "Pizzorusso et al. 2002, Science 298:1248-1251",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12424383/",
+      "quote": "After CSPG degradation with chondroitinase-ABC in adult rats, monocular deprivation caused an ocular dominance shift toward the nondeprived eye. The mature ECM is thus inhibitory for experience-dependent plasticity, and degradation of CSPGs reactivates cortical plasticity.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B2": {
+      "source_key": "hensch_bilimoria_2012",
+      "source_name": "Hensch & Bilimoria 2012, Cerebrum",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3574806/",
+      "quote": "data from animal studies now suggest that it may be possible to re-awaken youth-like plasticity in the adult brain",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B3": {
+      "source_key": "gervain_2013",
+      "source_name": "Gervain et al. 2013, Frontiers in Systems Neuroscience",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3848041/",
+      "quote": "histone-deacetylase inhibitors (HDAC inhibitors) enable adult mice to establish perceptual preferences that are otherwise impossible to acquire after youth",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B4": {
+      "source_key": "nardou_2023",
+      "source_name": "Nardou et al. 2023, Nature 618:790-798",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37316665/",
+      "quote": "the ability to reopen the social reward learning critical period is a shared property across psychedelic drugs",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B5": {
+      "source_key": "ribic_2020",
+      "source_name": "Ribic 2020, Frontiers in Cellular Neuroscience",
+      "url": "https://www.frontiersin.org/journals/cellular-neuroscience/articles/10.3389/fncel.2020.00076/full",
+      "quote": "abundant evidence supports that adult circuits exhibit both transient and long-term experience-induced plasticity",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "frontiersin.org",
+        "source_type": "academic",
+        "tier": 4,
+        "flags": [],
+        "note": "Known academic/scholarly publisher"
+      }
+    },
+    "B6": {
+      "source_key": "patton_2018",
+      "source_name": "Patton, Blundon & Zakharenko 2018, Current Opinion in Neurobiology",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6361689/",
+      "quote": "In adults, TC LTD/LTP in the ACx do not disappear but become gated",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "reactivates=True, adult=True",
+      "value_in_quote": true,
+      "quote_snippet": "After CSPG degradation with chondroitinase-ABC in adult rats, monocular deprivat"
+    },
+    "B2": {
+      "value": "re-awaken=True, adult_brain=True",
+      "value_in_quote": true,
+      "quote_snippet": "data from animal studies now suggest that it may be possible to re-awaken youth-"
+    },
+    "B3": {
+      "value": "enable_adult=True, after_youth=True",
+      "value_in_quote": true,
+      "quote_snippet": "histone-deacetylase inhibitors (HDAC inhibitors) enable adult mice to establish "
+    },
+    "B4": {
+      "value": "reopen=True",
+      "value_in_quote": true,
+      "quote_snippet": "the ability to reopen the social reward learning critical period is a shared pro"
+    },
+    "B5": {
+      "value": "adult_circuits=True",
+      "value_in_quote": true,
+      "quote_snippet": "abundant evidence supports that adult circuits exhibit both transient and long-t"
+    },
+    "B6": {
+      "value": "not_disappear=True",
+      "value_in_quote": true,
+      "quote_snippet": "In adults, TC LTD/LTP in the ACx do not disappear but become gated"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Independent sources from different labs, systems, and years all confirm critical period reopening",
+      "values_compared": [
+        "B1 (Pizzorusso 2002, visual cortex, enzymatic): reactivates=True",
+        "B3 (Gervain 2013, auditory/pitch, pharmacological): enable_adult=True",
+        "B4 (Nardou 2023, social reward, psychedelic): reopen=True",
+        "B6 (Patton 2018, auditory cortex, genetic): not_disappear=True"
+      ],
+      "agreement": true
+    },
+    {
+      "description": "Different cortical systems show reopening (visual, auditory, social) \u2014 not system-specific",
+      "values_compared": [
+        "Visual cortex: B1 (ChABC), B2 (fluoxetine, enrichment)",
+        "Auditory cortex: B3 (VPA), B6 (A1R knockout)",
+        "Social reward: B4 (psychedelics)"
+      ],
+      "agreement": true
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Could 'permanently' be interpreted more loosely, as 'under natural conditions without intervention', making the claim defensible?",
+      "search_performed": "Analysis of claim wording and neuroscience literature usage",
+      "finding": "The claim says 'close permanently', not 'close under normal conditions'. The word 'permanently' in standard English means 'lasting or intended to last indefinitely without change'. Even if we grant a charitable reading where 'permanently' means 'without artificial intervention', the claim then adds 'rendering the adult brain largely incapable' \u2014 which is also contradicted by evidence of spontaneous adult plasticity (Ribic 2020). The claim does not qualify with 'under natural conditions' or 'without pharmacological intervention'.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is the reopening evidence only from animal models? Could human critical periods truly be permanent?",
+      "search_performed": "Web search: human critical period reopening evidence VPA absolute pitch adult",
+      "finding": "Gervain et al. 2013 demonstrated critical period reopening in adult HUMANS using valproic acid for absolute pitch learning. Additionally, clinical evidence shows adult humans recovering from amblyopia with perceptual learning, and 5% of adult bilinguals master second languages to native level. The reopening evidence extends beyond animal models.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Does the reopened plasticity truly reach 'comparable' juvenile levels, or is it merely partial?",
+      "search_performed": "Web search: magnitude adult reopened plasticity vs juvenile critical period levels",
+      "finding": "Pizzorusso 2002 showed full ocular dominance shifts in adult rats after ChABC treatment \u2014 the same phenomenon that defines the juvenile critical period. Patton 2018 showed that knocking down A1Rs enables plasticity 'even in elderly (P300) mice'. Hensch & Bilimoria 2012 explicitly describe this as 're-awaken youth-like plasticity'. While baseline adult plasticity is reduced, the reopened state produces reorganization comparable to juvenile levels in the specific systems tested.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Are there brain systems where critical periods genuinely cannot be reopened, supporting at least a partial version of the claim?",
+      "search_performed": "Web search: critical periods that cannot be reopened irreversible brain development",
+      "finding": "Some developmental processes (e.g., certain aspects of gross neural migration, corpus callosum formation) have irreversible sensitive periods. However, the claim specifically addresses 'cortical plasticity' and 'experience-dependent reorganization', which are the domains where reopening has been most convincingly demonstrated. The claim is not about all developmental processes but specifically about cortical experience-dependent plasticity.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_reopening_methods": 5,
+    "subclaim_a_permanent_closure": false,
+    "subclaim_b_largely_incapable": false,
+    "overall_claim_holds": false,
+    "adult_plasticity_documented": true,
+    "reopening_restores_juvenile_like": true,
+    "confirmed_reopening_methods": [
+      "enzymatic_PNN_degradation",
+      "pharmacological_HDAC_inhibition",
+      "psychedelic_compounds",
+      "antidepressant_fluoxetine",
+      "thalamic_gating_removal"
+    ]
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "0.9.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

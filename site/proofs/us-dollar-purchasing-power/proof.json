@@ -1,0 +1,222 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "source_a_cpi",
+      "label": "Source A CPI: 1913 annual avg = 9.883, 2024 annual avg = 313.689 (BLS via rateinflation.com)"
+    },
+    "B2": {
+      "key": "source_b_cpi",
+      "label": "Source B CPI: 1913 annual avg = 9.9, 2024 annual avg = 313.689 (BLS via inflationdata.com)"
+    },
+    "B3": {
+      "key": "source_a_fed_date",
+      "label": "Federal Reserve Act signed December 23, 1913 (Wikipedia)"
+    },
+    "B4": {
+      "key": "source_b_fed_date",
+      "label": "Federal Reserve Act signed December 23, 1913 (US Senate)"
+    },
+    "A1": {
+      "label": "Purchasing power decline computed from Source A CPI values",
+      "method": "(1 - CPI_1913_A / CPI_2024_A) * 100",
+      "result": "96.8494%"
+    },
+    "A2": {
+      "label": "Purchasing power decline computed from Source B CPI values",
+      "method": "(1 - CPI_1913_B / CPI_2024_B) * 100",
+      "result": "96.8440%"
+    },
+    "A3": {
+      "label": "Cross-check: Source A and B decline percentages agree within tolerance",
+      "method": "abs(decline_A - decline_B) < 0.1",
+      "result": "diff=0.0054%, within tolerance"
+    },
+    "A4": {
+      "label": "Claim evaluation: decline > 90%",
+      "method": "compare(96.8494, '>', 90.0)",
+      "result": "True"
+    }
+  },
+  "claim_formal": {
+    "subject": "Purchasing power of the US dollar",
+    "property": "percentage decline since 1913",
+    "operator": ">",
+    "operator_note": "'More than 90%' is interpreted as strictly greater than 90.0%. If the decline were exactly 90.0%, the claim would be FALSE. This is the natural reading of 'more than'. 'Purchasing power' is operationalized via the Consumer Price Index for All Urban Consumers (CPI-U), the standard BLS measure. Decline is computed as (1 - CPI_1913 / CPI_current) * 100. 'Established in 1913' refers to the Federal Reserve Act signed December 23, 1913; the CPI baseline uses 1913 annual average.",
+    "threshold": 90.0
+  },
+  "claim_natural": "The purchasing power of the US dollar has declined by more than 90% since the Federal Reserve was established in 1913.",
+  "citations": {
+    "B1": {
+      "source_key": "source_a_cpi",
+      "source_name": "RateInflation.com (sourced from U.S. Bureau of Labor Statistics)",
+      "url": "https://www.rateinflation.com/consumer-price-index/usa-historical-cpi/",
+      "quote": "The CPI for USA is calculated and issued by: U.S. Bureau of Labor Statistics. CPI data is calculated and issued monthly.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "rateinflation.com",
+        "source_type": "reference",
+        "tier": 3,
+        "flags": [],
+        "note": "Established reference source"
+      }
+    },
+    "B2": {
+      "source_key": "source_b_cpi",
+      "source_name": "InflationData.com (sourced from U.S. Bureau of Labor Statistics)",
+      "url": "https://inflationdata.com/Inflation/Consumer_Price_Index/HistoricalCPI.aspx",
+      "quote": "A CPI of 195 indicates 95% inflation since 1982",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "inflationdata.com",
+        "source_type": "reference",
+        "tier": 3,
+        "flags": [],
+        "note": "Established reference source"
+      }
+    },
+    "B3": {
+      "source_key": "source_a_fed_date",
+      "source_name": "Wikipedia: Federal Reserve Act",
+      "url": "https://en.wikipedia.org/wiki/Federal_Reserve_Act",
+      "quote": "Signed into law by President Woodrow Wilson on December 23, 1913",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "wikipedia.org",
+        "source_type": "reference",
+        "tier": 3,
+        "flags": [],
+        "note": "Established reference source"
+      }
+    },
+    "B4": {
+      "source_key": "source_b_fed_date",
+      "source_name": "United States Senate Historical Office",
+      "url": "https://www.senate.gov/artandhistory/history/minute/Senate_Passes_the_Federal_Reserve_Act.htm",
+      "quote": "On December 23, 1913, the Senate adopted the conference report by a vote of 43 to 25",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "wayback",
+      "credibility": {
+        "domain": "senate.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "CPI_1913=9.883, CPI_2024=313.689",
+      "verified_via": "verify_data_values",
+      "data_values_verified": true,
+      "quote_snippet": "The CPI for USA is calculated and issued by: U.S. Bureau of Labor Statistics. CP"
+    },
+    "B2": {
+      "value": "CPI_1913=9.9, CPI_2024=313.689",
+      "verified_via": "verify_data_values",
+      "data_values_verified": true,
+      "quote_snippet": "A CPI of 195 indicates 95% inflation since 1982"
+    },
+    "B3": {
+      "value": "1913-12-23",
+      "value_in_quote": true,
+      "quote_snippet": "Signed into law by President Woodrow Wilson on December 23, 1913"
+    },
+    "B4": {
+      "value": "1913-12-23",
+      "value_in_quote": true,
+      "quote_snippet": "On December 23, 1913, the Senate adopted the conference report by a vote of 43 t"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Fed founding date: independently sourced from Wikipedia and US Senate",
+      "values_compared": [
+        "1913-12-23",
+        "1913-12-23"
+      ],
+      "agreement": true
+    },
+    {
+      "description": "CPI 2024 annual average: independently sourced from rateinflation.com and inflationdata.com",
+      "values_compared": [
+        "313.689",
+        "313.689"
+      ],
+      "agreement": true
+    },
+    {
+      "description": "CPI 1913 annual average: agree within rounding tolerance (9.883 vs 9.9)",
+      "values_compared": [
+        "9.883",
+        "9.9"
+      ],
+      "agreement": true
+    },
+    {
+      "description": "Computed decline percentages agree within 0.1%",
+      "values_compared": [
+        "96.8494%",
+        "96.8440%"
+      ],
+      "agreement": true
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Does hedonic quality adjustment mean the CPI overstates inflation, potentially bringing the true decline below 90%?",
+      "search_performed": "Web search: 'CPI hedonic adjustment overstate inflation purchasing power'",
+      "finding": "The BLS states that hedonic adjustments currently used outside shelter and apparel have increased the annual CPI rate of change by only about 0.005% per year. Even the Boskin Commission (1996), which argued CPI overstated inflation, estimated the bias at ~1.1% per year. Over 111 years, even a 1.1% annual overstatement would still leave cumulative inflation far above the 90% decline threshold. The actual decline using CPI-U is ~96.8%, so the claim holds with a ~6.8 percentage point margin.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Was the Federal Reserve established in 1913 (Act signed) or 1914 (Reserve Banks opened)? Does the date choice affect the result?",
+      "search_performed": "Web search: 'Federal Reserve established 1913 vs 1914 operational'",
+      "finding": "The Federal Reserve Act was signed December 23, 1913. The Reserve Banks opened for business on November 16, 1914. The CPI annual average for 1914 was 10.0 (vs 9.9 for 1913). Using 1914 baseline: (1 - 10.0/313.689) * 100 = 96.81%. The ~0.03 percentage point difference is negligible. The claim holds regardless of which date is used.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could using a different price index (PCE, GDP deflator) instead of CPI-U yield a decline of 90% or less?",
+      "search_performed": "Web search: 'PCE vs CPI inflation 1913 to present comparison'",
+      "finding": "The PCE deflator typically shows slightly lower inflation than CPI-U (roughly 0.3-0.5% per year lower since the 1990s). However, PCE data only goes back to 1929, not 1913. The GDP deflator shows a similar magnitude of total inflation over the full period. No standard US price index shows a decline of less than 90% over 111 years. The margin (~6.8pp) is too large for any reasonable index choice to flip the verdict.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is CPI-U the right measure? CPI-U only began in 1978. What was used before that?",
+      "search_performed": "Web search: 'BLS CPI history before 1978 CPI-U CPI-W comparison'",
+      "finding": "Before 1978, there was a single CPI series (now called CPI-W, for urban wage earners and clerical workers). The BLS retroactively linked the pre-1978 series to the CPI-U series for continuity. The Minneapolis Fed confirms the data from 1913 onward is 'generally compatible through the present day.' Using CPI-W instead of CPI-U would yield nearly identical results for the 1913-2024 period.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "PROVED",
+  "key_results": {
+    "decline_source_a": 96.8494,
+    "decline_source_b": 96.844,
+    "cpi_1913_a": 9.883,
+    "cpi_2024_a": 313.689,
+    "cpi_1913_b": 9.9,
+    "cpi_2024_b": 313.689,
+    "threshold": 90.0,
+    "operator": ">",
+    "claim_holds": true,
+    "margin_above_threshold": 6.8494,
+    "fed_founding_date": "1913-12-23"
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "0.9.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

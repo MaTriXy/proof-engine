@@ -9,6 +9,7 @@ build/
 docs/superpowers/
 eval-results/
 proofs/
+!site/proofs/
 docs/internal/
 .superpowers/brainstorm/
 _site/
