@@ -51,7 +51,23 @@
 </div>
 
 {# Section keys are always title-cased by extract_sections() #}
-{% for section_name in ["Key Findings", "Claim Interpretation", "Evidence Summary", "Proof Logic", "Conclusion"] %}
+{% for section_name in ["Key Findings", "Claim Interpretation"] %}
+{% if section_name in rendered_sections_md %}
+<h2 class="section-heading">{{ section_name }}</h2>
+<div class="proof-content">{{ rendered_sections_md[section_name] | safe }}</div>
+{% endif %}
+{% endfor %}
+
+{% if "Evidence Summary" in rendered_sections_md %}
+<h2 class="section-heading">Evidence Summary</h2>
+<p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px;">
+    <strong>Yes/No</strong> = cited fact verified against source.
+    <strong>Computed</strong> = calculated by the proof script from verified inputs.
+</p>
+<div class="proof-content">{{ rendered_sections_md["Evidence Summary"] | safe }}</div>
+{% endif %}
+
+{% for section_name in ["Proof Logic", "Conclusion"] %}
 {% if section_name in rendered_sections_md %}
 <h2 class="section-heading">{{ section_name }}</h2>
 <div class="proof-content">{{ rendered_sections_md[section_name] | safe }}</div>

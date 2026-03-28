@@ -18,7 +18,7 @@ Section "Key Findings": 3-4 bullet points with the decisive numbers that justify
 Section "Claim Interpretation": CLAIM_FORMAL in prose. State the natural-language claim, the formal interpretation, the operator choice with rationale. Expand acronyms on first use (e.g., "greenhouse gases (GHGs)"). Source: JSON summary `claim_formal` and `claim_natural`.
 
 Section "Evidence Summary": Table with columns ID, Fact, Verified. IDs and labels from JSON summary `fact_registry`. Multi-source sub-entries (`{fact_id}_source_{N}`) inherit their label from the parent `fact_registry` entry, appending the source index.
-- Type A facts: Verified = "Computed"
+- Type A facts: Verified = "Computed: [human-readable result]". The result should be meaningful to a non-technical reader — e.g., "Computed: 96.85%" or "Computed: True (all sub-claims hold)" or "Computed: 2 independent sources confirmed". Avoid bare numbers without context (not "Computed: 2" — say what 2 means).
 - Type B facts: Verified = "Yes", "No", or "Partial" with brief reason for No/Partial (e.g., "No (URL returned 403)"). Derive from JSON summary `citations[fact_id].status`. For multi-source facts, sub-entries are keyed `{fact_id}_source_{N}` — render one row per sub-entry.
 - Each source is its own fact row — no aggregation
 
