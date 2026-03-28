@@ -12,18 +12,28 @@
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:type" content="{{ og_type | default('website') }}">
     <meta property="og:site_name" content="Proof Engine">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KSGK7C8RGD"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-KSGK7C8RGD');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ base_url }}static/favicon.ico" sizes="32x32">
+    <link rel="icon" href="{{ base_url }}static/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="{{ base_url }}static/apple-touch-icon.png">
     <link rel="stylesheet" href="{{ base_url }}static/style.css">
     {% block head_extra %}{% endblock %}
 </head>
 <body>
     <nav class="site-nav">
         <div class="nav-inner">
-            <a href="{{ base_url }}" class="nav-logo">Proof Engine</a>
+            <a href="{{ base_url }}" class="nav-logo">⟨proof-engine⟩</a>
             <div class="nav-links">
-                <a href="{{ base_url }}catalog/">Catalog</a>
-                <a href="{{ base_url }}methodology/">Methodology</a>
-                <a href="{{ base_url }}submit/">Submit</a>
-                <a href="https://github.com/yaniv-golan/proof-engine" rel="nofollow">GitHub</a>
+                <a href="{{ base_url }}catalog/">catalog</a>
+                <a href="{{ base_url }}methodology/">methodology</a>
+                <a href="{{ base_url }}submit/">submit</a>
+                <a href="https://github.com/yaniv-golan/proof-engine" class="nav-github" rel="nofollow" aria-label="GitHub">
+                    <svg height="16" width="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                </a>
             </div>
         </div>
     </nav>
@@ -32,7 +42,7 @@
     </main>
     <footer class="site-footer">
         <div class="footer-inner">
-            <p>Built with <a href="https://github.com/yaniv-golan/proof-engine" rel="nofollow">Proof Engine</a> — open-source verifiable proofs</p>
+            <p>built with <a href="https://github.com/yaniv-golan/proof-engine" rel="nofollow">⟨proof-engine⟩</a> — open-source verifiable proofs</p>
         </div>
     </footer>
     {% block scripts %}{% endblock %}

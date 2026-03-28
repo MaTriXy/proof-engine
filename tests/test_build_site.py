@@ -291,6 +291,37 @@ def test_submit_page_has_ai_agents_section(site_fixture):
     assert "copy-btn" in html
 
 
+def test_google_fonts_link_in_head(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "index.html").read_text()
+    assert "fonts.googleapis.com" in html
+    assert "JetBrains+Mono" in html
+
+
+def test_favicon_links_in_head(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "index.html").read_text()
+    assert 'rel="icon" href="/proof-engine/static/favicon.ico"' in html
+    assert 'rel="apple-touch-icon" href="/proof-engine/static/apple-touch-icon.png"' in html
+
+
+def test_google_analytics_in_head(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "index.html").read_text()
+    assert "G-KSGK7C8RGD" in html
+    assert "googletagmanager.com/gtag/js" in html
+
+
+def test_favicon_links_with_root_base_url(site_fixture):
+    result = _run_build(site_fixture, base_url="/")
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "index.html").read_text()
+    assert 'rel="icon" href="/static/favicon.ico"' in html
+
+
 def test_supported_not_fully_resolved():
     """SUPPORTED proofs should not count as fully resolved."""
     proofs = [
