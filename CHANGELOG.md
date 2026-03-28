@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
   - Schema.org ClaimReview JSON-LD for search engine discoverability
   - SEO metadata: meta descriptions, OpenGraph tags, canonical URLs on all pages
   - `sitemap.xml` and `robots.txt` generated at build time
+  - `llms.txt` agent entry point for AI agents to discover and interact with the catalog
   - PR-based community proof submissions with CI validation
   - Methodology page generated from DESIGN.md and hardening rules
 
