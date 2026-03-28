@@ -32,6 +32,21 @@ OPTIONAL_AUDIT_SECTIONS = [
 OPTIONAL_MD_SECTIONS = ["Counter-Evidence Search"]
 
 
+def extract_source_names(proof_data, max_sources=3):
+    """Extract unique source names from citations, up to max_sources."""
+    citations = proof_data.get("citations")
+    if not citations:
+        return []
+    seen = set()
+    names = []
+    for cit in citations.values():
+        name = cit.get("source_name", "")
+        if name and name not in seen:
+            seen.add(name)
+            names.append(name)
+    return names[:max_sources]
+
+
 def load_proof(proof_dir: Path) -> dict:
     proof_dir = Path(proof_dir)
     slug = proof_dir.name
@@ -118,6 +133,8 @@ def load_proof(proof_dir: Path) -> dict:
         "featured": featured,
         "citation_count": citation_count,
         "search_count": search_count,
+        "source_names": extract_source_names(proof_data),
+        "source_names_extra": max(0, len({c.get("source_name") for c in proof_data.get("citations", {}).values() if c.get("source_name")}) - 3),
         "date": generator["generated_at"],
         "proof_engine_version": generator["version"],
     }

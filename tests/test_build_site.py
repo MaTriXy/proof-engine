@@ -278,7 +278,7 @@ def test_landing_page_has_ai_agents_link(site_fixture):
     assert result.returncode == 0, f"Build failed:\n{result.stderr}"
     html = (site_fixture / "_site" / "index.html").read_text()
     assert 'href="/proof-engine/submit/#ai-agents"' in html
-    assert "AI Agents" in html
+    assert "ai agents" in html.lower()
     assert "cta-row" in html
 
 
@@ -322,11 +322,55 @@ def test_favicon_links_with_root_base_url(site_fixture):
     assert 'rel="icon" href="/static/favicon.ico"' in html
 
 
-def test_supported_not_fully_resolved():
-    """SUPPORTED proofs should not count as fully resolved."""
+def test_supported_not_counted_as_proved():
+    """SUPPORTED proofs should not count in proved_count."""
     proofs = [
-        {"verdict": {"raw": "PROVED"}, "tags": []},
-        {"verdict": {"raw": "SUPPORTED"}, "tags": []},
+        {"verdict": {"raw": "PROVED", "filter_value": "proved"}, "tags": []},
+        {"verdict": {"raw": "SUPPORTED", "filter_value": "supported"}, "tags": []},
     ]
     stats = compute_stats(proofs)
-    assert stats["verification_rate"] == 50
+    assert stats["proved_count"] == 1
+    assert stats["disproved_count"] == 0
+
+
+def test_stats_proved_disproved_counts():
+    proofs = [
+        {"verdict": {"raw": "PROVED", "filter_value": "proved"}, "tags": []},
+        {"verdict": {"raw": "DISPROVED", "filter_value": "disproved"}, "tags": []},
+        {"verdict": {"raw": "SUPPORTED", "filter_value": "supported"}, "tags": []},
+        {"verdict": {"raw": "PROVED (with unverified citations)", "filter_value": "proved"}, "tags": []},
+    ]
+    stats = compute_stats(proofs)
+    assert stats["proved_count"] == 2  # includes qualified variant
+    assert stats["disproved_count"] == 1
+    assert "verification_rate" not in stats
+
+
+def test_index_json_has_source_names(site_fixture):
+    # Add citations to the test proof.json
+    proof_json_path = site_fixture / "site" / "proofs" / "test-claim" / "proof.json"
+    data = json.loads(proof_json_path.read_text())
+    data["citations"] = {
+        "B1": {
+            "source_name": "MIT McGovern Institute",
+            "url": "https://example.com/mit",
+            "status": "verified",
+        },
+        "B2": {
+            "source_name": "Encyclopaedia Britannica",
+            "url": "https://example.com/britannica",
+            "status": "verified",
+        },
+    }
+    proof_json_path.write_text(json.dumps(data))
+
+    result = _run_build(site_fixture, base_url="/")
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    catalog = json.loads((site_fixture / "_site" / "index.json").read_text())
+    proof_entry = catalog["proofs"][0]
+    assert "source_names" in proof_entry
+    assert "MIT McGovern Institute" in proof_entry["source_names"]
+    assert "Encyclopaedia Britannica" in proof_entry["source_names"]
+    assert "source_names_extra" in proof_entry
+    assert "has_citations" in proof_entry
+    assert proof_entry["has_citations"] is True

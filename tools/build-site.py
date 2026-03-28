@@ -60,15 +60,17 @@ def parse_args():
 
 def compute_stats(proofs):
     total = len(proofs)
-    fully_resolved = sum(1 for p in proofs if p["verdict"]["raw"] in ("PROVED", "DISPROVED"))
+    # Use filter_value to include qualified variants (e.g., "PROVED (with unverified citations)")
+    proved_count = sum(1 for p in proofs if p["verdict"].get("filter_value") == "proved")
+    disproved_count = sum(1 for p in proofs if p["verdict"].get("filter_value") == "disproved")
     all_tags = set()
     for p in proofs:
         all_tags.update(p["tags"])
-    rate = round(fully_resolved / total * 100) if total > 0 else 0
     return {
         "total": total,
         "tags_count": len(all_tags),
-        "verification_rate": rate,
+        "proved_count": proved_count,
+        "disproved_count": disproved_count,
     }
 
 
@@ -234,6 +236,9 @@ def main():
                 "url": f"{base_url}proofs/{p['slug']}/",
                 "json_url": f"{base_url}proofs/{p['slug']}/proof.json",
                 "proof_py_url": f"{base_url}proofs/{p['slug']}/proof.py",
+                "source_names": p.get("source_names", []),
+                "source_names_extra": p.get("source_names_extra", 0),
+                "has_citations": bool(p["proof_data"].get("citations")),
             }
             for p in proofs
         ],

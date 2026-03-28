@@ -18,8 +18,12 @@
             <div class="stat-label">Domains</div>
         </div>
         <div class="stat">
-            <div class="stat-value">{{ stats.verification_rate }}%</div>
-            <div class="stat-label">Fully Resolved</div>
+            <div class="stat-value">{{ stats.proved_count }}</div>
+            <div class="stat-label">Proved</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">{{ stats.disproved_count }}</div>
+            <div class="stat-label">Disproved</div>
         </div>
     </div>
     <div class="cta-row">
