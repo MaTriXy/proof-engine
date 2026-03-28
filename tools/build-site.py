@@ -209,7 +209,11 @@ def main():
     submit_md = (site_dir / "content" / "submit.md").read_text()
     submit_html = render_markdown(submit_md)
     tpl = env.get_template("submit.html")
-    write_file(output_dir / "submit" / "index.html", tpl.render(**common, submit_html=submit_html, canonical_url=f"{site_url}{base_url}submit/"))
+    write_file(output_dir / "submit" / "index.html", tpl.render(
+        **common, submit_html=submit_html,
+        canonical_url=f"{site_url}{base_url}submit/",
+        llms_txt_url=f"{site_url}{base_url}llms.txt",
+    ))
 
     # index.json
     catalog = {
@@ -274,6 +278,34 @@ def main():
         f"Sitemap: {site_url}{base_url}sitemap.xml\n"
     )
     write_file(output_dir / "robots.txt", robots_txt)
+
+    # llms.txt
+    llms_txt = (
+        "# Proof Engine\n"
+        "\n"
+        "> Open-source tool that proves claims using cited sources and executable code. "
+        "Every fact is traced to its source, every calculation is re-runnable. No LLM trust required.\n"
+        "\n"
+        "## Browsing Proofs\n"
+        "\n"
+        f"- [Proof Catalog]({site_url}{base_url}catalog/): Browse all verified proofs\n"
+        f"- [Catalog API]({site_url}{base_url}index.json): Machine-readable JSON catalog with all proofs, verdicts, tags, and links to individual proof.json files\n"
+        f"- [Methodology]({site_url}{base_url}methodology/): How Proof Engine works — citation verification, executable proofs, structured verdicts\n"
+        "\n"
+        "## Submitting Proofs\n"
+        "\n"
+        f"- [Submit a Proof]({site_url}{base_url}submit/): Submit a verified proof via GitHub pull request. "
+        "Generate proof files with proof-engine (produces proof.py, proof.md, proof_audit.md), "
+        "run the proof to create proof.json, then fork the repo and PR all four files to "
+        "site/proofs/your-claim-slug/. CI validates automatically.\n"
+        "\n"
+        "## Generating Proofs\n"
+        "\n"
+        "- [Install Proof Engine](https://github.com/yaniv-golan/proof-engine#installation): "
+        "Install the proof-engine skill for Claude Code, Cursor, or other AI agents to generate verifiable proofs from claims\n"
+        "- [GitHub Repository](https://github.com/yaniv-golan/proof-engine): Source code, documentation, and examples\n"
+    )
+    write_file(output_dir / "llms.txt", llms_txt)
 
     print(f"Built {len(proofs)} proofs to {output_dir}")
 
