@@ -1,0 +1,147 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "source_and",
+      "label": "Academy of Nutrition and Dietetics 2016 Position Paper on Vegetarian Diets (PubMed PMID 27886704)"
+    },
+    "B2": {
+      "key": "source_pmc_review",
+      "label": "Peer-reviewed review: Dietary Protein and Amino Acids in Vegetarian Diets (PMC6893534, Nutrients 2019)"
+    },
+    "B3": {
+      "key": "source_cleveland",
+      "label": "Cleveland Clinic: Do I Need to Worry About Eating Complete Proteins?"
+    },
+    "A1": {
+      "label": "Count of authoritative sources confirmed by citation verification",
+      "method": "count(citation_results[key]['status'] in ('verified', 'partial'))",
+      "result": "3 of 3 sources confirmed"
+    }
+  },
+  "claim_formal": {
+    "subject": "Animal protein",
+    "property": "necessity for meeting daily protein needs",
+    "operator": ">=",
+    "operator_note": "The claim asserts an absolute requirement ('must'): that animal protein is necessary and cannot be substituted to meet daily protein needs. Interpretation: no well-planned plant-based diet can adequately provide all protein needs without animal sources. Proof direction: DISPROVE. We show that >= 3 independent authoritative sources confirm plant-based diets CAN meet daily protein needs without animal protein, which directly negates the absolute 'must' claim. A single verified exception (a well-planned plant-based diet meeting protein needs) is logically sufficient to disprove any 'must' claim \u2014 the source threshold of 3 establishes consensus, not merely a single outlier observation.",
+    "threshold": 3,
+    "proof_direction": "disprove"
+  },
+  "claim_natural": "You must eat animal protein to meet daily protein needs effectively.",
+  "citations": {
+    "B1": {
+      "source_key": "source_and",
+      "source_name": "Journal of the Academy of Nutrition and Dietetics, Melina et al. 2016 (PMID 27886704)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27886704/",
+      "quote": "It is the position of the Academy of Nutrition and Dietetics that appropriately planned vegetarian, including vegan, diets are healthful, nutritionally adequate, and may provide health benefits for the prevention and treatment of certain diseases. These diets are appropriate for all stages of the life cycle, including pregnancy, lactation, infancy, childhood, adolescence, older adulthood, and for athletes.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B2": {
+      "source_key": "source_pmc_review",
+      "source_name": "Nutrients 2019: Dietary Protein and Amino Acids in Vegetarian Diets \u2014 A Review (PMC6893534)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6893534/",
+      "quote": "there is no evidence of protein deficiency in vegetarian populations in western countries",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B3": {
+      "source_key": "source_cleveland",
+      "source_name": "Cleveland Clinic Health Essentials: Complete Proteins",
+      "url": "https://health.clevelandclinic.org/do-i-need-to-worry-about-eating-complete-proteins",
+      "quote": "mixing and matching those protein sources can get you all the amino acids your body needs",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "clevelandclinic.org",
+        "source_type": "reference",
+        "tier": 3,
+        "flags": [],
+        "note": "Established reference source"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "It is the position of the Academy of Nutrition and Dietetics that appropriately "
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "there is no evidence of protein deficiency in vegetarian populations in western "
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "mixing and matching those protein sources can get you all the amino acids your b"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Multiple independent authoritative sources consulted",
+      "n_sources_consulted": 3,
+      "n_sources_verified": 3,
+      "sources": {
+        "source_and": "verified",
+        "source_pmc_review": "verified",
+        "source_cleveland": "verified"
+      },
+      "independence_note": "Sources are from three independent institutions: (1) Academy of Nutrition and Dietetics (professional dietetics body), (2) an independent peer-reviewed journal review (Nutrients/PMC), (3) Cleveland Clinic (major academic medical center). These sources represent independent research and expert consensus, not a single institution cited multiple times."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Does any meta-analysis or systematic review conclude that plant protein CANNOT meet protein needs, or that animal protein is physiologically required?",
+      "verification_performed": "Searched PubMed and Google Scholar for 'animal protein required necessary protein deficiency vegan vegetarian meta-analysis systematic review'. Reviewed PMC7926405 (meta-analysis on animal vs plant protein for lean mass, 2021) and Nutrition Reviews 2025 (plant protein and muscle). No study concludes that protein needs cannot be met on plant-based diets. PMC7926405 found animal protein has a modest lean mass advantage in younger adults but states the result 'does not significantly impact gains in lean mass or muscle strength following resistance type exercise training' overall.",
+      "finding": "No peer-reviewed meta-analysis or systematic review claims plant-based diets cannot meet protein needs. Studies note animal protein has higher bioavailability and leucine content, but none conclude plant protein is insufficient if adequate variety and quantity is consumed.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is there scientific evidence that athletes or specific populations CANNOT meet protein needs on plant-only diets?",
+      "verification_performed": "Searched for 'vegan athlete protein deficiency impossible' and 'plant-based diet protein inadequacy athletes systematic review'. The Gatorade Sports Science Institute review found: 'Muscle conditioning in athletes does not need to be compromised when adopting a plant-based diet as long as sufficient protein is consumed from a large variety of different plant-based protein sources.' The Academy of Nutrition and Dietetics explicitly states plant-based diets are appropriate 'for athletes'.",
+      "finding": "Athletes can meet protein needs on plant-based diets. Sports science literature confirms adequacy with sufficient quantity and variety, negating any claim that animal protein is required even for high-demand populations.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Does the claim have merit if interpreted narrowly \u2014 e.g., does animal protein have bioavailability or amino acid score (DIAAS) advantages that make plant protein 'ineffective' for meeting needs?",
+      "verification_performed": "Searched for 'DIAAS plant protein inadequate protein needs'. Animal proteins do generally score higher on the Digestible Indispensable Amino Acid Score (DIAAS). However, the Academy of Nutrition and Dietetics notes: 'Protein from a variety of plant foods, eaten during the course of a day, supplies enough of all indispensable (essential) amino acids when caloric requirements are met.' The terms 'complete' and 'incomplete' protein are described as 'misleading' in this context. The PMC6893534 review found lysine intakes in vegetarians were '58 and 43 mg/kg, respectively, largely higher than the 30 mg/kg estimated average requirement.'",
+      "finding": "Animal protein has higher DIAAS scores, but plant proteins consumed in adequate variety and quantity meet all amino acid requirements in practice. Bioavailability differences do not render plant protein 'ineffective' for meeting daily protein needs \u2014 they may require slightly larger total intake. The 'must' framing remains false: plant protein can effectively meet protein needs.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_confirmed": 3,
+    "threshold": 3,
+    "operator": ">=",
+    "proof_direction": "disprove",
+    "claim_holds": true
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

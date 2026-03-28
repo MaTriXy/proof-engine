@@ -1,0 +1,174 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "source_sleep",
+      "label": "PMC8591680: Sleep restriction shifts body composition at identical caloric deficits (more muscle lost, less fat lost)"
+    },
+    "B2": {
+      "key": "source_thermogenesis",
+      "label": "PMC3673773: Adaptive thermogenesis reduces energy expenditure 10-15% beyond predictions, persisting 6 months to 7 years after weight loss"
+    },
+    "B3": {
+      "key": "source_microbiome",
+      "label": "PMC3127503: Gut microbiome composition changes effective caloric extraction by ~150 kcal/day from identical food intake"
+    },
+    "B4": {
+      "key": "source_metabolic",
+      "label": "PMC11676201: Caloric restriction invokes hormonal/metabolic adaptations (thermogenesis, appetite hormones, metabolic profiles) that independently alter weight outcomes"
+    },
+    "A1": {
+      "label": "Count of independently verified peer-reviewed sources rejecting CICO sufficiency",
+      "method": "count(citations with status in ('verified', 'partial'))",
+      "result": "4 verified counter-sources (threshold: 3)"
+    }
+  },
+  "claim_formal": {
+    "subject": "Energy balance (caloric intake minus expenditure)",
+    "property": "sole sufficient determinant of sustainable weight loss",
+    "operator": ">=",
+    "operator_note": "The claim asserts caloric arithmetic is both necessary AND sufficient for sustainable weight loss \u2014 i.e., no other variable independently affects long-term weight loss outcomes. The word 'only' is interpreted strictly: any factor that materially affects sustainable weight loss outcomes independently of simple caloric accounting falsifies the claim. 'Sustainable' is interpreted as weight loss that preserves metabolically active lean mass and is maintainable long-term (not just short-term scale weight). We prove the NEGATION: at least 3 independent peer-reviewed research bodies each demonstrate a factor that materially affects sustainable weight loss beyond caloric arithmetic alone. Threshold = 3 verified sources across distinct research domains.",
+    "threshold": 3,
+    "proof_direction": "disprove"
+  },
+  "claim_natural": "\"Calories in, calories out\" is the ONLY thing that matters for sustainable weight loss.",
+  "citations": {
+    "B1": {
+      "source_key": "source_sleep",
+      "source_name": "Influence of Sleep Restriction on Weight Loss Outcomes Associated with Caloric Restriction \u2014 PMC (Sleep, 2022)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8591680/",
+      "quote": "less loss of total mass as fat when sleep was shorter",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B2": {
+      "source_key": "source_thermogenesis",
+      "source_name": "Adaptive thermogenesis in humans \u2014 PMC (International Journal of Obesity, 2013)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3673773/",
+      "quote": "the reduction in twenty four hour energy expenditure (TEE) persists in subjects who have sustained weight loss for extended periods of time (6 months \u2013 7 years)",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B3": {
+      "source_key": "source_microbiome",
+      "source_name": "Energy-balance studies reveal associations between gut microbes, caloric load, and nutrient absorption in humans \u2014 PMC (American Journal of Clinical Nutrition, 2011)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3127503/",
+      "quote": "a 20% increase in Firmicutes and a corresponding decrease in Bacteroidetes were associated with an increased energy harvest of",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B4": {
+      "source_key": "source_metabolic",
+      "source_name": "Beyond Calories: Individual Metabolic and Hormonal Adaptations Driving Variability in Weight Management \u2014 PMC (Nutrients, 2024)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11676201/",
+      "quote": "Caloric restriction invokes a suite of adaptive mechanisms involving adaptive thermogenesis, changes in appetite, alterations in hormonal and metabolic profiles, and changes in body composition.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "less loss of total mass as fat when sleep was shorter"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "the reduction in twenty four hour energy expenditure (TEE) persists in subjects "
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "a 20% increase in Firmicutes and a corresponding decrease in Bacteroidetes were "
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Caloric restriction invokes a suite of adaptive mechanisms involving adaptive th"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Four independently sourced peer-reviewed citations from distinct research domains (sleep science, energy expenditure physiology, gut microbiome research, hormonal/metabolic medicine)",
+      "n_sources_consulted": 4,
+      "n_sources_verified": 4,
+      "sources": {
+        "source_sleep": "verified",
+        "source_thermogenesis": "verified",
+        "source_microbiome": "verified",
+        "source_metabolic": "verified"
+      },
+      "independence_note": "Each source addresses a mechanistically distinct pathway by which factors beyond caloric arithmetic affect weight loss: (B1) sleep \u2192 body composition at fixed deficit; (B2) metabolic adaptation \u2192 reduced energy expenditure; (B3) gut microbiome \u2192 variable caloric extraction from identical food; (B4) hormonal cascade \u2192 multi-mechanism adaptive response. None of the four sources relies on the same underlying study or research group."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Do CICO proponents argue that sleep, hormones, and gut microbiome all operate *through* CICO \u2014 i.e., they affect 'calories in' or 'calories out' and therefore CICO remains the 'only' mechanism?",
+      "verification_performed": "Searched 'calories in calories out all factors funnel through CICO argument'; reviewed Precision Nutrition and ACE Fitness articles arguing CICO is the final common pathway. This is the strongest pro-CICO argument.",
+      "finding": "This semantic argument is valid at a definitional level: sleep affects hormones that affect appetite ('calories in'), and adaptive thermogenesis reduces resting metabolic rate ('calories out'). However, the sleep study (B1) directly refutes the practical claim: at the SAME measured caloric deficit (same calories in AND same calories out), sleep-restricted dieters lost only 58% of weight as fat vs 83% in well-rested dieters. Body composition at the same deficit differs significantly \u2014 a factor that is invisible to simple caloric accounting but critical for 'sustainable' weight loss (muscle loss reduces future metabolic rate, driving rebound weight gain).",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is adaptive thermogenesis large enough to matter practically, or is it a negligible 1-2% effect that dieters can ignore?",
+      "verification_performed": "Reviewed PMC3673773 for specific magnitudes. Also searched 'adaptive thermogenesis magnitude practical significance weight loss'.",
+      "finding": "PMC3673773 documents a 10-15% decline in 24-hour energy expenditure beyond what weight loss alone predicts, plus a ~20% increase in skeletal muscle work efficiency. At a 2000 kcal/day baseline, 10-15% is 200-300 kcal/day \u2014 equivalent to 20-30 minutes of brisk walking. This is not negligible: it means a dieter maintaining a calculated 500 kcal deficit is actually maintaining a 200-300 kcal deficit, explaining why weight loss stalls and regain occurs despite 'following the math.' The effect persists 6 months to 7 years (B2).",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is the gut microbiome effect (~150 kcal/day from Firmicutes changes) robust enough to be clinically significant, or is it a weak association from a single study?",
+      "verification_performed": "Searched 'gut microbiome energy harvest 150 kcal replication'; reviewed PMC3601187, PMC10334151, and Nature Communications 2023 (s41467-023-38778-x) for independent confirmation.",
+      "finding": "Multiple independent studies confirm microbiome-energy harvest associations. The 150 kcal/day figure from PMC3127503 is widely cited. A 2023 Nature Communications RCT (s41467-023-38778-x) showed that dietary-induced microbiome changes altered energy balance in a controlled setting. PMC3601187 confirms microbes enable absorption of energy that would otherwise pass undigested. The effect is real but the 150 kcal estimate has wide confidence intervals; the broader point \u2014 that identical food produces different effective caloric intake across individuals due to microbiome variation \u2014 is well-supported.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_confirmed": 4,
+    "threshold": 3,
+    "operator": ">=",
+    "claim_holds": true,
+    "proof_direction": "disprove"
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}

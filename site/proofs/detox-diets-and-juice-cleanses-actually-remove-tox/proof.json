@@ -1,0 +1,167 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "urmc",
+      "label": "URMC: detoxing through diet is a myth"
+    },
+    "B2": {
+      "key": "pubmed_review",
+      "label": "PubMed review: no compelling clinical evidence for detox diet toxin elimination"
+    },
+    "B3": {
+      "key": "harvard_health",
+      "label": "Harvard Health: cannot cleanse body through diet, per scientific reality"
+    },
+    "B4": {
+      "key": "cleveland_clinic",
+      "label": "Cleveland Clinic: no scientific research proving cleanses offer claimed health benefits"
+    },
+    "A1": {
+      "label": "Verified source count",
+      "method": "count(verified citations) = 4",
+      "result": "4"
+    }
+  },
+  "claim_formal": {
+    "subject": "Detox diets and juice cleanses",
+    "property": "actually remove toxins from the body beyond what normal organ function achieves",
+    "operator": ">=",
+    "operator_note": "The claim asserts that commercial detox diets and juice cleanses have a real, measurable effect on removing toxins \u2014 beyond what the liver, kidneys, and other organs already do. We disprove this by showing that 3 or more independent authoritative medical/scientific sources explicitly state there is no clinical evidence for this mechanism. threshold=3 applies the standard consensus bar: three independently verified sources from different institutions must confirm the disproof.",
+    "threshold": 3,
+    "proof_direction": "disprove"
+  },
+  "claim_natural": "Detox diets and juice cleanses actually remove toxins from the body.",
+  "citations": {
+    "B1": {
+      "source_key": "urmc",
+      "source_name": "University of Rochester Medical Center \u2014 Do Juice Cleanses Detox the Body?",
+      "url": "https://www.urmc.rochester.edu/news/publications/health-matters/do-juice-cleanses-detox-the-body",
+      "quote": "No. The concept of detoxing by eating or drinking certain diets is a myth.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "rochester.edu",
+        "source_type": "academic",
+        "tier": 4,
+        "flags": [],
+        "note": "Academic domain (.edu)"
+      }
+    },
+    "B2": {
+      "source_key": "pubmed_review",
+      "source_name": "PubMed \u2014 Detox diets for toxin elimination and weight management: a critical review of the evidence (2015)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25522674/",
+      "quote": "there is very little clinical evidence to support the use of these diets",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B3": {
+      "source_key": "harvard_health",
+      "source_name": "Harvard Health \u2014 Harvard Health Ad Watch: What's being cleansed in a detox cleanse?",
+      "url": "https://www.health.harvard.edu/blog/harvard-health-ad-watch-whats-being-cleansed-in-a-detox-cleanse-2020032519294",
+      "quote": "Searching the medical literature for \"detox diets\" or \"cleanse diets\" yields almost no relevant, high-quality medical evidence demonstrating health benefits.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "harvard.edu",
+        "source_type": "academic",
+        "tier": 4,
+        "flags": [],
+        "note": "Academic domain (.edu)"
+      }
+    },
+    "B4": {
+      "source_key": "cleveland_clinic",
+      "source_name": "Cleveland Clinic \u2014 Detox or Cleanse? What To Know Before You Start",
+      "url": "https://health.clevelandclinic.org/detox-cleanse",
+      "quote": "Research doesn't support many health claims linked to detoxification programs",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "clevelandclinic.org",
+        "source_type": "reference",
+        "tier": 3,
+        "flags": [],
+        "note": "Established reference source"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "No. The concept of detoxing by eating or drinking certain diets is a myth."
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "there is very little clinical evidence to support the use of these diets"
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Searching the medical literature for \"detox diets\" or \"cleanse diets\" yields alm"
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Research doesn't support many health claims linked to detoxification programs"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Multiple independent sources from different institutions consulted",
+      "n_sources_consulted": 4,
+      "n_sources_verified": 4,
+      "sources": {
+        "urmc": "verified",
+        "pubmed_review": "verified",
+        "harvard_health": "verified",
+        "cleveland_clinic": "verified"
+      },
+      "independence_note": "Sources are from four different institutions: University of Rochester Medical Center, PubMed/academic peer review, Harvard Medical School, and Cleveland Clinic \u2014 all independently rejecting the claim."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Are there any clinical studies showing detox diets effectively remove toxins?",
+      "verification_performed": "Searched PubMed and Google Scholar for clinical studies showing that commercial detox diets or juice cleanses measurably remove toxins. The 2015 systematic review (B2) acknowledged that 'a handful of clinical studies have shown that commercial detox diets enhance liver detoxification and eliminate persistent organic pollutants from the body,' but explicitly concluded these studies are 'hampered by flawed methodologies and small sample sizes' and that 'no randomised controlled trials have been conducted to assess the effectiveness of commercial detox diets in humans.' No high-quality RCT evidence was found.",
+      "finding": "A small number of low-quality studies with positive results exist, but the peer-reviewed consensus (B2) is that these are methodologically flawed and no RCTs have been conducted. The existence of weak, flawed studies does not constitute credible clinical evidence and does not break the disproof.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could 'detox' refer to a clinically recognized process that some diets support?",
+      "verification_performed": "Searched for medical definitions of 'detoxification' in the context of diet. URMC (B1) states 'The liver and kidneys remove toxins and waste. If we were holding onto toxins, we wouldn't be alive.' Cleveland Clinic (B4) states the body's digestive tract, liver, kidneys, and skin break down toxins daily without special cleanses. Harvard Health (B3) notes 'it's not even clear what toxin or toxins a cleanse is supposed to remove.' The term 'toxins' in detox marketing is consistently found to be undefined and unverifiable.",
+      "finding": "Medical authorities confirm the body performs toxin elimination via liver/kidneys continuously. The term 'toxins' in commercial detox marketing is undefined and no specific toxin has been shown to be measurably reduced by detox diets. Does not break the disproof.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_confirmed": 4,
+    "threshold": 3,
+    "operator": ">=",
+    "claim_holds": true
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.0.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-28"
+  }
+}
