@@ -2,22 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.11.0] - Unreleased
-
-### Added
-
-- **Absence-of-Evidence Proof Template** — new template for claims about absence of published evidence, with `search_registry` data structure, `verify_search_registry()` verification, Type S facts in FACT_REGISTRY, and `SUPPORTED` verdict
-- **SUPPORTED verdict** — 7th and 8th verdicts (`SUPPORTED`, `SUPPORTED (with unverified citations)`) for absence-of-evidence proofs where the epistemic claim is inherently weaker than deductive proof. Blue badge, own catalog filter.
-- **Academic citation normalization** — `normalize_text()` now strips inline reference markers (`<sup>[1]</sup>`, `<a class="xref">[1,2]</a>`) from PMC and journal HTML before quote matching, fixing false-negative citation verification on academic sources
-- **Rule applicability matrix** in hardening-rules.md — documents which validator rules auto-pass for each proof type
-- **Qualitative gotchas** in SKILL.md — 4 new gotchas for qualitative and absence proofs
-- Validator: Rule 2 and Rule 6 now support `search_registry` for absence proofs
-- `validate-site-proof.py`: absence proofs require `search_registry`; authored search metadata validated for completeness; dynamic verdict list in error messages
-
-### Fixed
-
-- README: updated Claude Desktop installation instructions with correct marketplace flow
-
 ## [0.10.0] - Unreleased
 
 ### Added
@@ -31,6 +15,17 @@ All notable changes to this project will be documented in this file.
   - `llms.txt` agent entry point for AI agents to discover and interact with the catalog
   - PR-based community proof submissions with CI validation
   - Methodology page generated from DESIGN.md and hardening rules
+- **Absence-of-Evidence Proof Template** — new template for claims about absence of published evidence, with `search_registry` data structure, `verify_search_registry()` verification, Type S facts in FACT_REGISTRY, and `SUPPORTED` verdict
+- **SUPPORTED verdict** — 7th and 8th verdicts (`SUPPORTED`, `SUPPORTED (with unverified citations)`) for absence-of-evidence proofs where the epistemic claim is inherently weaker than deductive proof. Blue badge, own catalog filter.
+- **Academic citation normalization** — `normalize_text()` now strips inline reference markers (`<sup>[1]</sup>`, `<a class="xref">[1,2]</a>`) from PMC and journal HTML before quote matching, fixing false-negative citation verification on academic sources
+- **Rule applicability matrix** in hardening-rules.md — documents which validator rules auto-pass for each proof type
+- **Qualitative gotchas** in SKILL.md — 4 new gotchas for qualitative and absence proofs
+- Validator: Rule 2 and Rule 6 now support `search_registry` for absence proofs
+- `validate-site-proof.py`: absence proofs require `search_registry`; authored search metadata validated for completeness; dynamic verdict list in error messages
+
+### Fixed
+
+- README: updated Claude Desktop installation instructions with correct marketplace flow
 
 ## [0.9.0] - 2026-03-28
 
