@@ -284,6 +284,56 @@ class ProofValidator:
             else:
                 self.passed.append("Rule 6: Pure computation — independent sources not required")
 
+    def check_rule6_per_subclaim(self):
+        """Check that each sub-claim in a compound proof has >=2 sources.
+
+        For compound proofs, extracts SC IDs from CLAIM_FORMAL (supports both
+        list-of-dicts and dict forms). Groups empirical_facts keys by lowercase
+        SC prefix (sc1_, sc2a_, etc.). Only warns if prefixed keys exist but
+        are unbalanced — skips silently when keys are descriptive (no prefix
+        match), since source-to-subclaim mapping can't be reliably inferred.
+        """
+        if "sub_claims" not in self.source:
+            return
+
+        # Extract SC IDs from both forms:
+        #   list form: {"id": "SC1", ...}
+        #   dict form: "SC1": { or "SC1": "
+        sc_ids = re.findall(r'"id"\s*:\s*"(SC\w+)"', self.source, re.IGNORECASE)
+        if not sc_ids:
+            # Try dict form: "SC1": { or "SC1": "
+            sc_ids = re.findall(r'"(SC\w+)"\s*:', self.source, re.IGNORECASE)
+            # Filter to only SC-prefixed keys that are sub-claim IDs (not random keys)
+            sc_ids = [s for s in sc_ids if re.match(r'^SC\d+\w*$', s, re.IGNORECASE)]
+        if not sc_ids:
+            return
+
+        ef_keys = self._extract_empirical_facts_keys()
+        if not ef_keys:
+            return
+
+        # Check if ALL sub-claims have at least one prefixed key.
+        # If any sub-claim has zero prefixed keys, the proof likely uses
+        # descriptive keys for that sub-claim — skip the whole check to
+        # avoid false positives on mixed-shape proofs.
+        for sc_id in sc_ids:
+            prefix = sc_id.lower() + "_"
+            if not any(k.startswith(prefix) for k in ef_keys):
+                # At least one sub-claim has no prefixed keys — can't
+                # reliably assess balance, skip entirely
+                return
+
+        for sc_id in sc_ids:
+            prefix = sc_id.lower() + "_"
+            sc_keys = [k for k in ef_keys if k.startswith(prefix)]
+            if len(sc_keys) < 2:
+                self.warnings.append((
+                    f"Rule 6: Sub-claim {sc_id} has only {len(sc_keys)} source(s) "
+                    f"in empirical_facts (keys starting with '{prefix}') — "
+                    "cross-check may not be truly independent for this sub-claim",
+                    [],
+                ))
+
     def check_rule7_no_hardcoded_constants(self):
         """Rule 7: No hard-coded well-known constants or formulas.
 
@@ -677,6 +727,7 @@ class ProofValidator:
         self.check_rule4_claim_interpretation()
         self.check_rule5_adversarial()
         self.check_rule6_independent_crosscheck()
+        self.check_rule6_per_subclaim()
         self.check_rule7_no_hardcoded_constants()
         self.check_fact_registry()
         self.check_json_summary()

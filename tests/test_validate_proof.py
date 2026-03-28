@@ -681,3 +681,150 @@ def test_affirm_proof_no_direction_passes():
 def test_pure_math_no_direction_passes():
     v = _validate_proof_direction(PURE_MATH_NO_DIRECTION_OK)
     assert len(v.issues) == 0
+
+
+# ---------------------------------------------------------------------------
+# Per-sub-claim source count (check_rule6_per_subclaim)
+# ---------------------------------------------------------------------------
+
+def _validate_rule6_subclaim(source_code: str) -> ProofValidator:
+    """Write source to temp file, run per-subclaim source check, return validator."""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
+        f.write(source_code)
+        f.flush()
+        v = ProofValidator(f.name)
+        v.check_rule6_per_subclaim()
+    os.unlink(f.name)
+    return v
+
+
+COMPOUND_BALANCED_LIST = '''
+CLAIM_FORMAL = {
+    "sub_claims": [
+        {"id": "SC1", "property": "...", "operator": ">=", "threshold": 2},
+        {"id": "SC2", "property": "...", "operator": ">=", "threshold": 2},
+    ],
+    "compound_operator": "AND",
+}
+empirical_facts = {
+    "sc1_source_a": {"quote": "...", "url": "...", "source_name": "A"},
+    "sc1_source_b": {"quote": "...", "url": "...", "source_name": "B"},
+    "sc2_source_c": {"quote": "...", "url": "...", "source_name": "C"},
+    "sc2_source_d": {"quote": "...", "url": "...", "source_name": "D"},
+}
+'''
+
+COMPOUND_UNBALANCED_LIST = '''
+CLAIM_FORMAL = {
+    "sub_claims": [
+        {"id": "SC1", "property": "...", "operator": ">=", "threshold": 2},
+        {"id": "SC2", "property": "...", "operator": ">=", "threshold": 2},
+    ],
+    "compound_operator": "AND",
+}
+empirical_facts = {
+    "sc1_source_a": {"quote": "...", "url": "...", "source_name": "A"},
+    "sc1_source_b": {"quote": "...", "url": "...", "source_name": "B"},
+    "sc1_source_c": {"quote": "...", "url": "...", "source_name": "C"},
+    "sc2_only_one": {"quote": "...", "url": "...", "source_name": "D"},
+}
+'''
+
+COMPOUND_DICT_FORM = '''
+CLAIM_FORMAL = {
+    "sub_claims": {
+        "SC1": {"property": "brain mass", "operator": "within", "threshold_pct": 2.0},
+        "SC2": {"property": "oxygen usage", "operator": ">=", "threshold_pct": 20.0},
+    },
+}
+empirical_facts = {
+    "sc1_brain_mass_who": {"quote": "...", "url": "...", "source_name": "WHO"},
+    "sc1_brain_mass_textbook": {"quote": "...", "url": "...", "source_name": "Textbook"},
+    "sc2_oxygen_nih": {"quote": "...", "url": "...", "source_name": "NIH"},
+    "sc2_oxygen_lancet": {"quote": "...", "url": "...", "source_name": "Lancet"},
+}
+'''
+
+COMPOUND_DESCRIPTIVE_KEYS = '''
+CLAIM_FORMAL = {
+    "sub_claims": [
+        {"id": "SC1", "property": "...", "operator": ">=", "threshold": 2},
+        {"id": "SC2", "property": "...", "operator": ">=", "threshold": 2},
+    ],
+    "compound_operator": "AND",
+}
+empirical_facts = {
+    "wiki_oslo_ii_areas": {"quote": "...", "url": "...", "source_name": "Wikipedia"},
+    "area_c_wiki": {"quote": "...", "url": "...", "source_name": "Wikipedia"},
+    "wiki_area_a": {"quote": "...", "url": "...", "source_name": "Wikipedia"},
+    "wiki_area_b": {"quote": "...", "url": "...", "source_name": "Wikipedia"},
+}
+'''
+
+COMPOUND_MIXED_PREFIX_DESCRIPTIVE = '''
+CLAIM_FORMAL = {
+    "sub_claims": [
+        {"id": "SC1", "property": "...", "operator": ">=", "threshold": 2},
+        {"id": "SC2", "property": "...", "operator": ">=", "threshold": 2},
+    ],
+    "compound_operator": "AND",
+}
+empirical_facts = {
+    "sc1_source_a": {"quote": "...", "url": "...", "source_name": "A"},
+    "sc1_source_b": {"quote": "...", "url": "...", "source_name": "B"},
+    "oslo_accords_wiki": {"quote": "...", "url": "...", "source_name": "Wikipedia"},
+    "un_resolution_doc": {"quote": "...", "url": "...", "source_name": "UN"},
+}
+'''
+
+NO_SUBCLAIMS_SKIPS = '''
+CLAIM_FORMAL = {
+    "subject": "...",
+    "property": "...",
+    "operator": ">",
+    "threshold": 50,
+}
+empirical_facts = {
+    "source_a": {"quote": "...", "url": "...", "source_name": "A"},
+    "source_b": {"quote": "...", "url": "...", "source_name": "B"},
+}
+'''
+
+
+def test_compound_balanced_list_passes():
+    v = _validate_rule6_subclaim(COMPOUND_BALANCED_LIST)
+    assert len(v.warnings) == 0
+    assert len(v.issues) == 0
+
+
+def test_compound_unbalanced_list_warns():
+    v = _validate_rule6_subclaim(COMPOUND_UNBALANCED_LIST)
+    assert len(v.warnings) > 0
+    assert any("SC2" in str(w) for w in v.warnings)
+
+
+def test_compound_dict_form_passes():
+    """sub_claims as dict with prefixed keys — should pass when balanced."""
+    v = _validate_rule6_subclaim(COMPOUND_DICT_FORM)
+    assert len(v.warnings) == 0
+    assert len(v.issues) == 0
+
+
+def test_compound_descriptive_keys_skips():
+    """Descriptive keys with no sc prefix — should skip without warning."""
+    v = _validate_rule6_subclaim(COMPOUND_DESCRIPTIVE_KEYS)
+    assert len(v.warnings) == 0
+    assert len(v.issues) == 0
+
+
+def test_compound_mixed_prefix_descriptive_skips():
+    """Mixed: SC1 prefixed, SC2 descriptive — should skip to avoid false positives."""
+    v = _validate_rule6_subclaim(COMPOUND_MIXED_PREFIX_DESCRIPTIVE)
+    assert len(v.warnings) == 0
+    assert len(v.issues) == 0
+
+
+def test_no_subclaims_skips():
+    v = _validate_rule6_subclaim(NO_SUBCLAIMS_SKIPS)
+    assert len(v.warnings) == 0
+    assert len(v.issues) == 0
