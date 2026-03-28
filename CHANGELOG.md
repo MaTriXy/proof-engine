@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
   - Searchable proof catalog with client-side filtering
   - Machine-readable JSON API (`index.json` + per-proof `proof.json`)
   - Schema.org ClaimReview JSON-LD for search engine discoverability
+  - SEO metadata: meta descriptions, OpenGraph tags, canonical URLs on all pages
+  - `sitemap.xml` and `robots.txt` generated at build time
   - PR-based community proof submissions with CI validation
   - Methodology page generated from DESIGN.md and hardening rules
 
