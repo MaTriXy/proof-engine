@@ -239,8 +239,11 @@ def parse_range_from_quote(quote: str, pattern: str = None, fact_id: str = "unkn
     ]
 
     for pat in range_patterns:
-        m = re.search(pat, norm, re.IGNORECASE)
-        if m:
+        for m in re.finditer(pat, norm, re.IGNORECASE):
+            # Reject if this match sits inside an ISO date (YYYY-MM-DD)
+            full_context = norm[max(0, m.start() - 5):m.end() + 5]
+            if re.search(r'\d{4}-\d{2}-\d{2}', full_context):
+                continue  # skip this match, try next occurrence of same pattern
             low = float(m.group(1).replace(",", ""))
             high = float(m.group(2).replace(",", ""))
             if low > high:
