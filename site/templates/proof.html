@@ -101,17 +101,15 @@
 
 <h2 class="section-heading">audit trail</h2>
 
-{% set audit_sections = [
+{% set audit_sections_before = [
     "Citation Verification Details",
     "Computation Traces",
     "Independent Source Agreement",
     "Adversarial Checks",
     "Hardening Checklist",
-    "Source Credibility Assessment",
-    "Extraction Records",
 ] %}
 
-{% for section_name in audit_sections %}
+{% for section_name in audit_sections_before %}
 {% set content = rendered_sections_audit.get(section_name) %}
 {% if content %}
 <div class="audit-section">
@@ -123,6 +121,59 @@
 </div>
 {% endif %}
 {% endfor %}
+
+{% if rendered_sections_audit.get("Source Credibility Assessment") %}
+<div class="audit-section">
+    <div class="audit-header" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.toggle').textContent = this.nextElementSibling.classList.contains('open') ? '▾' : '▸'">
+        <span>Source Credibility Assessment</span>
+        <span class="toggle">▸</span>
+    </div>
+    <div class="audit-body proof-content">
+        {{ rendered_sections_audit["Source Credibility Assessment"] | safe }}
+        {% if audit_tables.get("credibility") %}
+        <h3>Linked Sources</h3>
+        <table class="evidence-table">
+            <thead><tr><th>Fact ID</th><th>Domain</th><th>Source URL</th></tr></thead>
+            <tbody>
+            {% for row in audit_tables.credibility %}
+            <tr>
+                <td>{{ row.fact_id }}</td>
+                <td>{{ row.domain }}</td>
+                <td>{% if row.url %}<a href="{{ row.url }}">{{ row.url | truncate(60) }}</a>{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% if rendered_sections_audit.get("Extraction Records") %}
+<div class="audit-section">
+    <div class="audit-header" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.toggle').textContent = this.nextElementSibling.classList.contains('open') ? '▾' : '▸'">
+        <span>Extraction Records</span>
+        <span class="toggle">▸</span>
+    </div>
+    <div class="audit-body proof-content">
+        {{ rendered_sections_audit["Extraction Records"] | safe }}
+        {% if audit_tables.get("extractions") %}
+        <h3>Linked Sources</h3>
+        <table class="evidence-table">
+            <thead><tr><th>ID</th><th>Source URL</th></tr></thead>
+            <tbody>
+            {% for row in audit_tables.extractions %}
+            <tr>
+                <td>{% if row.url %}<a href="{{ row.url }}">{{ row.fact_id }}</a>{% else %}{{ row.fact_id }}{% endif %}</td>
+                <td>{% if row.url %}<a href="{{ row.url }}">{{ row.url | truncate(60) }}</a>{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
 
 <div class="downloads">
     <a href="{{ base_url }}proofs/{{ proof.slug }}/proof.py" class="download-link" download>↓ proof.py</a>

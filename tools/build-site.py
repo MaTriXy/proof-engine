@@ -117,6 +117,51 @@ def write_file(path, content):
     path.write_text(content)
 
 
+def build_audit_tables(proof_data):
+    """Build structured data for audit trail tables that need source linking."""
+    citations = proof_data.get("citations", {})
+    if not citations:
+        return {}
+
+    # Source Credibility Assessment
+    credibility_rows = []
+    for fact_id, cit in citations.items():
+        cred = cit.get("credibility", {})
+        credibility_rows.append({
+            "fact_id": fact_id,
+            "domain": cred.get("domain", ""),
+            "source_type": cred.get("source_type", ""),
+            "tier": cred.get("tier", ""),
+            "note": cred.get("note", ""),
+            "url": cit.get("url", ""),
+        })
+
+    # Extraction Records — from proof.json.extractions + citations for URLs
+    # Extraction keys may differ from citation keys (e.g., "B1_napoleon_height" vs "B1").
+    extraction_rows = []
+    extractions = proof_data.get("extractions", {})
+    for ext_id, ext in extractions.items():
+        # Try exact match first, then prefix match (B1_foo -> B1)
+        cit = citations.get(ext_id)
+        if not cit:
+            base_id = ext_id.split("_")[0] if "_" in ext_id else ext_id
+            cit = citations.get(base_id, {})
+        extraction_rows.append({
+            "fact_id": ext_id,
+            "url": cit.get("url", "") if cit else "",
+            "value": ext.get("value", ""),
+            "value_in_quote": ext.get("value_in_quote", False),
+            "quote_snippet": ext.get("quote_snippet", ""),
+        })
+
+    result = {}
+    if credibility_rows:
+        result["credibility"] = credibility_rows
+    if extraction_rows:
+        result["extractions"] = extraction_rows
+    return result
+
+
 def main():
     args = parse_args()
     site_dir = Path(args.site_dir)
@@ -167,6 +212,7 @@ def main():
             canonical_url=canonical_url,
             og_type="article",
             citations=proof["proof_data"].get("citations", {}),
+            audit_tables=build_audit_tables(proof["proof_data"]),
         ))
 
         src_dir = proofs_dir / proof["slug"]

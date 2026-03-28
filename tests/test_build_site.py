@@ -412,3 +412,50 @@ def test_proof_page_evidence_table_with_citations(site_fixture):
     assert "evidence-table" in html
     assert 'href="https://example.com/source"' in html
     assert "Test Source" in html
+
+
+def test_audit_extraction_links_with_suffixed_keys(site_fixture):
+    """Extraction keys like B1_foo should resolve to citation B1's URL."""
+    proof_json_path = site_fixture / "site" / "proofs" / "test-claim" / "proof.json"
+    data = json.loads(proof_json_path.read_text())
+    data["citations"] = {
+        "B1": {
+            "source_name": "Test Source",
+            "url": "https://example.com/source",
+            "status": "verified",
+            "source_key": "test_src",
+            "quote": "Test quote",
+            "method": "full_quote",
+            "credibility": {
+                "domain": "example.com",
+                "source_type": "academic",
+                "tier": 4,
+                "note": "Test note",
+            },
+        },
+    }
+    data["extractions"] = {
+        "B1_height": {
+            "value": "1.68",
+            "value_in_quote": True,
+            "quote_snippet": "height is 1.68m",
+        },
+        "B1_weight": {
+            "value": "70",
+            "value_in_quote": True,
+            "quote_snippet": "weight is 70kg",
+        },
+    }
+    proof_json_path.write_text(json.dumps(data))
+
+    # Also add audit markdown so the section renders
+    audit_path = site_fixture / "site" / "proofs" / "test-claim" / "proof_audit.md"
+    audit_text = audit_path.read_text()
+    audit_text += "\n\n## Extraction Records\n\n| ID | Value |\n|---|---|\n| B1_height | 1.68 |\n"
+    audit_path.write_text(audit_text)
+
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "proofs" / "test-claim" / "index.html").read_text()
+    # Both suffixed extraction IDs should link to B1's URL
+    assert html.count('href="https://example.com/source"') >= 2
