@@ -62,10 +62,10 @@ $skill-installer https://github.com/yaniv-golan/proof-engine
 CI (`.github/workflows/release.yml`) runs on version tags (`v*`) and produces the generic zip:
 
 ```bash
-cp -r proof-engine/skills/proof-engine proof-engine-zip
-sed -i 's|\${CLAUDE_SKILL_DIR}/||g' proof-engine-zip/SKILL.md
-mv proof-engine-zip proof-engine
-zip -r "proof-engine.zip" proof-engine/
+mkdir -p dist
+cp -r proof-engine/skills/proof-engine dist/proof-engine
+find dist/proof-engine -name '*.md' -exec sed -i 's|\${CLAUDE_SKILL_DIR}/||g' {} +
+cd dist && zip -r ../proof-engine.zip proof-engine/
 ```
 
 ## Version Management

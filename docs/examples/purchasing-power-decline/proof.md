@@ -2,7 +2,7 @@
 
 - **Generated:** 2026-03-26
 - **Verdict:** PROVED
-- **Audit trail:** [proof_purchasing_power_audit.md](proof_purchasing_power_audit.md) | [proof_purchasing_power.py](proof_purchasing_power.py)
+- **Audit trail:** [proof_audit.md](proof_audit.md) | [proof.py](proof.py)
 
 ## Key Findings
 

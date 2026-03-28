@@ -1,8 +1,8 @@
 # Audit: The purchasing power of the US dollar has declined by more than 90% since the Federal Reserve was established in 1913.
 
 - **Generated:** 2026-03-26
-- **Reader summary:** [proof_purchasing_power.md](proof_purchasing_power.md)
-- **Proof script:** [proof_purchasing_power.py](proof_purchasing_power.py)
+- **Reader summary:** [proof.md](proof.md)
+- **Proof script:** [proof.py](proof.py)
 
 ## Claim Specification
 
@@ -75,7 +75,7 @@ All 4 citations fully verified via live URL fetch with full quote match.
 
 ## Computation Traces
 
-Source: proof_purchasing_power.py inline output (execution trace).
+Source: proof.py inline output (execution trace).
 
 ```
 --- Source A (rateinflation.com, CPI 1913=9.883, CPI 2024=313.689) ---
