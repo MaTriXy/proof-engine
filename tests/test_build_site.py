@@ -268,7 +268,7 @@ def test_landing_page_has_ai_agents_link(site_fixture):
     result = _run_build(site_fixture)
     assert result.returncode == 0, f"Build failed:\n{result.stderr}"
     html = (site_fixture / "_site" / "index.html").read_text()
-    assert 'href="/proof-engine/llms.txt"' in html
+    assert 'href="/proof-engine/submit/#ai-agents"' in html
     assert "AI Agents" in html
     assert "cta-row" in html
 

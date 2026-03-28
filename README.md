@@ -80,7 +80,7 @@ Download [`proof-engine.zip`](https://github.com/yaniv-golan/proof-engine/releas
 
 ## Published Proofs
 
-Browse verified proofs at **[yaniv-golan.github.io/proof-engine](https://yaniv-golan.github.io/proof-engine/)** — a searchable catalog of claims that have been formally proved or disproved, with full audit trails. AI agents can fetch structured proof data via the [JSON API](https://yaniv-golan.github.io/proof-engine/index.json).
+Browse verified proofs at **[yaniv-golan.github.io/proof-engine](https://yaniv-golan.github.io/proof-engine/)** — a searchable catalog of claims that have been formally proved or disproved, with full audit trails. AI agents can fetch structured proof data via the [JSON API](https://yaniv-golan.github.io/proof-engine/index.json) or paste the [llms.txt](https://yaniv-golan.github.io/proof-engine/llms.txt) URL into any LLM for a quick overview.
 
 Want to contribute? See [how to submit a proof](https://yaniv-golan.github.io/proof-engine/submit/).
 
