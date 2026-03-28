@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
   - PR-based community proof submissions with CI validation
   - Methodology page generated from DESIGN.md and hardening rules
 
-## [0.9.0]
+## [0.9.0] - 2026-03-28
 
 ### Added
 
