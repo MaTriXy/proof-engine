@@ -6,9 +6,11 @@ on:
     paths:
       - 'site/**'
       - 'tools/build-site.py'
+      - 'tools/validate-site-proof.py'
       - 'tools/lib/**'
       - 'docs/DESIGN.md'
       - 'proof-engine/skills/proof-engine/references/hardening-rules.md'
+      - '.github/workflows/deploy-site.yml'
 
 permissions:
   contents: read
