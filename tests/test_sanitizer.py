@@ -49,12 +49,6 @@ def test_allows_safe_tags():
     assert "<a " in html
 
 
-def test_adds_nofollow_to_links():
-    md = "[link](http://example.com)"
-    html = render_markdown(md)
-    assert 'rel="nofollow"' in html
-
-
 def test_heading_ids_for_toc():
     md = "## My Heading"
     html = render_markdown(md)

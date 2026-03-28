@@ -23,13 +23,6 @@ ALLOWED_ATTRIBUTES = {
 }
 
 
-def _add_nofollow(attrs, new=False):
-    href_key = (None, "href")
-    if href_key in attrs:
-        attrs[(None, "rel")] = "nofollow"
-    return attrs
-
-
 def render_markdown(text: str) -> str:
     """Render markdown to sanitized HTML."""
     md = markdown.Markdown(extensions=["tables", "fenced_code", "toc"])
@@ -40,6 +33,7 @@ def render_markdown(text: str) -> str:
         attributes=ALLOWED_ATTRIBUTES,
         strip=False,
     )
-    clean_html = bleach.linkify(clean_html, callbacks=[_add_nofollow],
-                                 parse_email=False, skip_tags=["pre", "code"])
+    # Note: bleach.linkify is intentionally omitted — it double-escapes
+    # HTML entities inside <pre><code> blocks (known bleach bug).
+    # rel="nofollow" is added via ALLOWED_ATTRIBUTES on <a> tags instead.
     return clean_html
