@@ -140,10 +140,11 @@ def main():
                 f"proof.json says '{proof_data['verdict']}'"
             )
         elif not md_verdict:
+            known = ", ".join(sorted(VERDICT_TAXONOMY.keys(), key=len))
             errors.append(
                 "Could not extract verdict from proof.md Conclusion section — "
                 "the Conclusion must contain one of the known verdict strings "
-                "(PROVED, DISPROVED, PARTIALLY VERIFIED, UNDETERMINED)"
+                f"({known})"
             )
 
     print_results(errors, warnings)
