@@ -30,7 +30,7 @@ The skill produces three outputs: a re-runnable `proof.py` script, a reader-faci
 ### Claude Desktop
 
 1. Click **Customize** in the sidebar
-2. Click **Browse Skills**
+2. Click **Browse Plugins**
 3. Go to the **Personal** tab and click **+**
 4. Choose **Add marketplace** 
 5. Type `yaniv-golan/proof-engine` and click **Sync**
