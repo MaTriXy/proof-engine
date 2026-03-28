@@ -14,6 +14,7 @@ The version appears in these files (all managed by the bump script):
 2. `proof-engine/.claude-plugin/plugin.json` → `"version"` field
 3. `.cursor-plugin/plugin.json` → `"version"` field
 4. `proof-engine/skills/proof-engine/SKILL.md` → `metadata.version` in YAML frontmatter
+5. `proof-engine/skills/proof-engine/VERSION` → copied from root, read at runtime by generated proofs for the `generator.version` field in JSON summaries
 
 ## Bumping the Version
 
