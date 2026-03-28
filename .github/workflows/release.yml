@@ -20,11 +20,10 @@ jobs:
 
       - name: Build generic zip (Manus, ChatGPT, Cursor, etc.)
         run: |
-          cp -r proof-engine/skills/proof-engine proof-engine-zip
-          sed -i 's|\${CLAUDE_SKILL_DIR}/||g' proof-engine-zip/SKILL.md
-          mv proof-engine-zip proof-engine
-          zip -r "proof-engine.zip" proof-engine/
-          rm -rf proof-engine
+          mkdir -p dist
+          cp -r proof-engine/skills/proof-engine dist/proof-engine
+          find dist/proof-engine -name '*.md' -exec sed -i 's|\${CLAUDE_SKILL_DIR}/||g' {} +
+          cd dist && zip -r ../proof-engine.zip proof-engine/
 
       - name: Extract release notes from CHANGELOG.md
         id: changelog
