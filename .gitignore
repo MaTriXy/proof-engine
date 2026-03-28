@@ -8,3 +8,5 @@ build/
 .env
 docs/superpowers/
 eval-results/
+proofs/
+docs/internal/

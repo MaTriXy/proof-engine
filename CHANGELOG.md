@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-03-28
+
+### Added
+
+- Validator: `check_table_data_integrity()` — enforces correct table-data verification patterns:
+  - `data_values` present requires `verify_data_values()` call (hard failure)
+  - `verify_extraction()` on `data_values`-derived values detected as circular (hard failure)
+  - Pseudo-quote fields (`*_quote`) with bare numeric/date literals parsed as evidence (hard failure)
+  - Multiple numeric `_quote` fields without `data_values` (warning)
+- 9 new validator tests for table data integrity checks, including regression fixtures for the purchasing-power anti-pattern.
+- Negative example in proof-templates.md showing the rejected pseudo-quote pattern.
+- Gotcha in SKILL.md: "Never create pseudo-quote fields for table data."
+
+### Fixed
+
+- Purchasing-power example (`docs/examples/purchasing-power-decline/proof.py`) converted from pseudo-quote fields to `data_values` + `verify_data_values()`.
+
 ## [0.8.0] - 2026-03-27
 
 ### Added
