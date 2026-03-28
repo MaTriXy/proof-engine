@@ -141,11 +141,11 @@ def main():
     if not featured:
         featured = proofs[:3]
     tpl = env.get_template("landing.html")
-    write_file(output_dir / "index.html", tpl.render(**common, stats=stats, featured_proofs=featured))
+    write_file(output_dir / "index.html", tpl.render(**common, stats=stats, featured_proofs=featured, canonical_url=f"{site_url}{base_url}"))
 
     # Catalog page
     tpl = env.get_template("catalog.html")
-    write_file(output_dir / "catalog" / "index.html", tpl.render(**common))
+    write_file(output_dir / "catalog" / "index.html", tpl.render(**common, canonical_url=f"{site_url}{base_url}catalog/"))
 
     # Proof detail pages
     tpl = env.get_template("proof.html")
@@ -162,6 +162,7 @@ def main():
             rendered_sections_audit=rendered_audit,
             json_ld=json_ld,
             canonical_url=canonical_url,
+            og_type="article",
         ))
 
         src_dir = proofs_dir / proof["slug"]
@@ -187,24 +188,27 @@ def main():
 
             if page_num == 1:
                 path = output_dir / "tags" / tag / "index.html"
+                tag_canonical = f"{site_url}{base_url}tags/{tag}/"
             else:
                 path = output_dir / "tags" / tag / "page" / str(page_num) / "index.html"
+                tag_canonical = f"{site_url}{base_url}tags/{tag}/page/{page_num}/"
 
             write_file(path, tpl.render(
                 **common, tag=tag, proofs=page_proofs,
                 total=len(tproofs), current_page=page_num, total_pages=total_pages,
+                canonical_url=tag_canonical,
             ))
 
     # Methodology page
     methodology_html = build_methodology(args.design_md, args.hardening_rules_md)
     tpl = env.get_template("methodology.html")
-    write_file(output_dir / "methodology" / "index.html", tpl.render(**common, methodology_html=methodology_html))
+    write_file(output_dir / "methodology" / "index.html", tpl.render(**common, methodology_html=methodology_html, canonical_url=f"{site_url}{base_url}methodology/"))
 
     # Submit page
     submit_md = (site_dir / "content" / "submit.md").read_text()
     submit_html = render_markdown(submit_md)
     tpl = env.get_template("submit.html")
-    write_file(output_dir / "submit" / "index.html", tpl.render(**common, submit_html=submit_html))
+    write_file(output_dir / "submit" / "index.html", tpl.render(**common, submit_html=submit_html, canonical_url=f"{site_url}{base_url}submit/"))
 
     # index.json
     catalog = {
