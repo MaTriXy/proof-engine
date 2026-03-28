@@ -1,0 +1,33 @@
+{# site/templates/base.html #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Proof Engine{% endblock %}</title>
+    <link rel="stylesheet" href="{{ base_url }}static/style.css">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <nav class="site-nav">
+        <div class="nav-inner">
+            <a href="{{ base_url }}" class="nav-logo">Proof Engine</a>
+            <div class="nav-links">
+                <a href="{{ base_url }}catalog/">Catalog</a>
+                <a href="{{ base_url }}methodology/">Methodology</a>
+                <a href="{{ base_url }}submit/">Submit</a>
+                <a href="https://github.com/yaniv-golan/proof-engine" rel="nofollow">GitHub</a>
+            </div>
+        </div>
+    </nav>
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>Built with <a href="https://github.com/yaniv-golan/proof-engine" rel="nofollow">Proof Engine</a> — open-source verifiable proofs</p>
+        </div>
+    </footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
