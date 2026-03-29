@@ -35,6 +35,46 @@
     </span>
 </div>
 
+<div class="share-bar"
+     data-verdict="{{ proof.verdict.raw | e }}"
+     data-claim="{{ proof.proof_data.claim_natural | e }}"
+     data-url="{{ canonical_url | e }}"
+     data-has-citations="{{ 'true' if citations else 'false' }}">
+    <span class="share-bar-label">share</span>
+    <a id="share-twitter" href="#" target="_blank" rel="noopener" class="share-btn">𝕏 post</a>
+    <button id="share-copy-verdict" class="share-btn">copy verdict</button>
+    <button id="share-copy-link" class="share-btn">copy link</button>
+</div>
+<script>
+(function() {
+    var bar = document.querySelector('.share-bar');
+    var verdict = bar.dataset.verdict;
+    var claim = bar.dataset.claim;
+    var url = bar.dataset.url;
+    var verdictText = verdict + ': "' + claim + '" — ' + url;
+
+    var hasCitations = bar.dataset.hasCitations === 'true';
+    var shareDetail = hasCitations ? ' — verified with sources. ' : ' — verified by computation. ';
+    document.getElementById('share-twitter').href =
+        'https://twitter.com/intent/tweet?text=' +
+        encodeURIComponent(verdict + ': "' + claim + '"' + shareDetail + url);
+
+    function copyAndFlash(btn, text, label) {
+        navigator.clipboard.writeText(text).then(function() {
+            btn.textContent = 'copied!';
+            setTimeout(function() { btn.textContent = label; }, 1500);
+        });
+    }
+
+    document.getElementById('share-copy-verdict').addEventListener('click', function() {
+        copyAndFlash(this, verdictText, 'copy verdict');
+    });
+    document.getElementById('share-copy-link').addEventListener('click', function() {
+        copyAndFlash(this, url, 'copy link');
+    });
+})();
+</script>
+
 <div class="trust-bar">
     <span class="trust-icon">⬡</span>
     Verified by <a href="{{ base_url }}">Proof Engine</a> — an open-source tool that proves claims using cited sources and executable code. No LLM trust required.
@@ -181,4 +221,5 @@
     <a href="https://github.com/yaniv-golan/proof-engine/tree/main/site/proofs/{{ proof.slug }}" class="download-link" rel="nofollow">view on github</a>
     <a href="{{ base_url }}proofs/{{ proof.slug }}/proof.json" class="download-link">proof.json</a>
 </div>
+<p class="hero-trust" style="margin-top: 20px;">found this useful? <a href="https://github.com/yaniv-golan/proof-engine" rel="nofollow">★ star on github</a></p>
 {% endblock %}

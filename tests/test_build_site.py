@@ -485,3 +485,13 @@ def test_landing_page_has_pipeline_diagram(site_fixture):
     assert "fetch sources" in html
     assert "verify quotes" in html
     assert "verdict" in html
+
+
+def test_proof_page_has_share_bar(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "proofs" / "test-claim" / "index.html").read_text()
+    assert "share-bar" in html
+    assert "share-copy-verdict" in html
+    assert "share-copy-link" in html
+    assert "share-twitter" in html

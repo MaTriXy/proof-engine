@@ -234,6 +234,12 @@ a:hover { text-decoration: underline; }
 .evidence-failed { color: var(--red-text); }
 .evidence-unknown { color: var(--gray-text); }
 
+/* Share bar */
+.share-bar { display: flex; gap: 10px; align-items: center; margin-top: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+.share-bar-label { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.share-btn { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 11px; font-family: var(--font-mono); color: var(--link); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.share-btn:hover { background: #1c2129; text-decoration: none; }
+
 /* Responsive — tablet */
 @media (max-width: 768px) {
     .content { padding: 24px 16px; }
