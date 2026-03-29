@@ -218,20 +218,6 @@
       "independence_note": "IEA Grids report, IRENA (via PV Tech), and U.S. EIA are three separate institutions with independent research and data."
     }
   ],
-  "sub_claim_results": [
-    {
-      "id": "SC1",
-      "n_confirming": 3,
-      "threshold": 3,
-      "holds": true
-    },
-    {
-      "id": "SC2",
-      "n_confirming": 3,
-      "threshold": 3,
-      "holds": true
-    }
-  ],
   "adversarial_checks": [
     {
       "question": "Are there credible studies showing 100% solar+wind grids working without storage or grid upgrades?",

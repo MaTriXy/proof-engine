@@ -245,11 +245,6 @@
     }
   ],
   "verdict": "PARTIALLY VERIFIED",
-  "sub_verdicts": {
-    "SC1": "PROVED",
-    "SC2": "DISPROVED (with unverified citations)",
-    "SC3": "UNDETERMINED"
-  },
   "key_results": {
     "sc1_confirmed": 2,
     "sc1_threshold": 2,
