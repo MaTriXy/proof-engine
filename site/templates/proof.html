@@ -23,6 +23,20 @@
     {% endfor %}
 </div>
 
+{% if has_custom_thumbnail %}
+<img src="{{ base_url }}proofs/{{ proof.slug }}/thumbnail.png" alt="" class="proof-thumbnail" width="240" height="240">
+{% endif %}
+<h1 class="proof-title">"{{ proof.proof_data.claim_natural }}"</h1>
+<div class="proof-meta">
+    {% for tag in proof.tags %}
+    <a href="{{ base_url }}tags/{{ tag }}/" class="tag">{{ tag }}</a>
+    {% endfor %}
+    <span class="date-info">
+        · generated {{ proof.date }}
+        {% if proof.proof_engine_version %}· v{{ proof.proof_engine_version }}{% endif %}
+    </span>
+</div>
+
 <div class="verdict-banner {{ proof.verdict.category }}">
     <span class="badge badge-{{ proof.verdict.category }}">{{ proof.verdict.raw }}</span>
     <span class="verdict-info">
@@ -91,20 +105,6 @@
     <a href="https://github.com/yaniv-golan/proof-engine" rel="nofollow">github</a> ·
     <a href="{{ base_url }}methodology/#how-to-re-run-a-proof">re-run this proof</a> ·
     <a href="{{ base_url }}submit/">submit your own</a>
-</div>
-
-{% if has_custom_thumbnail %}
-<img src="{{ base_url }}proofs/{{ proof.slug }}/thumbnail.png" alt="" class="proof-thumbnail" width="240" height="240">
-{% endif %}
-<h1 class="proof-title">"{{ proof.proof_data.claim_natural }}"</h1>
-<div class="proof-meta">
-    {% for tag in proof.tags %}
-    <a href="{{ base_url }}tags/{{ tag }}/" class="tag">{{ tag }}</a>
-    {% endfor %}
-    <span class="date-info">
-        · generated {{ proof.date }}
-        {% if proof.proof_engine_version %}· v{{ proof.proof_engine_version }}{% endif %}
-    </span>
 </div>
 
 {% for section_name in ["Key Findings", "Claim Interpretation"] %}
