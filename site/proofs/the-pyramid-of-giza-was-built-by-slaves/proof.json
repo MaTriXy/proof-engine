@@ -1,0 +1,147 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "source_cbs",
+      "label": "CBS News: Zahi Hawass statement on workers' tombs proving non-slave status"
+    },
+    "B2": {
+      "key": "source_aap",
+      "label": "AAP Fact Check: Dr. Karin Sowada on Wadi el-Jarf papyri describing skilled non-slave workers"
+    },
+    "B3": {
+      "key": "source_hawass_tombs",
+      "label": "Guardians.net: Zahi Hawass official description of pyramid builders as conscripted peasants, not slaves"
+    },
+    "A1": {
+      "label": "Verified source count (sources whose quotes appear on their cited page)",
+      "method": "count(verified citations rejecting 'built by slaves') = 3",
+      "result": "3"
+    }
+  },
+  "claim_formal": {
+    "subject": "Great Pyramid of Giza (Pyramid of Khufu)",
+    "property": "primary workforce consisted of enslaved persons",
+    "operator": ">=",
+    "operator_note": "The claim is interpreted as asserting that the primary labor force constructing the Great Pyramid was enslaved. We disprove this by showing that the archaeological and documentary consensus \u2014 including physical tombs, skeletal analysis, administrative papyri, and graffiti from named work gangs \u2014 uniformly identifies the builders as paid or conscripted free Egyptian laborers, not slaves. Threshold of 3 independently verified sources expressing this consensus is required to support disproof. A single source would be insufficient; three independent institutions/publications are required.",
+    "threshold": 3,
+    "proof_direction": "disprove"
+  },
+  "claim_natural": "The Pyramid of Giza was built by slaves.",
+  "citations": {
+    "B1": {
+      "source_key": "source_cbs",
+      "source_name": "CBS News \u2014 More Evidence Slaves Didn't Build Pyramids",
+      "url": "https://www.cbsnews.com/news/more-evidence-slaves-didnt-build-pyramids/",
+      "quote": "No way would they have been buried so honorably if they were slaves",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "cbsnews.com",
+        "source_type": "major_news",
+        "tier": 3,
+        "flags": [],
+        "note": "Major news organization"
+      }
+    },
+    "B2": {
+      "source_key": "source_aap",
+      "source_name": "AAP FactCheck \u2014 The pyramids of Giza were not built by slaves",
+      "url": "https://www.aap.com.au/factcheck/the-pyramids-of-giza-were-not-built-by-slaves/",
+      "quote": "But the pyramids were not built by slaves.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "aap.com.au",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    },
+    "B3": {
+      "source_key": "source_hawass_tombs",
+      "source_name": "Guardians.net \u2014 Zahi Hawass: Discovery of the Tombs of the Pyramid Builders",
+      "url": "https://www.guardians.net/hawass/buildtomb.htm",
+      "quote": "The pyramid builders were not slaves but peasants conscripted on a rotating part-time basis, working under the supervision of skilled artisans and craftsmen who not only built the pyramid complexes for the kings and nobility, but also designed and constructed their own, more modest tombs.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "guardians.net",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain \u2014 verify source authority manually"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "No way would they have been buried so honorably if they were slaves"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "But the pyramids were not built by slaves."
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "The pyramid builders were not slaves but peasants conscripted on a rotating part"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Multiple independent sources consulted from different institutions",
+      "n_sources_consulted": 3,
+      "n_sources_verified": 3,
+      "sources": {
+        "source_cbs": "verified",
+        "source_aap": "verified",
+        "source_hawass_tombs": "verified"
+      },
+      "independence_note": "Source B1 is CBS News reporting on Egyptian government archaeology. Source B2 is AAP FactCheck citing Dr. Karin Sowada (Macquarie University). Source B3 is Zahi Hawass's own publication on the tomb discovery. All three are independently published; B2 traces to an independent academic source (Sowada) distinct from Hawass."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Does any modern Egyptologist or peer-reviewed study support the hypothesis that the Great Pyramid was built primarily by slaves?",
+      "verification_performed": "Searched: 'Egyptologist peer-reviewed pyramid built by slaves' and 'pyramid slave labor archaeology study'. Found no peer-reviewed study supporting slave labor at Giza. The consensus in academic Egyptology is uniformly against the slave hypothesis since the 1990 tomb discoveries.",
+      "finding": "No modern Egyptologist or academic study supports the slave-labor hypothesis. Hawass, Lehner (Harvard), Sowada (Macquarie University), and the Egyptian Ministry of Antiquities all reject it.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Does ancient Greek historian Herodotus directly say the pyramids were built by slaves, and is his account considered reliable?",
+      "verification_performed": "Searched: 'Herodotus pyramid slaves quote reliability'. Herodotus (c. 450 BCE) wrote that Khufu used 'a hundred thousand men' in rotating shifts but did not explicitly call them slaves \u2014 he describes an oppressed populace under a tyrant. His account predates modern Egyptology by 2,400 years, and archaeologists note that Herodotus visited Egypt roughly 2,000 years after the pyramids were built and was recording local oral tradition, not eyewitness testimony.",
+      "finding": "Herodotus does not explicitly call the builders slaves, and his account is widely regarded by modern Egyptologists as unreliable on this point. The Wadi el-Jarf papyri (discovered 2013) \u2014 actual contemporary documentation \u2014 supersedes Herodotus as a primary source.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Could some portion of the workforce have been slaves even if the majority were free workers?",
+      "verification_performed": "Searched: 'pyramid builders some slaves mixed workforce ancient Egypt'. Slavery did exist in ancient Egypt, primarily prisoners of war and debt bondage. However, no archaeological evidence places enslaved persons in the Giza workforce specifically. The workers' village, papyri, and tombs all point to a conscripted/paid free Egyptian labor force.",
+      "finding": "While slavery existed in ancient Egypt, no evidence supports enslaved labor at Giza specifically. The claim under evaluation asserts the pyramid 'was built by slaves' \u2014 implying slaves as the primary workforce \u2014 which contradicts the archaeological record. The disproof addresses this interpretation.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_confirmed": 3,
+    "threshold": 3,
+    "operator": ">=",
+    "claim_holds": true,
+    "proof_direction": "disprove"
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.2.0",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-03-29"
+  }
+}
