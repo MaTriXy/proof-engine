@@ -279,7 +279,7 @@ def test_landing_page_has_ai_agents_link(site_fixture):
     html = (site_fixture / "_site" / "index.html").read_text()
     assert 'href="/proof-engine/submit/#ai-agents"' in html
     assert "ai agents" in html.lower()
-    assert "cta-row" in html
+    assert "cta-links" in html
 
 
 def test_submit_page_has_ai_agents_section(site_fixture):

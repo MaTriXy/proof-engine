@@ -66,11 +66,22 @@ def compute_stats(proofs):
     all_tags = set()
     for p in proofs:
         all_tags.update(p["tags"])
+    # Count unique verified sources across all proofs (deduplicated by source_name per proof)
+    total_sources_checked = 0
+    for p in proofs:
+        proof_data = p.get("proof_data", {})
+        citations = proof_data.get("citations", {})
+        verified_names = {
+            c.get("source_name") for c in citations.values()
+            if c.get("status") in ("verified", "partial") and c.get("source_name")
+        }
+        total_sources_checked += len(verified_names)
     return {
         "total": total,
         "tags_count": len(all_tags),
         "proved_count": proved_count,
         "disproved_count": disproved_count,
+        "total_sources_checked": total_sources_checked,
     }
 
 
