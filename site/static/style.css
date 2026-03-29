@@ -126,7 +126,7 @@ a:hover { text-decoration: underline; }
 .pipeline-arrow { display: flex; align-items: center; color: var(--accent); font-size: 18px; font-family: var(--font-mono); padding: 0 4px; margin-top: -8px; }
 
 /* Section headings */
-.section-heading { font-size: 11px; font-family: var(--font-mono); color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin: 24px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); }
+.section-heading { font-size: 11px; font-family: var(--font-mono); color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); }
 
 /* Proof cards */
 .proof-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; transition: border-color 0.15s; }
@@ -170,7 +170,8 @@ a:hover { text-decoration: underline; }
 
 /* Proof content (markdown-rendered) */
 .proof-content { font-size: 13px; line-height: 1.7; color: #c9d1d9; }
-.proof-content ul { padding-left: 20px; }
+.proof-content p { margin-bottom: 10px; }
+.proof-content ul { padding-left: 20px; margin-bottom: 12px; }
 .proof-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
 .proof-content th, .proof-content td { padding: 6px 8px; border-bottom: 1px solid var(--border-subtle); text-align: left; font-size: 12px; }
 .proof-content th { color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
