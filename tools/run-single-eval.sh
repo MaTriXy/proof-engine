@@ -43,7 +43,10 @@ claude -p \
     --dangerously-skip-permissions \
     --model "$MODEL" \
     --session-id "$SESSION_ID" \
-    "Using /proof-engine, prove that: $CLAIM" \
+    "Using /proof-engine, prove that: $CLAIM
+
+Write the three output files to this exact directory: $OUTPUT_DIR/
+Use exactly these filenames: proof.py, proof.md, proof_audit.md" \
     > "$OUTPUT_DIR/phase1.log" 2>&1 \
     || PHASE1_EXIT=$?
 
