@@ -459,3 +459,19 @@ def test_audit_extraction_links_with_suffixed_keys(site_fixture):
     html = (site_fixture / "_site" / "proofs" / "test-claim" / "index.html").read_text()
     # Both suffixed extraction IDs should link to B1's URL
     assert html.count('href="https://example.com/source"') >= 2
+
+
+def test_twitter_card_meta_in_head(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "index.html").read_text()
+    assert 'twitter:card' in html
+    assert 'twitter:title' in html
+
+
+def test_landing_page_has_schema_org(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "index.html").read_text()
+    assert '"@type": "WebSite"' in html
+    assert '"name": "Proof Engine"' in html

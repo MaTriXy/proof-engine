@@ -4,6 +4,18 @@
 
 {% block meta_description %}Open-source verifiable proofs. Every fact cited, every calculation re-runnable. No LLM trust required.{% endblock %}
 
+{% block head_extra %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Proof Engine",
+    "url": "{{ canonical_url }}",
+    "description": "Open-source verifiable proofs. Every fact cited, every calculation re-runnable. No LLM trust required."
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="hero">
     <h1>Verifiable Proofs</h1>

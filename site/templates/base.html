@@ -12,6 +12,9 @@
     <meta property="og:url" content="{{ canonical_url }}">
     <meta property="og:type" content="{{ og_type | default('website') }}">
     <meta property="og:site_name" content="Proof Engine">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ self.og_title() }}">
+    <meta name="twitter:description" content="{{ self.og_description() }}">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KSGK7C8RGD"></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-KSGK7C8RGD');</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
