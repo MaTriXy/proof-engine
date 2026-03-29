@@ -495,3 +495,38 @@ def test_proof_page_has_share_bar(site_fixture):
     assert "share-copy-verdict" in html
     assert "share-copy-link" in html
     assert "share-twitter" in html
+
+
+def test_proof_page_friendly_download_labels(site_fixture):
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "proofs" / "test-claim" / "index.html").read_text()
+    assert "run the proof (Python)" in html
+    assert "full audit trail" in html
+    assert "raw data (JSON)" in html
+
+
+def test_proof_page_evidence_table_source_first(site_fixture):
+    """Evidence table should have Source as first column, ID as second."""
+    proof_json_path = site_fixture / "site" / "proofs" / "test-claim" / "proof.json"
+    data = json.loads(proof_json_path.read_text())
+    data["citations"] = {
+        "B1": {
+            "source_name": "Test Source Alpha",
+            "url": "https://example.com/alpha",
+            "status": "verified",
+        },
+    }
+    proof_json_path.write_text(json.dumps(data))
+
+    result = _run_build(site_fixture)
+    assert result.returncode == 0, f"Build failed:\n{result.stderr}"
+    html = (site_fixture / "_site" / "proofs" / "test-claim" / "index.html").read_text()
+    # Source column comes before ID column in the evidence-table header
+    evidence_table_start = html.find("evidence-table")
+    assert evidence_table_start != -1, "Evidence table not found"
+    table_html = html[evidence_table_start:]
+    source_pos = table_html.find("<th>Source</th>")
+    id_pos = table_html.find("<th>ID</th>")
+    assert source_pos != -1 and id_pos != -1, "Evidence table missing Source or ID header"
+    assert source_pos < id_pos, "Source column should come before ID column"
