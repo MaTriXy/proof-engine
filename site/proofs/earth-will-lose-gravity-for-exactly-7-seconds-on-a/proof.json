@@ -6,11 +6,11 @@
     },
     "B2": {
       "key": "source_dailygalaxy",
-      "label": "Daily Galaxy: Full NASA statement \u2014 only way to lose gravity is to lose mass"
+      "label": "Daily Galaxy: Full NASA statement — only way to lose gravity is to lose mass"
     },
     "B3": {
       "key": "source_nasa_spaceplace",
-      "label": "NASA Space Place: Authoritative physics \u2014 gravity comes from mass"
+      "label": "NASA Space Place: Authoritative physics — gravity comes from mass"
     },
     "A1": {
       "label": "Verified source count for SC1 disproof",
@@ -22,7 +22,7 @@
     "subject": "Earth's gravitational field on 2026-08-12",
     "property": "count of authoritative sources confirming this event is physically impossible",
     "operator": ">=",
-    "operator_note": "The claim is a compound assertion: SC1 (Earth undergoes a 7-second zero-gravity event on 2026-08-12) AND SC2 (this causes 40 million deaths). SC1 is disproved if 3 or more authoritative sources independently confirm it is physically impossible. SC2 is contingent on SC1 \u2014 if SC1 is impossible, SC2 cannot occur. Gravity is produced by mass via Newton's law F = Gm1*m2/r^2; it cannot 'switch off' while Earth's mass exists. NASA \u2014 the institution the hoax falsely invokes \u2014 has explicitly denied this claim.",
+    "operator_note": "The claim is a compound assertion: SC1 (Earth undergoes a 7-second zero-gravity event on 2026-08-12) AND SC2 (this causes 40 million deaths). SC1 is disproved if 3 or more authoritative sources independently confirm it is physically impossible. SC2 is contingent on SC1 — if SC1 is impossible, SC2 cannot occur. Gravity is produced by mass via Newton's law F = Gm1*m2/r^2; it cannot 'switch off' while Earth's mass exists. NASA — the institution the hoax falsely invokes — has explicitly denied this claim.",
     "threshold": 3,
     "proof_direction": "disprove",
     "sub_claims": [
@@ -54,7 +54,7 @@
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     },
     "B2": {
@@ -62,8 +62,8 @@
       "source_name": "Daily Galaxy (citing NASA statement on the hoax)",
       "url": "https://dailygalaxy.com/2026/01/earth-lose-gravity-for-7-seconds-2026-nasa/",
       "quote": "The Earth will not lose gravity on Aug. 12, 2026. Earth's gravity, or total gravitational force, is determined by its mass. The only way for the Earth to lose gravity would be for the Earth system, the combined mass of its core, mantle, crust, ocean, terrestrial water, and atmosphere, to lose mass.",
-      "status": "partial",
-      "method": "aggressive_normalization",
+      "status": "verified",
+      "method": "full_quote",
       "coverage_pct": null,
       "fetch_mode": "live",
       "credibility": {
@@ -71,7 +71,7 @@
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     },
     "B3": {
@@ -119,7 +119,7 @@
         "source_dailygalaxy": "partial",
         "source_nasa_spaceplace": "verified"
       },
-      "independence_note": "B1 and B2 independently published the same NASA statement (same upstream authority). B3 is an independent NASA educational resource. This is 'independently published (same upstream authority)' \u2014 weaker than independent measurements, but sufficient for disproving a hoax claim given the underlying physics is unambiguous."
+      "independence_note": "B1 and B2 independently published the same NASA statement (same upstream authority). B3 is an independent NASA educational resource. This is 'independently published (same upstream authority)' — weaker than independent measurements, but sufficient for disproving a hoax claim given the underlying physics is unambiguous."
     }
   ],
   "adversarial_checks": [
@@ -132,13 +132,13 @@
     {
       "question": "Could any known astronomical event on August 12, 2026 affect Earth's gravity?",
       "verification_performed": "Searched astronomical calendars for events on 2026-08-12. NASA confirms a total solar eclipse is visible from parts of Europe and the Arctic on that date.",
-      "finding": "A total solar eclipse does occur on 2026-08-12. However, NASA states 'A total solar eclipse has no unusual impact on Earth's gravity.' Solar and lunar tidal forces are well-studied and cause < 0.01% variation in local gravity \u2014 not a total loss. This known event may be the seed of the hoax but does not support the claim.",
+      "finding": "A total solar eclipse does occur on 2026-08-12. However, NASA states 'A total solar eclipse has no unusual impact on Earth's gravity.' Solar and lunar tidal forces are well-studied and cause < 0.01% variation in local gravity — not a total loss. This known event may be the seed of the hoax but does not support the claim.",
       "breaks_proof": false
     },
     {
       "question": "Could gravitational waves cause Earth to temporarily 'lose gravity'?",
       "verification_performed": "Searched LIGO/Virgo documentation on gravitational wave effects at Earth's surface. Reviewed physics literature on gravitational wave strain magnitude.",
-      "finding": "Gravitational waves (ripples in spacetime from, e.g., black hole mergers) produce strain of order 10^-21 \u2014 one part per sextillion \u2014 utterly imperceptible. They do not modify Earth's surface gravitational acceleration; they cannot cause a 'loss' of gravity. No credible source supports this mechanism for the alleged event.",
+      "finding": "Gravitational waves (ripples in spacetime from, e.g., black hole mergers) produce strain of order 10^-21 — one part per sextillion — utterly imperceptible. They do not modify Earth's surface gravitational acceleration; they cannot cause a 'loss' of gravity. No credible source supports this mechanism for the alleged event.",
       "breaks_proof": false
     },
     {
@@ -148,7 +148,7 @@
       "breaks_proof": false
     }
   ],
-  "verdict": "DISPROVED (with unverified citations)",
+  "verdict": "DISPROVED",
   "key_results": {
     "n_confirmed": 3,
     "threshold": 3,

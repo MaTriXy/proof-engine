@@ -37,8 +37,8 @@
       "source_name": "NASA",
       "url": "https://www.nasa.gov/image-article/great-wall/",
       "quote": "Despite myths to the contrary, the wall isn't visible from the moon, and is difficult or impossible to see from Earth orbit without the high-powered lenses used for this photo.",
-      "status": "partial",
-      "method": "aggressive_normalization",
+      "status": "verified",
+      "method": "full_quote",
       "coverage_pct": null,
       "fetch_mode": "live",
       "credibility": {
@@ -151,20 +151,20 @@
       "breaks_proof": false
     },
     {
-      "question": "Does the definition of 'space' matter \u2014 could the claim be true at some altitude?",
+      "question": "Does the definition of 'space' matter — could the claim be true at some altitude?",
       "verification_performed": "Reviewed definitions of 'space' (Karman line at 100km, ISS at ~400km, Moon at ~384,000km). At no altitude is the Great Wall the only visible structure. At ISS altitude, many structures are visible. At lunar distance, NO man-made structures are visible at all, including the wall.",
       "finding": "At any reasonable definition of 'space', the claim fails. At low orbit: many structures are visible, the wall generally is not. At lunar distance: nothing man-made is visible.",
       "breaks_proof": false
     }
   ],
-  "verdict": "DISPROVED (with unverified citations)",
+  "verdict": "DISPROVED",
   "key_results": {
     "n_confirmed": 4,
     "threshold": 3,
     "operator": ">=",
     "claim_holds": true,
-    "sc1_status": "FALSE \u2014 Great Wall not visible from space with naked eye (NASA, astronauts)",
-    "sc2_status": "FALSE \u2014 many man-made structures visible from space (highways, cities, dams)"
+    "sc1_status": "FALSE — Great Wall not visible from space with naked eye (NASA, astronauts)",
+    "sc2_status": "FALSE — many man-made structures visible from space (highways, cities, dams)"
   },
   "generator": {
     "name": "proof-engine",

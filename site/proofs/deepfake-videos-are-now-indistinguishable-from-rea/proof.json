@@ -22,7 +22,7 @@
     "subject": "deepfake video detection by average humans",
     "property": "number of independent authoritative sources confirming humans detect deepfake videos above chance level",
     "operator": ">=",
-    "operator_note": "'Indistinguishable' means detection accuracy at or near chance level (50% in a two-alternative forced choice). If average humans detect deepfake videos significantly above 50%, the videos are distinguishable \u2014 disproving the claim. We seek >= 3 independent sources showing above-chance detection to disprove. This is the conservative threshold: even a single well-powered study showing above-chance performance would challenge the claim, but we require 3 for robustness.",
+    "operator_note": "'Indistinguishable' means detection accuracy at or near chance level (50% in a two-alternative forced choice). If average humans detect deepfake videos significantly above 50%, the videos are distinguishable — disproving the claim. We seek >= 3 independent sources showing above-chance detection to disprove. This is the conservative threshold: even a single well-powered study showing above-chance performance would challenge the claim, but we require 3 for robustness.",
     "threshold": 3,
     "proof_direction": "disprove"
   },
@@ -67,16 +67,16 @@
       "source_name": "Fortune (Prof. Siwei Lyu, UB Media Forensic Lab)",
       "url": "https://fortune.com/2025/12/27/2026-deepfakes-outlook-forecast/",
       "quote": "voice cloning has crossed what I would call the 'indistinguishable threshold'",
-      "status": "partial",
+      "status": "verified",
       "method": "fragment",
-      "coverage_pct": 54.5,
+      "coverage_pct": 81.8,
       "fetch_mode": "live",
       "credibility": {
         "domain": "fortune.com",
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     }
   },
@@ -113,7 +113,7 @@
   "adversarial_checks": [
     {
       "question": "Are there studies showing humans perform AT chance level for deepfake videos specifically?",
-      "verification_performed": "Searched for 'deepfake video detection human chance level indistinguishable study'. The meta-analysis (B1) reports video accuracy 57.31% with 95% CI [47.80, 66.57] \u2014 the CI crosses 50%, meaning the meta-analytic estimate is not statistically significantly above chance. However, the point estimate (57.31%) is above 50%, and individual large studies (B2, N=1901) show clearly above-chance performance (AUC 0.67).",
+      "verification_performed": "Searched for 'deepfake video detection human chance level indistinguishable study'. The meta-analysis (B1) reports video accuracy 57.31% with 95% CI [47.80, 66.57] — the CI crosses 50%, meaning the meta-analytic estimate is not statistically significantly above chance. However, the point estimate (57.31%) is above 50%, and individual large studies (B2, N=1901) show clearly above-chance performance (AUC 0.67).",
       "finding": "The meta-analysis CI crossing 50% reflects heterogeneity across studies (varying deepfake quality, methodology), not that humans truly perform at chance. The largest individual study (N=1901) found AUC=0.67 for video, clearly above chance. The CI width reflects study-to-study variation, not individual inability.",
       "breaks_proof": false
     },
@@ -125,12 +125,12 @@
     },
     {
       "question": "Has any expert specifically stated video deepfakes have crossed the indistinguishable threshold?",
-      "verification_performed": "Searched for 'deepfake video indistinguishable threshold 2025 2026 expert'. Prof. Siwei Lyu (UB Media Forensic Lab) explicitly stated that VOICE cloning has crossed the indistinguishable threshold, but characterized video deepfakes differently: 'realism is now high enough to reliably fool nonexpert viewers' \u2014 a weaker claim than indistinguishable. The distinction is deliberate.",
+      "verification_performed": "Searched for 'deepfake video indistinguishable threshold 2025 2026 expert'. Prof. Siwei Lyu (UB Media Forensic Lab) explicitly stated that VOICE cloning has crossed the indistinguishable threshold, but characterized video deepfakes differently: 'realism is now high enough to reliably fool nonexpert viewers' — a weaker claim than indistinguishable. The distinction is deliberate.",
       "finding": "Leading deepfake researchers distinguish between voice (indistinguishable) and video (improving but not yet indistinguishable). No expert source found claiming video deepfakes have crossed the indistinguishable threshold as of March 2026.",
       "breaks_proof": false
     }
   ],
-  "verdict": "DISPROVED (with unverified citations)",
+  "verdict": "DISPROVED",
   "key_results": {
     "n_confirmed": 3,
     "threshold": 3,

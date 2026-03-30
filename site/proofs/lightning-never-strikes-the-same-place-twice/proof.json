@@ -26,7 +26,7 @@
     "subject": "Lightning",
     "property": "whether lightning can strike the same location more than once",
     "operator": ">=",
-    "operator_note": "The claim asserts lightning NEVER strikes the same place twice \u2014 an absolute universal negative. To DISPROVE this, we need authoritative sources confirming that lightning DOES strike the same place repeatedly. A threshold of 3 independent authoritative sources confirming repeated strikes is used. The claim is disproved if >= 3 sources confirm it is false.",
+    "operator_note": "The claim asserts lightning NEVER strikes the same place twice — an absolute universal negative. To DISPROVE this, we need authoritative sources confirming that lightning DOES strike the same place repeatedly. A threshold of 3 independent authoritative sources confirming repeated strikes is used. The claim is disproved if >= 3 sources confirm it is false.",
     "threshold": 3,
     "proof_direction": "disprove"
   },
@@ -37,8 +37,8 @@
       "source_name": "National Weather Service (NWS)",
       "url": "https://www.weather.gov/safety/lightning-myths",
       "quote": "Lightning often strikes the same place repeatedly, especially if it's a tall, pointy, isolated object. The Empire State Building is hit an average of 23 times a year",
-      "status": "partial",
-      "method": "aggressive_normalization",
+      "status": "verified",
+      "method": "full_quote",
       "coverage_pct": null,
       "fetch_mode": "live",
       "credibility": {
@@ -157,7 +157,7 @@
       "breaks_proof": false
     }
   ],
-  "verdict": "DISPROVED (with unverified citations)",
+  "verdict": "DISPROVED",
   "key_results": {
     "n_confirmed": 4,
     "threshold": 3,

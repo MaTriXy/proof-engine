@@ -26,7 +26,7 @@
     "subject": "Resolution of the twin paradox",
     "property": "Whether general relativity is required for resolution",
     "operator": ">=",
-    "operator_note": "The claim asserts that GR is REQUIRED (the word 'only'). To disprove this, we need >= 3 independent authoritative physics sources that explicitly state the twin paradox can be resolved within special relativity alone, without invoking general relativity. The 'only' makes this a strong exclusivity claim: finding that SR suffices is a direct counterexample. Note: the claim conflates two ideas \u2014 (a) GR is required, and (b) acceleration is the key. The physics consensus is that (a) is false and (b) is partially true but misleading: acceleration marks the asymmetry but the resolution uses SR's relativity of simultaneity, not GR's equivalence principle.",
+    "operator_note": "The claim asserts that GR is REQUIRED (the word 'only'). To disprove this, we need >= 3 independent authoritative physics sources that explicitly state the twin paradox can be resolved within special relativity alone, without invoking general relativity. The 'only' makes this a strong exclusivity claim: finding that SR suffices is a direct counterexample. Note: the claim conflates two ideas — (a) GR is required, and (b) acceleration is the key. The physics consensus is that (a) is false and (b) is partially true but misleading: acceleration marks the asymmetry but the resolution uses SR's relativity of simultaneity, not GR's equivalence principle.",
     "threshold": 3,
     "proof_direction": "disprove"
   },
@@ -37,9 +37,9 @@
       "source_name": "UCR Physics FAQ (maintained by John Baez)",
       "url": "https://math.ucr.edu/home/baez/physics/Relativity/SR/TwinParadox/twin_intro.html",
       "quote": "Some people claim that the twin paradox can or even must be resolved only by invoking General Relativity (which is built on the Equivalence Principle). This is not true",
-      "status": "partial",
-      "method": "fragment",
-      "coverage_pct": 48.3,
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
       "fetch_mode": "live",
       "credibility": {
         "domain": "ucr.edu",
@@ -51,7 +51,7 @@
     },
     "B2": {
       "source_key": "wikipedia_twin",
-      "source_name": "Wikipedia \u2014 Twin paradox",
+      "source_name": "Wikipedia — Twin paradox",
       "url": "https://en.wikipedia.org/wiki/Twin_paradox",
       "quote": "this scenario can be resolved within the standard framework of special relativity: the travelling twin's trajectory involves two different inertial frames",
       "status": "verified",
@@ -85,7 +85,7 @@
     },
     "B4": {
       "source_key": "unsw_einstein_light",
-      "source_name": "UNSW School of Physics \u2014 Einstein Light",
+      "source_name": "UNSW School of Physics — Einstein Light",
       "url": "https://www.phys.unsw.edu.au/einsteinlight/jw/module4_twin_paradox.htm",
       "quote": "appealing to General Relativity is not necessary to resolve the paradox",
       "status": "verified",
@@ -147,7 +147,7 @@
     {
       "question": "Can the twin paradox be formulated without any acceleration at all?",
       "verification_performed": "Searched for twin paradox relay version / no-acceleration variant. Wikipedia confirms: 'it has been proven that neither general relativity, nor even acceleration, are necessary to explain the effect, as the effect still applies if two astronauts pass each other at the turnaround point.' This is the 'relay' or 'triplet' version where no single clock accelerates but time dilation still occurs, showing acceleration is not the cause.",
-      "finding": "The relay version of the twin paradox demonstrates that even acceleration is not required \u2014 only the change of inertial frame matters. This further undermines the claim that GR (which handles acceleration via the equivalence principle) is needed.",
+      "finding": "The relay version of the twin paradox demonstrates that even acceleration is not required — only the change of inertial frame matters. This further undermines the claim that GR (which handles acceleration via the equivalence principle) is needed.",
       "breaks_proof": false
     },
     {
@@ -157,7 +157,7 @@
       "breaks_proof": false
     }
   ],
-  "verdict": "DISPROVED (with unverified citations)",
+  "verdict": "DISPROVED",
   "key_results": {
     "n_confirmed": 4,
     "threshold": 3,

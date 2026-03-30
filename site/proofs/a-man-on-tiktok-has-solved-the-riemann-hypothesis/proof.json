@@ -2,29 +2,29 @@
   "fact_registry": {
     "B1": {
       "key": "source_wikipedia_rh",
-      "label": "Wikipedia: Riemann Hypothesis \u2014 2026 survey confirms no proof is known"
+      "label": "Wikipedia: Riemann Hypothesis — 2026 survey confirms no proof is known"
     },
     "B2": {
       "key": "source_wikipedia_mpp",
-      "label": "Wikipedia: Millennium Prize Problems \u2014 RH listed among six remaining unsolved problems"
+      "label": "Wikipedia: Millennium Prize Problems — RH listed among six remaining unsolved problems"
     },
     "B3": {
       "key": "source_clay",
-      "label": "Clay Mathematics Institute \u2014 official Millennium Prize page for Riemann Hypothesis"
+      "label": "Clay Mathematics Institute — official Millennium Prize page for Riemann Hypothesis"
     },
     "A1": {
       "label": "Logical conclusion: if RH is unsolved per authoritative sources, no TikTok claim can constitute a valid solution",
       "method": "compare(rh_is_solved, '==', True)",
-      "result": "False \u2014 rh_is_solved=False, claim requires True. Two independent sources (B1, B2) confirm no proof is known."
+      "result": "False — rh_is_solved=False, claim requires True. Two independent sources (B1, B2) confirm no proof is known."
     }
   },
   "claim_formal": {
-    "subject": "Riemann Hypothesis \u2014 solved status",
+    "subject": "Riemann Hypothesis — solved status",
     "property": "whether a valid proof has been accepted by the mathematical community",
     "operator": "==",
     "threshold": true,
     "claim_type": "compound_empirical",
-    "operator_note": "The claim asserts the Riemann Hypothesis has been 'solved'. For this to be true, a correct proof must exist and have been accepted by the mathematical community. The Clay Mathematics Institute (CMI) administers a $1 million Millennium Prize for a correct solution; non-award of this prize is treated as authoritative evidence the hypothesis remains unsolved. The claim has three sub-claims: (SC1) the solver is a man on TikTok; (SC2) the work took ~1 week; (SC3) the solution is mathematically valid. SC3 is decisive \u2014 if SC3 is false, the whole claim is false regardless of SC1/SC2. This proof focuses on disproving SC3 via authoritative independent sources."
+    "operator_note": "The claim asserts the Riemann Hypothesis has been 'solved'. For this to be true, a correct proof must exist and have been accepted by the mathematical community. The Clay Mathematics Institute (CMI) administers a $1 million Millennium Prize for a correct solution; non-award of this prize is treated as authoritative evidence the hypothesis remains unsolved. The claim has three sub-claims: (SC1) the solver is a man on TikTok; (SC2) the work took ~1 week; (SC3) the solution is mathematically valid. SC3 is decisive — if SC3 is false, the whole claim is false regardless of SC1/SC2. This proof focuses on disproving SC3 via authoritative independent sources."
   },
   "claim_natural": "A man on TikTok has solved the Riemann Hypothesis after one week of work.",
   "citations": {
@@ -66,24 +66,24 @@
       "source_key": "source_clay",
       "source_name": "Clay Mathematics Institute: Riemann Hypothesis (Millennium Prize)",
       "url": "https://www.claymath.org/millennium/riemann-hypothesis/",
-      "quote": "The Riemann hypothesis asserts that all the \u2018non-obvious\u2019 zeros of the zeta function are complex numbers with real part 1/2.",
-      "status": "partial",
-      "method": "aggressive_normalization",
-      "coverage_pct": null,
+      "quote": "The Riemann hypothesis asserts that all the ‘non-obvious’ zeros of the zeta function are complex numbers with real part 1/2.",
+      "status": "verified",
+      "method": "fragment",
+      "coverage_pct": 84.2,
       "fetch_mode": "live",
       "credibility": {
         "domain": "claymath.org",
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     }
   },
   "extractions": {},
   "cross_checks": [
     {
-      "description": "B1 (Wikipedia RH article) and B2 (Wikipedia MPP article) independently confirm the Riemann Hypothesis is unsolved as of 2026 \u2014 different pages, different editorial histories, same conclusion.",
+      "description": "B1 (Wikipedia RH article) and B2 (Wikipedia MPP article) independently confirm the Riemann Hypothesis is unsolved as of 2026 — different pages, different editorial histories, same conclusion.",
       "values_compared": [
         "verified",
         "verified"
@@ -106,12 +106,12 @@
     },
     {
       "question": "Has any Millennium Prize Problem ever been solved through social media or by an amateur working alone for one week?",
-      "verification_performed": "Reviewed history of solved Millennium Prize Problems. The only solved problem, the Poincare conjecture, was proved by Grigori Perelman over several years through peer-reviewed academic papers \u2014 not social media. Wikipedia MPP states the remaining six 'remain unsolved, despite a large number of unsatisfactory proofs by both amateur and professional mathematicians.'",
+      "verification_performed": "Reviewed history of solved Millennium Prize Problems. The only solved problem, the Poincare conjecture, was proved by Grigori Perelman over several years through peer-reviewed academic papers — not social media. Wikipedia MPP states the remaining six 'remain unsolved, despite a large number of unsatisfactory proofs by both amateur and professional mathematicians.'",
       "finding": "No Millennium Prize Problem has ever been solved through social media or by informal one-week effort. All serious claimed proofs have come through peer-reviewed academic channels. The claim's social-media origin and one-week timeframe are inconsistent with the depth of work the Riemann Hypothesis requires, though the decisive disproof is the Clay Institute's current 'unsolved' designation.",
       "breaks_proof": false
     }
   ],
-  "verdict": "DISPROVED (with unverified citations)",
+  "verdict": "DISPROVED",
   "key_results": {
     "rh_is_solved": false,
     "claim_requires_solved": true,

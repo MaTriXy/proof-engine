@@ -46,7 +46,7 @@
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     },
     "B2": {
@@ -63,29 +63,29 @@
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     },
     "B3": {
       "source_key": "jpmorgan_research",
-      "source_name": "J.P. Morgan Global Research \u2014 AI's Impact on Job Growth (2025)",
+      "source_name": "J.P. Morgan Global Research — AI's Impact on Job Growth (2025)",
       "url": "https://www.jpmorgan.com/insights/global-research/artificial-intelligence/ai-impact-job-growth",
       "quote": "We find little association between various measures of AI intensity and job growth outside of selected tech industries.",
-      "status": "partial",
+      "status": "verified",
       "method": "fragment",
-      "coverage_pct": 50.0,
+      "coverage_pct": 83.3,
       "fetch_mode": "live",
       "credibility": {
         "domain": "jpmorgan.com",
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     },
     "B4": {
       "source_key": "hbr_2026",
-      "source_name": "Harvard Business Review \u2014 Research: How AI Is Changing the Labor Market (March 2026)",
+      "source_name": "Harvard Business Review — Research: How AI Is Changing the Labor Market (March 2026)",
       "url": "https://hbr.org/2026/03/research-how-ai-is-changing-the-labor-market",
       "quote": "Rather than solely eliminating jobs, generative AI creates new demand in augmentation-prone roles, suggesting that human-AI collaboration is a key driver of labor market transformation",
       "status": "verified",
@@ -97,7 +97,7 @@
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     }
   },
@@ -125,7 +125,7 @@
   },
   "cross_checks": [
     {
-      "description": "Four independent authoritative sources consulted \u2014 institutional research (Yale Budget Lab, J.P. Morgan), peer-reviewed AI company research (Anthropic), and independent academic journalism (HBR). All four reach the same conclusion: no evidence of 50%+ replacement.",
+      "description": "Four independent authoritative sources consulted — institutional research (Yale Budget Lab, J.P. Morgan), peer-reviewed AI company research (Anthropic), and independent academic journalism (HBR). All four reach the same conclusion: no evidence of 50%+ replacement.",
       "n_sources_consulted": 4,
       "n_sources_verified": 4,
       "sources": {
@@ -140,7 +140,7 @@
   "adversarial_checks": [
     {
       "question": "Does Dario Amodei's May 2025 warning of '50% of entry-level white-collar jobs eliminated within five years' support the claim?",
-      "verification_performed": "Fetched Fortune article (fortune.com/2025/05/28/anthropic-ceo-warning-ai-job-loss/) confirming Amodei stated: 'AI could eliminate half of all entry-level white-collar jobs within five years.' Also reviewed Anthropic's own January 2026 peer-reviewed research paper (anthropic.com/research/labor-market-impacts) which found 'no systematic increase in unemployment for highly exposed workers since late 2022' \u2014 directly contradicting Amodei's prediction with Anthropic's own data.",
+      "verification_performed": "Fetched Fortune article (fortune.com/2025/05/28/anthropic-ceo-warning-ai-job-loss/) confirming Amodei stated: 'AI could eliminate half of all entry-level white-collar jobs within five years.' Also reviewed Anthropic's own January 2026 peer-reviewed research paper (anthropic.com/research/labor-market-impacts) which found 'no systematic increase in unemployment for highly exposed workers since late 2022' — directly contradicting Amodei's prediction with Anthropic's own data.",
       "finding": "Amodei's warning is limited to 'entry-level' roles only (a subset of white-collar), not all white-collar jobs. His own company's peer-reviewed research shows no measured unemployment increase in AI-exposed occupations even 3+ years after ChatGPT's launch. The CEO prediction is a forward-looking warning, not a measured forecast; it does not constitute evidence that the full claim holds.",
       "breaks_proof": false
     },
@@ -158,18 +158,18 @@
     },
     {
       "question": "Does the IMF finding that '40% of global jobs (60% in high-income countries) are exposed to AI' support the 50%+ replacement claim?",
-      "verification_performed": "Reviewed IMF 2024 World Economic Outlook AI assessment. The 40-60% figure refers to 'exposure' \u2014 jobs containing tasks that AI could potentially assist with. The IMF explicitly states that exposure can lead to either augmentation (increased productivity) or displacement, and that historical technology transitions show net job creation rather than elimination.",
+      "verification_performed": "Reviewed IMF 2024 World Economic Outlook AI assessment. The 40-60% figure refers to 'exposure' — jobs containing tasks that AI could potentially assist with. The IMF explicitly states that exposure can lead to either augmentation (increased productivity) or displacement, and that historical technology transitions show net job creation rather than elimination.",
       "finding": "'Exposure to AI' is not equivalent to 'replacement by AI.' The IMF's own analysis finds that advanced economies see AI mostly as a productivity-enhancing tool (augmentation), with only a subset of exposed jobs at risk of displacement. The IMF does not project 50%+ white-collar job replacement by 2035.",
       "breaks_proof": false
     },
     {
       "question": "Is there any peer-reviewed study projecting 50%+ white-collar job replacement specifically by 2035?",
       "verification_performed": "Searched for: 'peer-reviewed study AI replace 50 percent white collar jobs 2035'; 'academic research AI job displacement 50% forecast 2035'; 'economics paper AI employment white collar replacement 50 percent'. Also reviewed: Oxford Frey & Osborne (2013, 47% US jobs 'at high risk'), Goldman Sachs research note (March 2023, 300 million jobs globally affected), Yale Budget Lab (2026), Anthropic research (2026), J.P. Morgan (2025).",
-      "finding": "No peer-reviewed economics study projects 50%+ white-collar job *replacement* by 2035. The Oxford 47% figure (Frey & Osborne 2013) refers to 'at high risk of automation' over unspecified long run, not confirmed replacement by 2035 \u2014 and has been widely criticized as overestimating displacement. Goldman Sachs projects 300 million jobs globally 'affected' but their net employment effect estimate is only 6-7% displacement if AI is fully deployed. The institutional consensus is far below the 50% threshold.",
+      "finding": "No peer-reviewed economics study projects 50%+ white-collar job *replacement* by 2035. The Oxford 47% figure (Frey & Osborne 2013) refers to 'at high risk of automation' over unspecified long run, not confirmed replacement by 2035 — and has been widely criticized as overestimating displacement. Goldman Sachs projects 300 million jobs globally 'affected' but their net employment effect estimate is only 6-7% displacement if AI is fully deployed. The institutional consensus is far below the 50% threshold.",
       "breaks_proof": false
     }
   ],
-  "verdict": "DISPROVED (with unverified citations)",
+  "verdict": "DISPROVED",
   "key_results": {
     "n_confirmed": 4,
     "threshold": 3,

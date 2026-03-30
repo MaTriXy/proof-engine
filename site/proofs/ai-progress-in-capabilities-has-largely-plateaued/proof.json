@@ -34,7 +34,7 @@
   "citations": {
     "B1": {
       "source_key": "epoch_ai_acceleration",
-      "source_name": "Epoch AI \u2014 AI capabilities progress has sped up",
+      "source_name": "Epoch AI — AI capabilities progress has sped up",
       "url": "https://epoch.ai/data-insights/ai-capabilities-progress-has-sped-up",
       "quote": "The best score on the Epoch Capabilities Index grew almost twice as fast over the last two years as it did over the two years before that, with a 90% acceleration in April 2024",
       "status": "verified",
@@ -46,12 +46,12 @@
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     },
     "B2": {
       "source_key": "epoch_substack_acceleration",
-      "source_name": "Epoch AI Substack \u2014 Frontier AI capabilities accelerated in 2024",
+      "source_name": "Epoch AI Substack — Frontier AI capabilities accelerated in 2024",
       "url": "https://epochai.substack.com/p/frontier-ai-capabilities-accelerated",
       "quote": "frontier model improvement nearly doubled in pace, from ~8 points/year prior to April 2024, to ~15 points/year thereafter",
       "status": "verified",
@@ -63,12 +63,12 @@
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     },
     "B3": {
       "source_key": "swebench_leaderboard",
-      "source_name": "LLM Stats \u2014 SWE-bench Verified Leaderboard",
+      "source_name": "LLM Stats — SWE-bench Verified Leaderboard",
       "url": "https://llm-stats.com/benchmarks/swe-bench-verified",
       "quote": "Claude Opus 4.5",
       "status": "verified",
@@ -80,24 +80,24 @@
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     },
     "B4": {
       "source_key": "epoch_eci_page",
-      "source_name": "Epoch AI \u2014 Epoch Capabilities Index",
+      "source_name": "Epoch AI — Epoch Capabilities Index",
       "url": "https://epoch.ai/benchmarks/eci",
       "quote": "combines scores from many different AI benchmarks into a single 'general capability' scale",
-      "status": "partial",
-      "method": "fragment",
-      "coverage_pct": 46.2,
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
       "fetch_mode": "live",
       "credibility": {
         "domain": "epoch.ai",
         "source_type": "unknown",
         "tier": 2,
         "flags": [],
-        "note": "Unclassified domain \u2014 verify source authority manually"
+        "note": "Unclassified domain — verify source authority manually"
       }
     }
   },
@@ -141,12 +141,12 @@
     {
       "question": "Are there credible sources arguing AI capabilities HAVE plateaued?",
       "verification_performed": "Searched for 'AI plateau debunked OR wrong OR criticism 2025 2026'. Found Gary Marcus (neural scientist) quoted in Futurism: 'I don't hear a lot of companies using AI saying that 2025 models are a lot more useful to them than 2024 models, even though the 2025 models perform better on benchmarks.' Also found Bill Gates stated in 2023 that scalable AI had 'reached a plateau'. Found EDUCAUSE Review article (Sept 2025) titled 'An AI Plateau?' and Medium articles arguing both sides.",
-      "finding": "The plateau narrative exists but conflates two different things: (1) benchmark capability improvements (which are accelerating per Epoch AI), and (2) practical/deployment value improvements (which some argue have stalled). Marcus's own quote concedes models 'perform better on benchmarks' \u2014 his concern is about usefulness, not capabilities. The claim specifically states 'progress in capabilities', which is directly measured by benchmarks. Gates's comment predates the claimed period (2023). None of the plateau sources provide quantitative evidence of capability stagnation.",
+      "finding": "The plateau narrative exists but conflates two different things: (1) benchmark capability improvements (which are accelerating per Epoch AI), and (2) practical/deployment value improvements (which some argue have stalled). Marcus's own quote concedes models 'perform better on benchmarks' — his concern is about usefulness, not capabilities. The claim specifically states 'progress in capabilities', which is directly measured by benchmarks. Gates's comment predates the claimed period (2023). None of the plateau sources provide quantitative evidence of capability stagnation.",
       "breaks_proof": false
     },
     {
       "question": "Could benchmark saturation explain apparent progress while true capabilities plateau?",
-      "verification_performed": "Searched for 'AI benchmark saturation MMLU 2025 2026'. Found that original MMLU is indeed saturated (top scores >90%), but newer benchmarks (FrontierMath, SWE-bench Verified, GPQA, Humanity's Last Exam) were specifically designed to avoid saturation. Epoch AI's ECI composite index was created to track progress across difficulty levels. FrontierMath went from <2% (Nov 2024) to 47.6% (Mar 2026) \u2014 far from saturated.",
+      "verification_performed": "Searched for 'AI benchmark saturation MMLU 2025 2026'. Found that original MMLU is indeed saturated (top scores >90%), but newer benchmarks (FrontierMath, SWE-bench Verified, GPQA, Humanity's Last Exam) were specifically designed to avoid saturation. Epoch AI's ECI composite index was created to track progress across difficulty levels. FrontierMath went from <2% (Nov 2024) to 47.6% (Mar 2026) — far from saturated.",
       "finding": "Benchmark saturation is real for older benchmarks but does not apply to the evidence used in this proof. FrontierMath, SWE-bench Verified, and the ECI composite index are all designed to resist saturation, and all show continued rapid improvement through early 2026.",
       "breaks_proof": false
     },
@@ -157,7 +157,7 @@
       "breaks_proof": false
     }
   ],
-  "verdict": "DISPROVED (with unverified citations)",
+  "verdict": "DISPROVED",
   "key_results": {
     "n_confirmed": 4,
     "threshold": 3,
