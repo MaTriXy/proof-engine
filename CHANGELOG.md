@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- OG images: moved metadata and branding higher to avoid being hidden by Twitter's card title overlay
+
 ## [1.3.0] - 2026-03-30
 
 ### Added
