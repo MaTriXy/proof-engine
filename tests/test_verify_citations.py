@@ -429,6 +429,43 @@ def test_fragment_no_false_verified_from_coincidental_overlap():
         assert result["status"] != "verified" or result["method"] == "full_quote"
 
 
+def test_normalize_strips_sup_span_a_refs():
+    """PMC variant: <sup><span class="ref"><a>N</a></span></sup>"""
+    text = 'PUFA<sup><span class="ref"><a href="#r1">1</a></span></sup> intake'
+    result = vc_module.normalize_text(text)
+    assert "pufa intake" in result
+
+
+def test_normalize_strips_sup_a_span_refs():
+    """PMC variant: <sup id="..."><a><span>N</span></a></sup>"""
+    text = 'markers<sup id="xref-ref-2"><a href="#ref-2"><span>2</span></a></sup> of inflammation'
+    result = vc_module.normalize_text(text)
+    assert "markers of inflammation" in result
+
+
+def test_normalize_still_strips_bare_sup_refs():
+    """Regression: bare <sup>N</sup> must still be stripped (existing behavior)."""
+    text = 'plasticity<sup>1</sup> throughout'
+    result = vc_module.normalize_text(text)
+    assert "plasticity throughout" in result
+
+
+def test_normalize_strips_comma_separated_a_refs():
+    """PMC pattern: <sup><a>5</a>,<a>6</a></sup> — comma-separated refs in one <sup>."""
+    text = 'the traditional view<sup><a href="#ref5" class="bibr">5</a>,<a href="#ref6" class="bibr">6</a></sup> of fixed'
+    result = vc_module.normalize_text(text)
+    assert "the traditional view of fixed" in result
+
+
+def test_pmc_span_fixture_quote_match():
+    """Full quote match against PMC page with nested-span ref styles."""
+    page_html = _read_fixture("pmc_span_refs.html")
+    quote = "Clinical trials show that increased n-6 PUFA intake does not increase markers of inflammation. Multiple meta-analyses confirm these findings."
+    result = vc_module._match_quote(page_html, quote, "test_span_ref")
+    assert result is not None
+    assert result["status"] == "verified"
+
+
 def test_escaped_html_not_stripped_by_unescape():
     """Escaped HTML entities like &lt;sup&gt; must NOT be turned into tags and stripped.
     They represent visible text content that should be preserved."""

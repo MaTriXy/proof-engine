@@ -121,13 +121,27 @@ def normalize_text(text: str) -> str:
     text = normalize_unicode(text)
     # 1.5. Strip inline reference elements (common in academic HTML)
     _had_academic_refs = False
+
+    # Pattern 0 (NEW): <sup> with nested <span>/<a> combinations
+    # Catches PMC variants the main pattern below misses:
+    #   <sup><span class="ref"><a href="#r1">1</a></span></sup>
+    #   <sup id="..."><a href="#ref-2"><span>2</span></a></sup>
+    # Also handles comma-separated refs: <sup><a>5</a>,<a>6</a></sup>
+    # Requires <a> inside (nested spans without links are formula exponents)
+    text, n0 = re.subn(
+        r'<sup[^>]*>\s*(?:<span[^>]*>\s*)*<a[^>]*>\s*(?:<span[^>]*>\s*)?\[?\d+(?:[,\-\u2013]\d+)*\]?\s*(?:</span>\s*)?</a>\s*(?:</span>\s*)*(?:,\s*(?:<span[^>]*>\s*)*<a[^>]*>\s*(?:<span[^>]*>\s*)?\[?\d+(?:[,\-\u2013]\d+)*\]?\s*(?:</span>\s*)?</a>\s*(?:</span>\s*)*)*</sup>',
+        '', text, flags=re.IGNORECASE)
+
+    # Pattern 1 (UNCHANGED): existing regex for <sup>[N]</sup>, <sup><a>N</a></sup>, <sup>N</sup>
     text, n1 = re.subn(
         r'<sup[^>]*>\s*(?:<a[^>]*>)?\s*\[?\d+(?:[,\-\u2013]\d+)*\]?\s*(?:</a>)?\s*</sup>',
         '', text, flags=re.IGNORECASE)
+
+    # Pattern 2 (UNCHANGED): xref links
     text, n2 = re.subn(
         r'<a[^>]*class="[^"]*xref[^"]*"[^>]*>\s*\[?\d+(?:[,\-\u2013]\d+)*\]?\s*</a>',
         '', text, flags=re.IGNORECASE)
-    _had_academic_refs = (n1 + n2) > 0
+    _had_academic_refs = (n0 + n1 + n2) > 0
     # 2. Strip HTML tags
     text = re.sub(r'<[^>]+>', ' ', text)
     # 2a. Decode HTML entities — AFTER tag stripping so escaped HTML like
