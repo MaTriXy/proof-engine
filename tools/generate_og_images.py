@@ -153,7 +153,7 @@ def generate_proof_og_image(
         draw.text((80, claim_y + i * 48), line, fill=COLORS["text"], font=font_large)
 
     # --- Source count ---
-    meta_y = HEIGHT - 120
+    meta_y = HEIGHT - 170
     meta_parts = []
     if search_count is not None:
         meta_parts.append(f"{search_count} search{'es' if search_count != 1 else ''}")
