@@ -474,3 +474,20 @@ def test_escaped_html_not_stripped_by_unescape():
     # The "<sup>2</sup>" should appear as text, not be stripped as a tag
     assert "2" in result
     assert "sup" in result  # the literal text "sup" should survive
+
+
+def test_normalize_unifies_single_and_double_quotes():
+    """Double quotes and single quotes should be treated as equivalent for matching."""
+    text_double = 'seed oils are "toxic," not healthy'
+    text_single = "seed oils are 'toxic,' not healthy"
+    assert vc_module.normalize_text(text_double) == vc_module.normalize_text(text_single)
+
+
+def test_quote_type_mismatch_full_quote_match():
+    """A page using double quotes around a word should match a quote using single quotes."""
+    page = '<p>scientists say seed oils are \u201ctoxic,\u201d according to the study</p>'
+    quote = "scientists say seed oils are 'toxic,' according to the study"
+    result = vc_module._match_quote(page, quote, "test_quote_type")
+    assert result is not None
+    assert result["status"] == "verified"
+    assert result["method"] == "full_quote"

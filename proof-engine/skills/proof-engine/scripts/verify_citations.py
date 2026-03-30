@@ -154,6 +154,11 @@ def normalize_text(text: str) -> str:
     # 2.5. Strip orphaned reference markers — ONLY in academic HTML
     if _had_academic_refs:
         text = re.sub(r'\[\d+(?:[,\-\u2013]\d+)*\]', '', text)
+    # 2c. Unify quote characters — after Unicode normalization has already
+    # converted curly quotes to straight, collapse double quotes to single
+    # so 'toxic' matches "toxic". Done in normalize_text (matching) only,
+    # not in normalize_unicode (extraction) where quote type matters.
+    text = text.replace('"', "'")
     # 3. Remove spaces before punctuation
     text = re.sub(r'\s+([,.:;!?\)\]])', r'\1', text)
     # 4. Collapse whitespace
