@@ -6,12 +6,25 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **`tools/proof-site.py` CLI** — single tool for publishing proofs to the site and managing featured proofs, replacing the manual seeding workflow. Subcommands: `publish`, `feature`, `unfeature`, `repair-featured`
+- **Centralized featured proofs** — `site/proofs/featured.json` replaces per-proof `featured` flags in `proof.json`/`meta.yaml`. Featured status is now site-scoped, resolved in `load_all_proofs()`.
+- `tools/lib/featured.py` — featured.json read/write with atomic writes and validation
+- `tools/lib/slug.py` — slug derivation from claim text and duplicate claim detection
+- `tools/lib/publish.py` — proof staging, thumbnail validation (240x240), and atomic swap finalization
+- `tools/lib/proof_runner.py` — extracted shared `run_proof_and_extract_json` from `validate-site-proof.py`
+- `tools/migrate-featured.py` — one-time migration script (already run, 10 proofs migrated)
 - **Structured citation verification summary** — replaces the noisy "Citation Verification Details" audit section with a data-driven summary badge (green/amber/red) that highlights only what's interesting. Clean proofs collapse to "3/3 verified"; flagged proofs show per-citation details with reasons (partial match, not found, fetch failed, Wayback fetch, unreliable source). Original audit markdown preserved as "Original audit log" expandable.
 - `build_citation_summary()` function in `build-site.py` — computes citation health, flag reasons, and unflagged counts from `proof.json` structured data
 - 22 new tests (12 unit + 10 integration) covering all citation status/method combinations, fallback rendering, and stale-audit scenarios
 
 ### Changed
 
+- `proof_loader.py` — `load_proof()` no longer reads featured status; `load_all_proofs()` resolves it from `featured.json`
+- `validate-site-proof.py` — `featured` key in `proof.json` is now a hard error (rejected, not just warned)
+- `proof_loader.py` — `featured` key in `meta.yaml` is now a hard error
+- `load_all_proofs()` skips dot-prefixed directories (staging, backups)
+- `proof_types.py` — removed `featured: bool` from `ProofData` (kept on `LoadedProof`)
+- Removed `proofs[:3]` fallback from `build-site.py` landing page — empty featured set now shows no featured proofs instead of silently selecting arbitrary ones
 - Download link label changed from "full audit trail" to "original audit log" to reflect that `proof_audit.md` may be stale relative to `proof.json`
 - Evidence table now shows "Fetch Failed" (instead of "No") for `fetch_failed` and legacy `failed` citation statuses
 - `proof.json` is authoritative for citation status; `proof_audit.md` is treated as a historical record
