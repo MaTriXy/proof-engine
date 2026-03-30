@@ -291,8 +291,6 @@ def main():
 
     # Landing page — pass all featured proofs; JS picks 3 randomly per page load
     featured = [p for p in proofs if p.get("featured")]
-    if not featured:
-        featured = proofs[:3]
     tpl = env.get_template("landing.html")
     write_file(output_dir / "index.html", tpl.render(**common, stats=stats, featured_proofs=featured, canonical_url=f"{site_url}{base_url}"))
 
