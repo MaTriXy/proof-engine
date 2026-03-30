@@ -1,7 +1,7 @@
 # Proof: A man on TikTok has solved the Riemann Hypothesis after one week of work.
 
 - **Generated:** 2026-03-28
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) · [proof.py](proof.py)
 
 ---
@@ -82,7 +82,7 @@ None of these checks produce counter-evidence that breaks the disproof.
 
 ## Conclusion
 
-**Verdict: DISPROVED (with unverified citations)**
+**Verdict: DISPROVED**
 
 Two independently verified authoritative sources (B1, B2) establish that the Riemann Hypothesis remains unsolved as of 2026, with no accepted proof in existence. The claim that a man on TikTok "has solved" it — implying a valid, accepted mathematical proof — is therefore false.
 

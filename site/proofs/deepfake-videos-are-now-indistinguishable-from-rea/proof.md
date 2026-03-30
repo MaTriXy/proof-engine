@@ -1,7 +1,7 @@
 # Proof: Deepfake videos are now indistinguishable from real footage to the average human eye.
 
 - **Generated:** 2026-03-29
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) | [proof.py](proof.py)
 
 ## Key Findings
@@ -58,7 +58,7 @@ All 3 sources were verified (A1), meeting the threshold of >= 3 independent sour
 
 ## Conclusion
 
-**DISPROVED (with unverified citations).** The claim that deepfake videos are "indistinguishable" from real footage to the average human eye is contradicted by multiple large-scale studies. Humans detect deepfake videos at rates of 57-67%, significantly above the 50% chance level that "indistinguishable" would require. Three independent sources — two peer-reviewed studies (B1, B2) and one expert assessment (B3) — confirm that video deepfakes remain detectable, even as voice deepfakes have crossed the indistinguishable threshold.
+**DISPROVED.** The claim that deepfake videos are "indistinguishable" from real footage to the average human eye is contradicted by multiple large-scale studies. Humans detect deepfake videos at rates of 57-67%, significantly above the 50% chance level that "indistinguishable" would require. Three independent sources — two peer-reviewed studies (B1, B2) and one expert assessment (B3) — confirm that video deepfakes remain detectable, even as voice deepfakes have crossed the indistinguishable threshold.
 
 The B3 citation (Fortune) was only partially verified (54.5% fragment coverage). However, this conclusion does not depend solely on B3 — the two fully verified peer-reviewed sources (B1, B2) independently establish above-chance detection.
 

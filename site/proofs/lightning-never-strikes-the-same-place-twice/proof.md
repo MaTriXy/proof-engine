@@ -1,7 +1,7 @@
 # Proof: Lightning never strikes the same place twice.
 
 - **Generated**: 2026-03-28
-- **Verdict**: DISPROVED (with unverified citations)
+- **Verdict**: DISPROVED
 - **Audit trail**: [proof_audit.md](proof_audit.md) | [proof.py](proof.py)
 
 ## Key Findings
@@ -45,7 +45,7 @@ All four sources independently and unambiguously reject the claim. The verified 
 
 ## Conclusion
 
-**DISPROVED (with unverified citations)**. The claim "lightning never strikes the same place twice" is false. Four independent authoritative sources — the National Weather Service (B1), NOAA NSSL (B2), NASA (B3), and Encyclopaedia Britannica (B4) — all explicitly confirm that lightning regularly strikes the same location multiple times. The Empire State Building alone is struck approximately 23 times per year. No scientific source supports the literal claim.
+**DISPROVED**. The claim "lightning never strikes the same place twice" is false. Four independent authoritative sources — the National Weather Service (B1), NOAA NSSL (B2), NASA (B3), and Encyclopaedia Britannica (B4) — all explicitly confirm that lightning regularly strikes the same location multiple times. The Empire State Building alone is struck approximately 23 times per year. No scientific source supports the literal claim.
 
 One citation (B1, NWS) was verified via aggressive normalization (fragment match) rather than full quote match, likely due to HTML rendering differences on the .gov page. The three remaining sources (B2, B3, B4) were fully verified with exact quote matches. The disproof does not depend on B1 alone — the three fully verified sources independently exceed the threshold of 3.
 

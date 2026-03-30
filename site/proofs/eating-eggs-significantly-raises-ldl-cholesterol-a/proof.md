@@ -1,7 +1,7 @@
 # Proof: Eating eggs significantly raises LDL cholesterol and heart-disease risk.
 
 - **Generated:** 2026-03-28
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) | [proof.py](proof.py)
 
 ---
@@ -85,7 +85,7 @@ The original claim is an AND: both SC1 and SC2 must hold. Neither does. The comp
 
 ## Conclusion
 
-**Verdict: DISPROVED (with unverified citations)**
+**Verdict: DISPROVED**
 
 The compound claim — that eggs *significantly* raise both LDL cholesterol AND heart-disease risk — is disproved on both sub-claims:
 

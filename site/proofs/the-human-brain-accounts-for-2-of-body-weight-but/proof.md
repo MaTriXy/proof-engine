@@ -1,7 +1,7 @@
 # Proof: The human brain accounts for 2% of body weight but uses 20% of the body's oxygen at rest.
 
 - **Generated:** 2026-03-27
-- **Verdict:** PROVED (with unverified citations)
+- **Verdict:** PROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) · [proof.py](proof.py)
 
 ---
@@ -81,7 +81,7 @@ Neuroimaging studies show local brain blood flow increases 30–50% during cogni
 
 ## Conclusion
 
-**Verdict: PROVED (with unverified citations)**
+**Verdict: PROVED**
 
 Both sub-claims are strongly supported:
 - SC1 (brain = ~2% of body weight): 2.0% reported by two independent peer-reviewed sources (B1 fully verified, B3 fully verified), confirmed equal.

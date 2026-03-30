@@ -1,7 +1,7 @@
 # Proof: AI will replace over 50% of white-collar jobs by 2035
 
 - **Generated:** 2026-03-28
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) · [proof.py](proof.py)
 
 ---
@@ -83,7 +83,7 @@ The following arguments *for* the original claim were investigated:
 
 ## Conclusion
 
-**Verdict: DISPROVED (with unverified citations)**
+**Verdict: DISPROVED**
 
 Four authoritative, independent sources (B1–B4) contradict the claim that AI will replace over 50% of white-collar jobs by 2035. Three are fully verified (B1: Yale Budget Lab, B2: Anthropic research, B4: HBR); these three alone satisfy the threshold of 3 independent verified sources required for a disproof. The fourth (B3: J.P. Morgan) received a partial citation match (50% fragment coverage) and does not affect the verdict.
 

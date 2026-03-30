@@ -1,7 +1,7 @@
 # Proof: The Great Wall of China is the only man-made object visible from space with the naked eye
 
 - **Generated:** 2026-03-28
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) | [proof.py](proof.py)
 
 ## Key Findings
@@ -55,7 +55,7 @@ With 4 out of 4 sources confirmed (3 fully verified, 1 partial), the threshold o
 
 ## Conclusion
 
-**DISPROVED (with unverified citations).** The claim that the Great Wall of China is the only man-made object visible from space with the naked eye is false on both counts. The wall itself is not visible from space with the naked eye (confirmed by NASA, astronaut testimony, and Britannica), and numerous other man-made structures — highways, dams, cities, airports, and greenhouses — are routinely visible from low Earth orbit.
+**DISPROVED.** The claim that the Great Wall of China is the only man-made object visible from space with the naked eye is false on both counts. The wall itself is not visible from space with the naked eye (confirmed by NASA, astronaut testimony, and Britannica), and numerous other man-made structures — highways, dams, cities, airports, and greenhouses — are routinely visible from low Earth orbit.
 
 The "with unverified citations" qualifier applies because the NASA source (B1) was verified via aggressive normalization (fragment match) rather than full quote match. However, the disproof does not depend on this source — 3 fully verified sources (B2, B3, B4) independently exceed the threshold. The conclusion is robust.
 

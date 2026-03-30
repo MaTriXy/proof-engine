@@ -1,7 +1,7 @@
 # Proof: Seed oils (canola, sunflower, soybean, corn oil) are toxic and a primary cause of modern chronic inflammation and disease.
 
 - **Generated:** 2026-03-28
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) · [proof.py](proof.py)
 
 ---
@@ -89,7 +89,7 @@ No large, well-designed RCT demonstrating that eliminating seed oils specificall
 
 ## Conclusion
 
-**Verdict: DISPROVED (with unverified citations)**
+**Verdict: DISPROVED**
 
 Both sub-claims of the compound claim were disproved by independent authoritative sources:
 

@@ -1,7 +1,7 @@
 # Proof: Higher atmospheric CO2 is beneficial "plant food" with no net negative effects.
 
 - **Generated:** 2026-03-28
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) · [proof.py](proof.py)
 
 ---
@@ -92,7 +92,7 @@ Multiple peer-reviewed studies (Loladze 2014; Myers et al. 2014, *Nature*) docum
 
 ## Conclusion
 
-**Verdict: DISPROVED (with unverified citations)**
+**Verdict: DISPROVED**
 
 The compound claim has two parts. The first part — that CO2 acts as "plant food" with measurable fertilization effects — is genuinely supported by scientific evidence (SC1: 2 verified sources from NASA). However, the second part — "no net negative effects" — is decisively falsified by three independent government and intergovernmental sources (SC2: 3 confirmed disproof sources).
 

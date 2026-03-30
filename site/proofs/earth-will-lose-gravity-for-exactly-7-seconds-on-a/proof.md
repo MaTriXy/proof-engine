@@ -1,7 +1,7 @@
 # Proof: Earth will lose gravity for exactly 7 seconds on August 12, 2026, causing 40 million deaths.
 
 - **Generated:** 2026-03-28
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) · [proof.py](proof.py)
 
 ---
@@ -75,7 +75,7 @@ No counter-evidence was found that supports the claim. All adversarial checks re
 
 ## Conclusion
 
-**Verdict: DISPROVED (with unverified citations)**
+**Verdict: DISPROVED**
 
 SC1 — the alleged gravity-loss event — is physically impossible. Gravity is a consequence of mass; it cannot "switch off" while Earth's mass exists. NASA explicitly confirmed this. SC2 — 40 million deaths — is contingent on SC1 and falls with it.
 

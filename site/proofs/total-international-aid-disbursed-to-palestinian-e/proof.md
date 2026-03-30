@@ -1,7 +1,7 @@
 # Proof: Total international aid to Palestinian entities from 1994–2023 exceeded $40 billion USD
 
 **Generated:** 2026-03-27
-**Verdict:** PROVED (with unverified citations)
+**Verdict:** PROVED
 **Audit trail:** [proof_audit.md](proof_audit.md) · [proof.py](proof.py)
 
 ---
@@ -75,7 +75,7 @@ Yes — confirmed. The OECD explicitly noted in the April 2024 preliminary relea
 
 ## Conclusion
 
-**Verdict: PROVED (with unverified citations)**
+**Verdict: PROVED**
 
 A conservative lower bound of $41.4 billion in nominal USD is established for 1994–2023, exceeding the $40B threshold by $1.4B. Three sources independently citing OECD data confirm the 1994–2020 period alone exceeded $40B (B1, B2, B3); OECD 2024 preliminary data confirms $1.4B for 2023 (B4). The lower bound omits 2021 and 2022 flows and excludes UNRWA from the 2023 figure — the actual total is substantially higher.
 

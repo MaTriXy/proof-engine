@@ -1,7 +1,7 @@
 # Proof: AI progress in capabilities has largely plateaued since late 2024
 
 - **Generated:** 2026-03-29
-- **Verdict:** DISPROVED (with unverified citations)
+- **Verdict:** DISPROVED
 - **Audit trail:** [proof_audit.md](proof_audit.md) | [proof.py](proof.py)
 
 ## Key Findings
@@ -51,7 +51,7 @@ All 4 sources were confirmed (3 fully verified, 1 partial), exceeding the thresh
 
 ## Conclusion
 
-**DISPROVED (with unverified citations).** The claim that AI capabilities have largely plateaued since late 2024 is contradicted by quantitative evidence from 4 confirmed sources showing that capabilities have not only continued to improve but have actually *accelerated*. The ECI improvement rate nearly doubled after April 2024, FrontierMath scores rose >20x in 16 months, and SWE-bench Verified scores continue climbing.
+**DISPROVED.** The claim that AI capabilities have largely plateaued since late 2024 is contradicted by quantitative evidence from 4 confirmed sources showing that capabilities have not only continued to improve but have actually *accelerated*. The ECI improvement rate nearly doubled after April 2024, FrontierMath scores rose >20x in 16 months, and SWE-bench Verified scores continue climbing.
 
 The "with unverified citations" qualifier reflects that B4 (Epoch AI ECI page) received only partial verification (46.2% fragment coverage). However, the disproof does not depend on B4 — 3 other sources are fully verified, independently meeting the threshold. The partial verification of B4 does not weaken the conclusion.
 

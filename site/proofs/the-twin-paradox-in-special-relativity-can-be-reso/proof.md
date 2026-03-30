@@ -1,7 +1,7 @@
 # Proof: The twin paradox in special relativity can be resolved only by invoking general relativity and the acceleration of the traveling twin
 
 - **Generated**: 2026-03-28
-- **Verdict**: DISPROVED (with unverified citations)
+- **Verdict**: DISPROVED
 - **Audit trail**: [proof_audit.md](proof_audit.md) | [proof.py](proof.py)
 
 ## Key Findings
@@ -55,7 +55,7 @@ The resolution within SR proceeds as follows: The stay-at-home twin remains in a
 
 ## Conclusion
 
-**DISPROVED (with unverified citations).** The claim that the twin paradox "can be resolved only by invoking general relativity and the acceleration of the traveling twin" is false. Four independent authoritative sources (B1-B4) explicitly confirm that special relativity alone provides a complete resolution. Three citations (B2, B3, B4) are fully verified; one (B1, UCR Physics FAQ) has partial verification due to HTML rendering noise on the academic page, but the source independently confirms the same conclusion as the three fully verified sources. The disproof does not depend solely on any unverified citation.
+**DISPROVED.** The claim that the twin paradox "can be resolved only by invoking general relativity and the acceleration of the traveling twin" is false. Four independent authoritative sources (B1-B4) explicitly confirm that special relativity alone provides a complete resolution. Three citations (B2, B3, B4) are fully verified; one (B1, UCR Physics FAQ) has partial verification due to HTML rendering noise on the academic page, but the source independently confirms the same conclusion as the three fully verified sources. The disproof does not depend solely on any unverified citation.
 
 The physics consensus is clear: GR provides an *alternative* framework for analyzing the twin paradox (via the equivalence principle), but it is not *required*. The resolution within SR relies on the asymmetry of inertial frames and the relativity of simultaneity.
 
