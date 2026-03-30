@@ -131,6 +131,14 @@ def test_load_proof_no_search_registry(proof_dir):
     assert proof["search_count"] is None
 
 
+def test_load_proof_meta_yaml_featured_raises(proof_dir):
+    """meta.yaml with deprecated featured key should raise ValueError."""
+    meta_path = proof_dir / "test-claim" / "meta.yaml"
+    meta_path.write_text(yaml.dump({"featured": True}))
+    with pytest.raises(ValueError, match="deprecated"):
+        load_proof(proof_dir / "test-claim")
+
+
 def test_load_all_proofs_applies_featured(proof_dir):
     """load_all_proofs should set featured=True for slugs in featured.json."""
     featured_path = proof_dir / "featured.json"
