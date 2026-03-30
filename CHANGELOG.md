@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Citation verification: decode HTML entities (`&rsquo;`, `&nbsp;`, `&#8217;`, etc.) before quote matching — fixes false "partial" results on pages using HTML entities instead of Unicode characters
 - Citation verification: sliding-window fragment matching replaces fixed first-half-only approach — long quotes no longer always produce ~50% coverage
 - Citation verification: broadened academic ref regex to handle PMC variants with nested `<span>` and `id` attributes on `<sup>` elements
+- Citation verification: unify single and double quotes during matching — pages using "toxic" now match proof quotes using 'toxic'
 
 ## [1.3.0] - 2026-03-30
 
