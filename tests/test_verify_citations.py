@@ -352,6 +352,83 @@ def test_html_entity_fixture_full_quote_match():
     assert result["method"] == "full_quote"
 
 
+def test_fragment_match_finds_second_half():
+    """If the first word of a quote is mangled but the rest is present,
+    the sliding window should find an 80%+ contiguous match."""
+    # 30-word quote with first word mangled on the page
+    page = "<p>ZZZZZ internet may be full of posts stating that seed oils such as canola and soy are toxic scientific evidence does not support these claims and further research confirms this</p>"
+    quote = "While the internet may be full of posts stating that seed oils such as canola and soy are toxic scientific evidence does not support these claims and further research confirms this"
+    result = vc_module._match_quote(page, quote, "test_frag")
+    assert result is not None
+    assert result["status"] == "verified"
+    assert result["method"] == "fragment"
+    assert result["coverage_pct"] >= 80
+
+
+def test_fragment_match_mismatch_in_middle():
+    """A mismatch near the middle of a 20-word quote: every ceil(80%)=16-word
+    window contains the mangled word, so no 80% window matches. But the 50%
+    sliding window should find the best partial."""
+    words = "alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango".split()
+    mangled = words.copy()
+    mangled[9] = "ZZZZZ"  # mangle "juliet" (position 9 of 20)
+    page = f"<p>{' '.join(mangled)}</p>"
+    quote = ' '.join(words)
+    result = vc_module._match_quote(page, quote, "test_mid")
+    assert result is not None
+    assert result["status"] == "partial"
+    # Accept either "fragment" or "aggressive_normalization" method
+    assert result["method"] in ("fragment", "aggressive_normalization")
+    if result["method"] == "fragment":
+        assert result["coverage_pct"] == 50.0
+
+
+def test_fragment_match_mismatch_at_end():
+    """A mismatch at the very end should allow verified via first-80% window."""
+    words = "alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango".split()
+    mangled = words.copy()
+    mangled[-1] = "ZZZZZ"  # mangle last word
+    page = f"<p>{' '.join(mangled)}</p>"
+    quote = ' '.join(words)
+    result = vc_module._match_quote(page, quote, "test_end")
+    assert result is not None
+    assert result["status"] == "verified"
+    assert result["method"] == "fragment"
+    assert result["coverage_pct"] >= 80
+
+
+def test_fragment_exercised_not_full_quote():
+    """Verify that fragment path is actually exercised when page differs from quote."""
+    page = "<p>the quick brown fox jumps over the lazy dog and runs through the forest to find shelter</p>"
+    quote = "the quick brown fox jumps over the lazy dog and runs through the forest to find ZZZZZ"
+    result = vc_module._match_quote(page, quote, "test_frag_exercise")
+    assert result is not None
+    assert result["method"] == "fragment"
+    assert result["coverage_pct"] >= 80
+    assert result["status"] == "verified"
+
+
+def test_fragment_short_quote_preserves_partial_coverage():
+    """Regression: a 9-word quote with a 6-word prefix match must still
+    report 66.7% partial, not drop to 44.4% from a 4-word fallback."""
+    page = "<p>alpha bravo charlie delta echo foxtrot XXXX YYYY ZZZZ</p>"
+    quote = "alpha bravo charlie delta echo foxtrot golf hotel india"
+    result = vc_module._match_quote(page, quote, "test_short")
+    assert result is not None
+    assert result["method"] == "fragment"
+    assert result["status"] == "partial"
+    assert result["coverage_pct"] >= 66.0  # 6/9 = 66.7%, not 4/9 = 44.4%
+
+
+def test_fragment_no_false_verified_from_coincidental_overlap():
+    """Negative test: scattered word overlap must not produce false verified."""
+    page = "<p>scientists studying canola and soy found that toxic chemical levels are within safe limits according to recent evidence</p>"
+    quote = "canola and soy are toxic according to scientists who reject the evidence"
+    result = vc_module._match_quote(page, quote, "test_false_pos")
+    if result is not None:
+        assert result["status"] != "verified" or result["method"] == "full_quote"
+
+
 def test_escaped_html_not_stripped_by_unescape():
     """Escaped HTML entities like &lt;sup&gt; must NOT be turned into tags and stripped.
     They represent visible text content that should be preserved."""

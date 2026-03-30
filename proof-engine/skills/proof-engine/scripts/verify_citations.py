@@ -29,6 +29,7 @@ Usage as CLI:
 """
 
 import html
+import math
 import re
 import sys
 import json
@@ -158,6 +159,51 @@ def _extract_fragment(quote: str, min_words: int = 6) -> str:
     return ' '.join(words[:length])
 
 
+def _extract_fragments(quote: str) -> list:
+    """Extract sliding-window verification fragments from a normalized quote.
+
+    Returns a list of (fragment, word_count) tuples.
+    """
+    words = quote.split()
+    total = len(words)
+    if total < 4:
+        return [(' '.join(words), total)]
+
+    candidates = []
+    seen = set()
+
+    # Only use sliding windows for quotes >= 8 words
+    MIN_SLIDING_TOTAL = 8
+
+    if total >= MIN_SLIDING_TOTAL:
+        # Primary: 80% window at every offset (for "verified" matches)
+        win_len = math.ceil(total * 0.8)
+        for offset in range(total - win_len + 1):
+            frag = ' '.join(words[offset:offset + win_len])
+            if frag not in seen:
+                seen.add(frag)
+                candidates.append((frag, win_len))
+
+        # Secondary: 50% window slid across all offsets (for partial matches)
+        half_len = max(4, math.ceil(total * 0.5))
+        if half_len < win_len:
+            for offset in range(total - half_len + 1):
+                frag = ' '.join(words[offset:offset + half_len])
+                if frag not in seen:
+                    seen.add(frag)
+                    candidates.append((frag, half_len))
+
+    # Prefix fragments: preserves existing behavior for short quotes
+    for min_w in [6, 5, 4]:
+        length = max(min_w, total // 2)
+        frag = ' '.join(words[:length])
+        if frag not in seen:
+            seen.add(frag)
+            candidates.append((frag, length))
+
+    return candidates
+
+
 # ---------------------------------------------------------------------------
 # Quote matching (shared logic for all fetch modes)
 # ---------------------------------------------------------------------------
@@ -192,23 +238,25 @@ def _match_quote(page_text_raw: str, expected_quote: str, fact_id: str,
         return _result("verified", "unicode_normalized", fetch_mode=fetch_mode,
                         message=f"Full quote verified for {fact_id} (after Unicode normalization)")
 
-    # 3. Fragment fallback
+    # 3. Fragment fallback — sliding window
     quote_words = norm_quote.split()
     total_words = len(quote_words)
-    for min_w in [6, 5, 4]:
-        fragment = _extract_fragment(norm_quote, min_words=min_w)
+    best_fragment_result = None
+    for fragment, word_count in _extract_fragments(norm_quote):
         if fragment in page_text:
-            word_count = len(fragment.split())
             coverage = word_count / total_words if total_words > 0 else 0
             coverage_pct = round(coverage * 100, 1)
             if coverage >= 0.8:
                 return _result("verified", "fragment", coverage_pct=coverage_pct,
                                 fetch_mode=fetch_mode,
                                 message=f"Quote largely verified ({word_count}/{total_words} words matched) for {fact_id}")
-            else:
-                return _result("partial", "fragment", coverage_pct=coverage_pct,
+            elif best_fragment_result is None or coverage_pct > best_fragment_result["coverage_pct"]:
+                best_fragment_result = _result("partial", "fragment", coverage_pct=coverage_pct,
                                 fetch_mode=fetch_mode,
                                 message=f"Only {word_count}/{total_words} quote words matched for {fact_id} — partial verification only")
+
+    if best_fragment_result is not None:
+        return best_fragment_result
 
     if diag["found"]:
         return _result("partial", "aggressive_normalization", fetch_mode=fetch_mode,
