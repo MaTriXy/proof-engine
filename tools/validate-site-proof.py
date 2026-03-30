@@ -2,7 +2,6 @@
 """Validate a proof submission for the Proof Engine site."""
 
 import json
-import os
 import re
 import subprocess
 import sys
@@ -12,6 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from tools.lib.verdict import VERDICT_TAXONOMY
+from tools.lib.proof_runner import run_proof_and_extract_json
 
 # Import ProofData to get the known keys for unknown-key detection
 sys.path.insert(0, str(Path(__file__).parent.parent / "proof-engine" / "skills" / "proof-engine" / "scripts"))
@@ -43,6 +43,16 @@ def validate_json_structure(proof_data):
             f"proof.json contains unknown key '{key}' — "
             f"add it to ProofData in proof_types.py to silence this warning"
         )
+
+    # Reject deprecated keys that have been migrated to site-level config
+    REJECTED_KEYS = ["featured"]
+    for key in REJECTED_KEYS:
+        if key in proof_data:
+            errors.append(
+                f"proof.json contains rejected key '{key}' — "
+                f"featured status is now managed via site/proofs/featured.json, "
+                f"not per-proof. Remove this key."
+            )
 
     for key in REQUIRED_JSON_KEYS:
         if key not in proof_data:
@@ -76,31 +86,6 @@ def validate_json_structure(proof_data):
                     errors.append(f"search_registry[{key}] missing authored field: {field}")
 
     return errors, warnings
-
-
-def run_proof_and_extract_json(proof_py_path):
-    env = dict(os.environ)
-    env.pop("GITHUB_TOKEN", None)
-    env.pop("ACTIONS_RUNTIME_TOKEN", None)
-
-    result = subprocess.run(
-        [sys.executable, str(proof_py_path)],
-        capture_output=True, text=True, timeout=600, env=env,
-    )
-    if result.returncode != 0:
-        return None, f"proof.py failed: {result.stderr[:500]}"
-
-    marker = "=== PROOF SUMMARY (JSON) ==="
-    output = result.stdout
-    idx = output.find(marker)
-    if idx == -1:
-        return None, "proof.py output missing JSON summary marker"
-
-    json_str = output[idx + len(marker):].strip()
-    try:
-        return json.loads(json_str), None
-    except json.JSONDecodeError as e:
-        return None, f"Invalid JSON in proof.py output: {e}"
 
 
 def compare_invariant_fields(checked_in, regenerated):
