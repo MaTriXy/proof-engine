@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 - Citation verification: sliding-window fragment matching replaces fixed first-half-only approach — long quotes no longer always produce ~50% coverage
 - Citation verification: broadened academic ref regex to handle PMC variants with nested `<span>` and `id` attributes on `<sup>` elements
 - Citation verification: unify single and double quotes during matching — pages using "toxic" now match proof quotes using 'toxic'
+- Citation verification: collapse tag-stripping artifacts in compound terms — `CO 2` → `CO2`, `n -6` → `n-6` from stripped `<sub>`/`<sup>` tags
+- Citation verification: add `∞` → `infinity` to Unicode normalization registry
 
 ## [1.3.0] - 2026-03-30
 
