@@ -84,6 +84,7 @@ UNICODE_NORMALIZATIONS = [
     # Other common web characters
     ("\u2026", "...", "ellipsis → three dots"),
     ("\u00D7", "x", "multiplication sign → x"),
+    ("\u221E", "infinity", "infinity symbol → word"),
 ]
 
 

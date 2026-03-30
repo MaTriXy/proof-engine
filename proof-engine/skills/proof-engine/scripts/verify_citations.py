@@ -161,6 +161,11 @@ def normalize_text(text: str) -> str:
     text = text.replace('"', "'")
     # 3. Remove spaces before punctuation
     text = re.sub(r'\s+([,.:;!?\)\]])', r'\1', text)
+    # 3a. Collapse tag-stripping artifacts in compound terms:
+    #   - "CO 2" → "CO2" (letter + space + digit, from stripped <sub>/<sup>)
+    #   - "n -6" → "n-6" (word + space + hyphen + word, from stripped inline tags)
+    text = re.sub(r'([a-zA-Z]) +(\d)', r'\1\2', text)
+    text = re.sub(r'(\w) +-([\w])', r'\1-\2', text)
     # 4. Collapse whitespace
     text = ' '.join(text.split())
     # 5. Lowercase

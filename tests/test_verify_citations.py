@@ -491,3 +491,24 @@ def test_quote_type_mismatch_full_quote_match():
     assert result is not None
     assert result["status"] == "verified"
     assert result["method"] == "full_quote"
+
+
+def test_normalize_collapses_letter_space_digit():
+    """Tag stripping of CO<sub>2</sub> produces 'CO 2' — should become 'co2'."""
+    text = "CO<sub>2</sub> emissions are rising"
+    result = vc_module.normalize_text(text)
+    assert "co2" in result
+
+
+def test_normalize_collapses_word_space_hyphen():
+    """Tag stripping of n<sup>-6</sup> produces 'n -6' — should become 'n-6'."""
+    text = "increased n<sup>-6</sup> PUFA intake"
+    result = vc_module.normalize_text(text)
+    assert "n-6" in result
+
+
+def test_normalize_infinity_symbol():
+    """The infinity symbol should normalize to the word 'infinity'."""
+    text = "division of \u221E/\u221E results in NaN"
+    result = vc_module.normalize_text(text)
+    assert "infinity/infinity" in result
