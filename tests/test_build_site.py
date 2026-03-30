@@ -139,7 +139,7 @@ def test_og_tags_in_proof_page(site_fixture):
     result = _run_build(site_fixture)
     assert result.returncode == 0, f"Build failed:\n{result.stderr}"
     html = (site_fixture / "_site" / "proofs" / "test-claim" / "index.html").read_text()
-    assert 'og:title" content="Test claim is true"' in html
+    assert 'og:title" content="PROVED: Test claim is true"' in html
     assert 'og:description" content="PROVED: Test claim is true' in html
     assert 'og:url" content="https://example.com/proof-engine/proofs/test-claim/"' in html
     assert 'og:type" content="article"' in html

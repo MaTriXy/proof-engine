@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - OG images: moved metadata and branding higher to avoid being hidden by Twitter's card title overlay
+- OG title: added verdict prefix (e.g., "DISPROVED:") to og:title so Twitter card overlay shows the verdict
+- Citation verification: decode HTML entities (`&rsquo;`, `&nbsp;`, `&#8217;`, etc.) before quote matching — fixes false "partial" results on pages using HTML entities instead of Unicode characters
+- Citation verification: sliding-window fragment matching replaces fixed first-half-only approach — long quotes no longer always produce ~50% coverage
+- Citation verification: broadened academic ref regex to handle PMC variants with nested `<span>` and `id` attributes on `<sup>` elements
 
 ## [1.3.0] - 2026-03-30
 
