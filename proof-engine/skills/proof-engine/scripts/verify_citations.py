@@ -28,6 +28,7 @@ Usage as CLI:
     python scripts/verify_citations.py --facts facts.json
 """
 
+import html
 import re
 import sys
 import json
@@ -100,6 +101,11 @@ def normalize_text(text: str) -> str:
       1.5. Strip inline reference elements — <sup>[N]</sup>, <sup><a>N</a></sup>,
            <a class="xref">[N,M]</a> (common in academic HTML like PMC)
       2. Strip HTML tags  — handles inline markup like <span>...</span>
+      2a. Decode HTML entities — &rsquo;, &nbsp;, &#8217;, &mdash;, etc.
+          Placed AFTER tag stripping so escaped HTML (&lt;sup&gt;) isn't
+          decoded into real tags then stripped.
+      2b. Second Unicode normalization pass — decoded entities may introduce
+          curly quotes, em-dashes, etc. that need normalizing.
       2.5. Strip orphaned reference markers [N] — ONLY if academic refs
            were detected in step 1.5 (avoids false positives in non-academic text)
       3. Remove spaces before punctuation — fixes "Ben-Gurion ," artifacts
@@ -123,6 +129,13 @@ def normalize_text(text: str) -> str:
     _had_academic_refs = (n1 + n2) > 0
     # 2. Strip HTML tags
     text = re.sub(r'<[^>]+>', ' ', text)
+    # 2a. Decode HTML entities — AFTER tag stripping so escaped HTML like
+    # &lt;sup&gt; doesn't become a real tag and get stripped. Remaining entities
+    # (&rsquo;, &nbsp;, &#8217;, etc.) are safe text content to decode.
+    text = html.unescape(text)
+    # 2b. Second Unicode normalization pass — decoded entities may introduce
+    # curly quotes, em-dashes, non-breaking spaces that need normalizing.
+    text = normalize_unicode(text)
     # 2.5. Strip orphaned reference markers — ONLY in academic HTML
     if _had_academic_refs:
         text = re.sub(r'\[\d+(?:[,\-\u2013]\d+)*\]', '', text)

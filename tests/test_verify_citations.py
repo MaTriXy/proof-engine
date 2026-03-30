@@ -306,3 +306,57 @@ def test_verify_search_registry_unreachable(monkeypatch):
     }
     results = verify_search_registry(registry)
     assert results["search_a"]["status"] == "unreachable"
+
+
+# ---------------------------------------------------------------------------
+# HTML entity decoding tests
+# ---------------------------------------------------------------------------
+
+
+def test_normalize_decodes_html_entities():
+    """HTML entities like &rsquo; must be decoded before matching."""
+    text = "seed oils are &lsquo;toxic,&rsquo; not healthy"
+    result = vc_module.normalize_text(text)
+    assert "seed oils are 'toxic,' not healthy" in result
+
+
+def test_normalize_decodes_numeric_html_entities():
+    """Numeric HTML entities like &#8217; must be decoded."""
+    text = "brain&#8217;s neural pathways"
+    result = vc_module.normalize_text(text)
+    assert "brain's neural pathways" in result
+
+
+def test_normalize_decodes_nbsp_entity():
+    """&nbsp; must become a regular space."""
+    text = "1.1&nbsp;degrees"
+    result = vc_module.normalize_text(text)
+    assert "1.1 degrees" in result
+
+
+def test_normalize_decodes_mdash_entity():
+    """&mdash; must be decoded (then normalized to hyphen by Unicode step)."""
+    text = "a significant increase&mdash;noted by researchers"
+    result = vc_module.normalize_text(text)
+    # &mdash; → em-dash U+2014 → hyphen (via normalize_unicode)
+    assert "increase-noted" in result
+
+
+def test_html_entity_fixture_full_quote_match():
+    """Real-world scenario: page with HTML entities should match clean quote."""
+    page_html = _read_fixture("html_entities.html")
+    quote = "While the internet may be full of posts stating that seed oils such as canola and soy are 'toxic,' scientific evidence does not support these claims."
+    result = vc_module._match_quote(page_html, quote, "test_entity", fetch_mode="live")
+    assert result is not None
+    assert result["status"] == "verified"
+    assert result["method"] == "full_quote"
+
+
+def test_escaped_html_not_stripped_by_unescape():
+    """Escaped HTML entities like &lt;sup&gt; must NOT be turned into tags and stripped.
+    They represent visible text content that should be preserved."""
+    text = "See formula &lt;sup&gt;2&lt;/sup&gt; in the appendix"
+    result = vc_module.normalize_text(text)
+    # The "<sup>2</sup>" should appear as text, not be stripped as a tag
+    assert "2" in result
+    assert "sup" in result  # the literal text "sup" should survive
