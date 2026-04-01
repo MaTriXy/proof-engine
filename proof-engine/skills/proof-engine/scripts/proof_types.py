@@ -189,6 +189,8 @@ class ProofData(TypedDict, total=False):
     data_value_verification: dict[str, dict[str, DataValueVerificationEntry]]
     # Time-sensitive proofs may include a date note
     date_note: str
+    # Compound proof sub-claim results
+    sub_claim_results: list[dict] | dict[str, dict]
     # Verdict annotations (used in some published proofs)
     verdict_note: str
     verdict_reason: str
