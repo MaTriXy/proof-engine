@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Skill: `breaks_proof: True` now forces UNDETERMINED in ALL proof templates (was missing from date/age, numeric/table, pure-math)
+- Skill: adversarial rebuttal requirement — `breaks_proof: False` requires explicit rebuttal when counter-evidence found (Rule 5)
+- Skill: `proof_direction` support in compound template — enables DISPROVED verdict for disproof-direction compound claims
+- Skill: causal vs associational evidence guardrail — causal claims decomposed into SC-association + SC-causation via compound template
+- Skill: threshold reduction quality gates — `threshold: 2` requires domain-appropriate source quality, no majority COI, documented domain scarcity
+- Skill: `uncertainty_override` flag in numeric/date templates — UNDETERMINED when cited source flags overlapping uncertainty ranges
+
 ## [1.3.1] - 2026-03-30
 
 ### Fixed

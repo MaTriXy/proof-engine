@@ -258,6 +258,12 @@ These are structurally independent: they don't re-derive the founding date or re
 - Search for **edge cases where the operator choice matters** (claim is exactly at the threshold boundary)
 - Search for **methodological disputes** (different measurement approaches yield different numbers)
 
+**`breaks_proof` must be justified when counter-evidence is found.** For each adversarial check:
+- If `breaks_proof: True` — the verdict is forced to UNDETERMINED. No further justification needed.
+- If `breaks_proof: False` AND the check found counter-evidence (not just a reproducibility confirmation or null result) — the `finding` field must contain an explicit rebuttal: *why* the counter-evidence does not invalidate the conclusion. "Does not break the proof" or "the proof still holds" is insufficient.
+- This rebuttal requirement does NOT apply to reproducibility checks, null-result checks, or edge-case checks where no counter-evidence was discovered.
+- **Red flag**: If the `finding` text contains "no significant difference," "does not confirm," "contradicts," "insufficient evidence," or "RCTs show no effect" — and `breaks_proof` is False — the rebuttal must explain why this specific contradiction does not apply. If you cannot write a specific rebuttal, set `breaks_proof: True`.
+
 **How validate_proof.py catches it**: Looks for "adversarial", "disproof", "counter-evidence" etc. in the code.
 
 ---

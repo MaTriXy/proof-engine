@@ -29,3 +29,7 @@ Read this at **Step 6** before presenting results.
 - [ ] proof_audit.md presents "Partially verified" citations distinctly from "Verified"
 - [ ] proof_audit.md includes Source Credibility Assessment table (for empirical proofs)
 - [ ] proof.md and proof_audit.md end with generator footer line
+- [ ] Each adversarial check that found counter-evidence and has `breaks_proof: False` includes an explicit rebuttal in `finding`. Reproducibility/null-result checks are exempt.
+- [ ] If claim uses causal language ("causes," "leads to," "promotes," "damages," "prevents"): decomposed into association + causation sub-claims via compound template; verdict is PARTIALLY VERIFIED if only associational evidence found
+- [ ] If `threshold < 3`: operator_note documents domain scarcity search, sources meet domain-appropriate quality bar, and no majority COI among threshold sources
+- [ ] For comparative/superlative claims: if the cited source flags overlapping uncertainty in the compared values, `uncertainty_override = True` is set and verdict is UNDETERMINED

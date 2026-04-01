@@ -43,6 +43,8 @@ These are the highest-value lessons from field testing. Read before writing any 
 - **Academic HTML degrades citation matches**: PMC and journal pages embed inline reference markers (`[1]`, superscripts) that inject noise after HTML stripping. If a real verbatim quote gets `partial` status, check whether the source is academic HTML before suspecting the quote itself. Use `snapshot` to capture clean text if needed.
 - **Don't conflate source count with evidence strength**: 5 news articles citing the same study count as 1 independent source, not 5. For qualitative consensus proofs, check whether sources trace to independent primary research. Document the independence rationale in the cross-checks section.
 - **Absence claims need search documentation**: For "no evidence exists" claims, use the Absence-of-Evidence template. Document what was searched (databases, query terms, date ranges), not just what was found. The `search_registry` structure makes this machine-checkable.
+- **Don't weaken causal claims to prove them**: If the claim says X "causes" Y, you cannot redefine it to X "is associated with" Y in `operator_note` and then PROVE the weaker version. Decompose into SC-association + SC-causation sub-claims using the compound claim template. If only observational evidence exists without causal inference methods (Bradford Hill, Mendelian randomization, natural experiments), the result is PARTIALLY VERIFIED (association confirmed, causation not established), not PROVED.
+- **Don't rank from point estimates when the source says they overlap**: If Our World in Data says "nuclear: 0.07/TWh, solar: 0.05/TWh" but also says "the uncertainties mean these values are likely to overlap," you cannot conclude solar is safer than nuclear. Set `uncertainty_override = True` and return UNDETERMINED.
 
 ## Reference Files
 
@@ -51,7 +53,7 @@ Read these on demand, not all upfront.
 | File | Read when |
 |------|-----------|
 | [hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) | **Step 3** — the 7 rules with bad/good examples |
-| [proof-templates.md](${CLAUDE_SKILL_DIR}/references/proof-templates.md) | **Step 3** — choose a template: date/age, numeric/table, or pure-math |
+| [proof-templates.md](${CLAUDE_SKILL_DIR}/references/proof-templates.md) | **Step 3** — choose a template: date/age, numeric/table, qualitative consensus, compound, absence-of-evidence, or pure-math |
 | [output-specs.md](${CLAUDE_SKILL_DIR}/references/output-specs.md) | **Step 5** — proof.md and proof_audit.md structure |
 | [self-critique-checklist.md](${CLAUDE_SKILL_DIR}/references/self-critique-checklist.md) | **Step 6** — before presenting results |
 | [advanced-patterns.md](${CLAUDE_SKILL_DIR}/references/advanced-patterns.md) | When encountering complex quotes or table-sourced data |
@@ -161,7 +163,7 @@ Find at least two independent sources (Rule 6). For math claims, plan two indepe
 If a source is likely to return 403 on automated fetch (common for .gov, .edu, and some aggregators), pre-fetch the page text using any available tool and include it as the `snapshot` field in `empirical_facts`. The proof script will verify against the snapshot instead of live-fetching. See [environment-and-sources.md](${CLAUDE_SKILL_DIR}/references/environment-and-sources.md) for details.
 
 ### Step 3: Write the Proof Code
-Read [hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) for the 7 rules. Then read [proof-templates.md](${CLAUDE_SKILL_DIR}/references/proof-templates.md) and choose the template that matches your claim type (date/age, numeric/table, qualitative consensus, or pure-math). The proof script must be self-contained: `python proof.py` produces the full output.
+Read [hardening-rules.md](${CLAUDE_SKILL_DIR}/references/hardening-rules.md) for the 7 rules. Then read [proof-templates.md](${CLAUDE_SKILL_DIR}/references/proof-templates.md) and choose the template that matches your claim type (date/age, numeric/table, qualitative consensus, compound, absence-of-evidence, or pure-math). **If the claim uses causal language** ("causes," "leads to," "promotes," "damages," "prevents"), **use the compound claim template** with SC-association + SC-causation sub-claims — see "Causal vs. associational claims" in the Verdicts section. For claims about absence of evidence ("there is no published evidence that X causes Y"), use the absence-of-evidence template. The proof script must be self-contained: `python proof.py` produces the full output.
 
 Required elements:
 - `CLAIM_FORMAL` dict with `operator_note` (Rule 4)
@@ -196,7 +198,34 @@ Before presenting results, run through the checklist in [self-critique-checklist
 | **PARTIALLY VERIFIED** | Some sub-claims met threshold, others did not — Conclusion states whether each failing SC lacked evidence or was contradicted |
 | **UNDETERMINED** | Insufficient evidence either way |
 
-**Threshold guidance for source-counting proofs:** The default `threshold: 3` means 3 independently verified sources must confirm the claim. Use `threshold: 2` only when the domain has few authoritative sources (e.g., a single landmark study replicated once). Always document the threshold choice in `operator_note`. Never set `threshold: 1` — a single source is not consensus.
+**Threshold guidance for source-counting proofs:** The default `threshold: 3` means 3 independently verified sources must confirm the claim. Never set `threshold: 1` — a single source is not consensus.
+
+**Reducing to `threshold: 2`** is permitted only when ALL of the following are met:
+1. **Domain scarcity**: Fewer than 3 independent authoritative sources exist. Document the search that established this (databases queried, terms used, why results are insufficient).
+2. **Source quality adequate for domain**: Each threshold source must meet the minimum quality standard for its domain:
+   - *Human/clinical studies*: n >= 30 participants (or justify smaller n for rare conditions)
+   - *Physical/mathematical*: peer-reviewed or established reference (textbook, standards body)
+   - *Economic/statistical*: government or intergovernmental data source, or peer-reviewed analysis
+   - *Other domains*: tier >= 3 credibility (no unclassified or flagged sources)
+3. **No majority COI**: No more than one of the threshold sources may have authors with a financial or commercial conflict of interest related to the claim.
+4. **Documented in `operator_note`**: State why 3 sources are unavailable, confirm source quality, and disclose any known COI.
+
+If these conditions are not met, keep `threshold: 3`. If fewer than 3 qualifying sources exist and the quality gates are not met, the verdict should be **UNDETERMINED** (insufficient evidence), not PROVED at a lowered threshold.
+
+**Causal vs. associational claims:** When the claim uses causal language — "causes," "leads to," "promotes," "triggers," "results in," "damages," "prevents" — the proof must decompose it into at least two sub-claims using the **compound claim template**:
+- **SC-association**: "X is associated with Y" — satisfiable by observational cohorts, cross-sectional studies, epidemiological correlations.
+- **SC-causation**: "The association is causal (not confounded)" — satisfiable by:
+  - RCTs or controlled experiments (gold standard)
+  - Established causal inference methods where RCTs are impractical: Bradford Hill criteria assessment, Mendelian randomization, natural experiments, dose-response with adequate confounding control
+  - Converging mechanistic evidence (biological pathway) + longitudinal outcome data from independent studies
+
+Verdict outcomes:
+- **SC-association holds + SC-causation holds** -> **PROVED**
+- **SC-association holds + SC-causation fails** -> **PARTIALLY VERIFIED** (association confirmed, causation not established)
+- **SC-association fails** -> use `proof_direction: "disprove"` in CLAIM_FORMAL, which maps to **DISPROVED** when disproof sub-claims hold
+- **Insufficient evidence for SC-association** -> **UNDETERMINED**
+
+The `operator_note` must NOT redefine a causal claim as associational to avoid this decomposition. This rule does not apply to claims already phrased associationally ("is correlated with," "is associated with").
 
 ## Limitations
 
@@ -211,3 +240,5 @@ Disproof is often easier (single counterexample suffices). The engine struggles 
 **Partial-period data:** If a claim covers a time range but the best sources only cover part of it (e.g., claim says 1994-2023, sources cover 1994-2020), document the gap in `operator_note`. For **cumulative nonnegative totals** (e.g., total aid disbursed, cumulative emissions), if the partial-period sum already exceeds the claim's threshold, prove it with a logical extension: "If S₂₀ > T and the quantity is monotonically nondecreasing (cumulative total cannot shrink), then S₂₃ ≥ S₂₀ > T." State the monotonicity assumption explicitly using `explain_calc()`. This shortcut does NOT apply to averages, rates, percentages, or rolling metrics — for those, the missing-period values could decrease the aggregate, and you must either find full-period sources or return `UNDETERMINED` with an explanation of what data is missing.
 
 **Source doesn't contain claimed constant:** If a claim says "per [Source]" but that source doesn't publish the specific constant (e.g., "CODATA values for solar mass" when CODATA doesn't list solar mass), document the substitution in `operator_note`: which source you actually used, why it's authoritative, and how it relates to the claimed source.
+
+**Comparative claims with source-acknowledged uncertainty:** When a claim uses a superlative or comparative — "the safest," "the lowest," "the most," "better than" — and the source used to evaluate the comparison explicitly states that the compared values have overlapping uncertainty ranges, confidence intervals, or error bars: set `uncertainty_override = True` in the verdict section (date/age or numeric template). The verdict will be **UNDETERMINED**, not PROVED or DISPROVED. Point estimates alone cannot resolve a ranking when the source itself flags that the estimates are not statistically distinguishable. Document in `operator_note`: "Source [name] states [exact quote about uncertainty overlap]." This applies when the source providing the data also flags the uncertainty, or when the caveat comes from a source analyzing the same underlying dataset.

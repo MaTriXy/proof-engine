@@ -84,9 +84,9 @@ claim_holds = compare(age, CLAIM_FORMAL["operator"], CLAIM_FORMAL["threshold"])
 adversarial_checks = [
     {
         "question": "...",
-        "verification_performed": "...",
-        "finding": "...",
-        "breaks_proof": False,
+        "verification_performed": "Searched for ...",
+        "finding": "...",  # If counter-evidence found AND breaks_proof=False: MUST include explicit rebuttal (Rule 5)
+        "breaks_proof": False,  # If True, verdict forced to UNDETERMINED
     },
 ]
 
@@ -95,7 +95,17 @@ if __name__ == "__main__":
     any_unverified = any(
         cr["status"] != "verified" for cr in citation_results.values()
     )
-    if claim_holds and not any_unverified:
+    any_breaks = any(ac.get("breaks_proof") for ac in adversarial_checks)
+    # Set to True if the source itself flags overlapping uncertainty ranges
+    # for a comparative/superlative claim. See SKILL.md "Comparative claims
+    # with source-acknowledged uncertainty."
+    uncertainty_override = False  # change to True with documented reason if applicable
+
+    if any_breaks:
+        verdict = "UNDETERMINED"
+    elif uncertainty_override:
+        verdict = "UNDETERMINED"
+    elif claim_holds and not any_unverified:
         verdict = "PROVED"
     elif claim_holds and any_unverified:
         verdict = "PROVED (with unverified citations)"
@@ -268,9 +278,9 @@ claim_holds = compare(decline_a, CLAIM_FORMAL["operator"], CLAIM_FORMAL["thresho
 adversarial_checks = [
     {
         "question": "...",
-        "verification_performed": "Searched for ...",  # past tense — this is Step 2 research
-        "finding": "...",
-        "breaks_proof": False,
+        "verification_performed": "Searched for ...",
+        "finding": "...",  # If counter-evidence found AND breaks_proof=False: MUST include explicit rebuttal (Rule 5)
+        "breaks_proof": False,  # If True, verdict forced to UNDETERMINED
     },
 ]
 
@@ -279,7 +289,17 @@ if __name__ == "__main__":
     any_unverified = any(
         cr["status"] != "verified" for cr in citation_results.values()
     )
-    if claim_holds and not any_unverified:
+    any_breaks = any(ac.get("breaks_proof") for ac in adversarial_checks)
+    # Set to True if the source itself flags overlapping uncertainty ranges
+    # for a comparative/superlative claim. See SKILL.md "Comparative claims
+    # with source-acknowledged uncertainty."
+    uncertainty_override = False  # change to True with documented reason if applicable
+
+    if any_breaks:
+        verdict = "UNDETERMINED"
+    elif uncertainty_override:
+        verdict = "UNDETERMINED"
+    elif claim_holds and not any_unverified:
         verdict = "PROVED"
     elif claim_holds and any_unverified:
         verdict = "PROVED (with unverified citations)"
@@ -396,16 +416,20 @@ adversarial_checks = [
     {
         "question": "...",
         "verification_performed": "...",
-        "finding": "...",
-        "breaks_proof": False,
+        "finding": "...",  # If counter-evidence found AND breaks_proof=False: MUST include explicit rebuttal (Rule 5)
+        "breaks_proof": False,  # If True, verdict forced to UNDETERMINED
     },
 ]
 
 # 6. VERDICT AND STRUCTURED OUTPUT
 if __name__ == "__main__":
     claim_holds = compare(primary_result, CLAIM_FORMAL["operator"], CLAIM_FORMAL["threshold"])
+    any_breaks = any(ac.get("breaks_proof") for ac in adversarial_checks)
     # Pure-math: no citations, so no unverified-citation variants needed
-    verdict = "PROVED" if claim_holds else "DISPROVED"
+    if any_breaks:
+        verdict = "UNDETERMINED"
+    else:
+        verdict = "PROVED" if claim_holds else "DISPROVED"
 
     FACT_REGISTRY["A1"]["method"] = "..."
     FACT_REGISTRY["A1"]["result"] = str(primary_result)
@@ -598,8 +622,8 @@ adversarial_checks = [
     {
         "question": "...",
         "verification_performed": "Searched for ...",
-        "finding": "...",
-        "breaks_proof": False,
+        "finding": "...",  # If counter-evidence found AND breaks_proof=False: MUST include explicit rebuttal (Rule 5)
+        "breaks_proof": False,  # If True, verdict forced to UNDETERMINED
     },
 ]
 
@@ -736,8 +760,8 @@ CLAIM_NATURAL = "..."
 CLAIM_FORMAL = {
     "subject": "...",
     "sub_claims": [
-        {"id": "SC1", "property": "...", "operator": ">=", "threshold": 2, "operator_note": "..."},
-        {"id": "SC2", "property": "...", "operator": ">=", "threshold": 2, "operator_note": "..."},
+        {"id": "SC1", "property": "...", "operator": ">=", "threshold": 3, "operator_note": "..."},
+        {"id": "SC2", "property": "...", "operator": ">=", "threshold": 3, "operator_note": "..."},
     ],
     "compound_operator": "AND",  # only AND is supported; OR claims should be decomposed into separate proofs
     "operator_note": "All sub-claims must hold for the compound claim to be PROVED",
@@ -788,33 +812,34 @@ adversarial_checks = [
     {
         "question": "...",
         "verification_performed": "Searched for ...",
-        "finding": "...",
-        "breaks_proof": False,
+        "finding": "...",  # If counter-evidence found AND breaks_proof=False: MUST include explicit rebuttal (Rule 5)
+        "breaks_proof": False,  # If True, verdict forced to UNDETERMINED
     },
 ]
 
-# 9. VERDICT — handles mixed results and unverified citations
+# 9. VERDICT — handles mixed results, proof direction, and unverified citations
 if __name__ == "__main__":
     any_unverified = any(
         cr["status"] != "verified" for cr in citation_results.values()
     )
     any_breaks = any(ac.get("breaks_proof") for ac in adversarial_checks)
+    is_disproof = CLAIM_FORMAL.get("proof_direction") == "disprove"
 
     if any_breaks:
         verdict = "UNDETERMINED"
     elif not claim_holds and n_holding > 0:
         # Mixed: some sub-claims hold, others don't.
-        # Citation status is noted in proof.md conclusion but doesn't change
-        # the verdict label — PARTIALLY VERIFIED already signals incompleteness.
         verdict = "PARTIALLY VERIFIED"
     elif claim_holds and not any_unverified:
-        verdict = "PROVED"
+        verdict = "DISPROVED" if is_disproof else "PROVED"
     elif claim_holds and any_unverified:
-        verdict = "PROVED (with unverified citations)"
-    elif not claim_holds:
-        # No sub-claims met threshold. For source-counting proofs,
-        # this is insufficient evidence, not disproof.
-        # Citation status is noted in proof.md conclusion.
+        verdict = ("DISPROVED (with unverified citations)" if is_disproof
+                   else "PROVED (with unverified citations)")
+    elif not claim_holds and n_holding == 0:
+        # No sub-claims met threshold.
+        # Prove direction: insufficient evidence. Disprove direction: couldn't disprove.
+        verdict = "UNDETERMINED"
+    else:
         verdict = "UNDETERMINED"
 
     FACT_REGISTRY["A1"]["method"] = f"count(verified sc1 citations) = {n_sc1}"
