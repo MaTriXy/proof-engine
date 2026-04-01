@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-04-01
+
 ### Added
 
 - Skill: `breaks_proof: True` now forces UNDETERMINED in ALL proof templates (was missing from date/age, numeric/table, pure-math)

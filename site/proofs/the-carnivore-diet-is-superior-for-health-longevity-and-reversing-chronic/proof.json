@@ -1,0 +1,174 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "pmcreview",
+      "label": "PMC/Nutrients Scoping Review (2025): carnivore diet evidence quality rated very limited; long-term adherence cannot be recommended"
+    },
+    "B2": {
+      "key": "bluezones",
+      "label": "Blue Zones / Adventist Health Study: plant-eating populations outlive meat-eating counterparts by up to eight years"
+    },
+    "B3": {
+      "key": "who",
+      "label": "WHO Healthy Diet Fact Sheet: recommends shift toward plant-based protein away from red meat for health benefits"
+    },
+    "B4": {
+      "key": "nutritionstudies",
+      "label": "T. Colin Campbell Center for Nutrition Studies: large-scale observational studies associate plant-predominant diets with lower chronic disease incidence"
+    },
+    "A1": {
+      "label": "Verified source count: authoritative sources contradicting carnivore superiority claim",
+      "method": "count(verified citations) = 4",
+      "result": "4"
+    }
+  },
+  "claim_formal": {
+    "subject": "carnivore diet",
+    "property": "demonstrably superior to plant-inclusive diets for health, longevity, and chronic disease reversal, as established by the scientific evidence base",
+    "operator": ">=",
+    "operator_note": "'Superior' requires measurably better outcomes compared to plant-inclusive diets across all three stated dimensions: (1) general health, (2) longevity, and (3) chronic disease reversal. This is a DISPROOF: we establish the claim is false by showing (a) the carnivore diet evidence base is insufficient to support any superiority claim, and (b) substantial scientific evidence points in the opposite direction for longevity and long-term health. Threshold: 3 independently verified authoritative sources that contradict or fail to support the superiority claim. Note: some studies report short-term carnivore benefits (weight loss, satiety, anecdotal disease remission), but none establish superiority over plant-inclusive diets in head-to-head controlled trials across the three claimed dimensions.",
+    "threshold": 3,
+    "proof_direction": "disprove"
+  },
+  "claim_natural": "The carnivore diet is superior for health, longevity, and reversing chronic disease compared to plant-inclusive diets.",
+  "citations": {
+    "B1": {
+      "source_key": "pmcreview",
+      "source_name": "Nutrients (MDPI) / PMC — Carnivore Diet: A Scoping Review of the Current Evidence, Potential Benefits and Risks (2025)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12845189/",
+      "quote": "the quality of evidence is very limited due to small sample sizes, short study durations, and the absence of control groups",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B2": {
+      "source_key": "bluezones",
+      "source_name": "Blue Zones — Blue Zones Diet: Food Secrets of the World's Longest-Lived People (reporting on Adventist Health Study findings)",
+      "url": "https://www.bluezones.com/2020/07/blue-zones-diet-food-secrets-of-the-worlds-longest-lived-people/",
+      "quote": "Research suggests that 30-year-old vegetarian Adventists will likely outlive their meat-eating counterparts by as many as eight years.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "bluezones.com",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain — verify source authority manually"
+      }
+    },
+    "B3": {
+      "source_key": "who",
+      "source_name": "World Health Organization — Healthy Diet Fact Sheet",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
+      "quote": "For many adults, a shift towards more plant-based sources of protein may bring health benefits, particularly when the shift is away from red meat.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "who.int",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Known government/intergovernmental organization"
+      }
+    },
+    "B4": {
+      "source_key": "nutritionstudies",
+      "source_name": "T. Colin Campbell Center for Nutrition Studies — The Carnivore Diet: What Does the Evidence Say?",
+      "url": "https://nutritionstudies.org/the-carnivore-diet-what-does-the-evidence-say/",
+      "quote": "countless large-scale observational studies consistently show that plant-predominant diets are associated with a lower incidence and mortality of numerous chronic diseases",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nutritionstudies.org",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain — verify source authority manually"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "the quality of evidence is very limited due to small sample sizes, short study d"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Research suggests that 30-year-old vegetarian Adventists will likely outlive the"
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "For many adults, a shift towards more plant-based sources of protein may bring h"
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "countless large-scale observational studies consistently show that plant-predomi"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Multiple independent authoritative sources consulted",
+      "n_sources_consulted": 4,
+      "n_sources_verified": 4,
+      "sources": {
+        "pmcreview": "verified",
+        "bluezones": "verified",
+        "who": "verified",
+        "nutritionstudies": "verified"
+      },
+      "independence_note": "Sources span: peer-reviewed journal (PMC/Nutrients scoping review), population longevity research (Blue Zones / Adventist Health Study), international health authority (WHO), and nutrition research institution — representing distinct methodologies, institutions, and datasets."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Do self-report surveys of carnivore dieters report significant health benefits that might support the superiority claim?",
+      "verification_performed": "Reviewed Baker et al. (2021, PMC8684475): a survey of 2,029 adults consuming a carnivore diet. Participants self-reported improvements in obesity, diabetes, and autoimmune conditions; 93% rated themselves satisfied or very satisfied.",
+      "finding": "Self-report data shows satisfaction and perceived improvements. However, the study has no control group, relies on self-selection and recall bias, and does not compare outcomes against plant-inclusive diets. It cannot establish superiority over any alternative dietary pattern. Does not break the disproof.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Are there clinical studies showing carnivore diet reverses specific chronic diseases more effectively than plant-inclusive diets?",
+      "verification_performed": "Found Frontiers in Nutrition (2024) case series of 10 IBD patients achieving remission on carnivore-ketogenic diet (PMC11409203). Searched for head-to-head RCTs comparing carnivore vs. plant-inclusive diets for chronic disease reversal.",
+      "finding": "Case series data (n=10) shows promising signals for IBD, but these are case reports with no randomization, no control arm, and no comparison to plant-inclusive diets. No head-to-head RCT establishing carnivore superiority for any chronic disease was found. Does not break the disproof.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Do any systematic reviews or meta-analyses conclude carnivore diet is superior to plant-inclusive diets across health, longevity, or chronic disease reversal?",
+      "verification_performed": "Searched PubMed and Google Scholar for systematic reviews comparing carnivore diet directly to plant-inclusive diets on health outcomes, lifespan, and chronic disease. Reviewed the 2025 PMC scoping review (PMC12845189) and Palmer 2025 (Sage Journals doi:10.1177/02601060251314575) on red meat's long-term hypertrophy vs. longevity tradeoffs.",
+      "finding": "No systematic review or meta-analysis has concluded carnivore diet is superior to plant-inclusive diets for health, longevity, or chronic disease reversal. The 2025 PMC scoping review concluded 'long-term adherence to a CD cannot be recommended' due to insufficient evidence quality. Palmer (2025) found that long-term adverse effects of red/processed meat outweigh short-term benefits. Does not break the disproof.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_confirmed": 4,
+    "threshold": 3,
+    "operator": ">=",
+    "claim_holds": true,
+    "proof_direction": "disprove"
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.3.1",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-04-01"
+  }
+}

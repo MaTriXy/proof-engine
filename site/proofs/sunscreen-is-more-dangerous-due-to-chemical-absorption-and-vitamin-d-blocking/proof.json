@@ -1,0 +1,206 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "source_aad",
+      "label": "American Academy of Dermatology: absorbed ingredients not proven harmful"
+    },
+    "B2": {
+      "key": "source_mdanderson",
+      "label": "MD Anderson Cancer Center: no medical evidence sunscreen causes cancer; UV does"
+    },
+    "B3": {
+      "key": "source_pmc_cmaj",
+      "label": "PMC/CMAJ 2020: high-quality evidence sunscreen reduces melanoma and nonmelanoma cancer"
+    },
+    "B4": {
+      "key": "source_pmc_vitd",
+      "label": "PMC 2022 expert panel: sunscreen does not limit vitamin D production in real-world use"
+    },
+    "B5": {
+      "key": "source_skincancer",
+      "label": "Skin Cancer Foundation: ~90% of nonmelanoma skin cancers associated with UV exposure"
+    },
+    "A1": {
+      "label": "Verified disproof source count",
+      "method": "count(verified disproof citations) = 5",
+      "result": "5"
+    }
+  },
+  "claim_formal": {
+    "subject": "Chemical sunscreen",
+    "property": "comparative harm vs. moderate sun exposure",
+    "operator": ">=",
+    "operator_note": "The claim asserts sunscreen is MORE dangerous than moderate sun exposure, citing two mechanisms: (1) systemic absorption of chemical UV filters and (2) reduction of vitamin D synthesis. Interpreted as: the combined harm of sunscreen use >= the harm of moderate unprotected sun exposure. We DISPROVE this by gathering authoritative sources showing: (a) chemical absorption is documented but no human harm has been demonstrated; (b) real-world vitamin D reduction from sunscreen is minimal — population studies show no significant difference in vitamin D levels between sunscreen users and non-users with equivalent outdoor exposure; (c) UV radiation is the dominant cause of skin cancer (~86-90% of cases); and (d) sunscreen use reduces melanoma risk by ~50% and squamous cell carcinoma by ~40%. Threshold: 3 or more independently verified authoritative sources must reject the claim's conclusion for a DISPROVED verdict.",
+    "threshold": 3,
+    "proof_direction": "disprove"
+  },
+  "claim_natural": "Sunscreen is more dangerous due to chemical absorption and vitamin D blocking than moderate sun exposure.",
+  "citations": {
+    "B1": {
+      "source_key": "source_aad",
+      "source_name": "American Academy of Dermatology — Sunscreen FAQs",
+      "url": "https://www.aad.org/media/stats-sunscreen",
+      "quote": "Just because an ingredient is absorbed into the bloodstream does not mean that it is harmful or unsafe.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "aad.org",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain — verify source authority manually"
+      }
+    },
+    "B2": {
+      "source_key": "source_mdanderson",
+      "source_name": "MD Anderson Cancer Center — Sunscreen Myths Debunked",
+      "url": "https://www.mdanderson.org/cancerwise/sunscreen-myths-debunked.h00-159697545.html",
+      "quote": "There is no medical evidence that sunscreen causes cancer. However, there is a lot of evidence that UV rays from the sun and tanning beds do.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "mdanderson.org",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain — verify source authority manually"
+      }
+    },
+    "B3": {
+      "source_key": "source_pmc_cmaj",
+      "source_name": "PMC / CMAJ — Efficacy and Safety of Sunscreen (2020)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7759112/",
+      "quote": "High-quality evidence has shown that sunscreen reduces the risk of developing both melanoma and nonmelanoma skin cancer.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B4": {
+      "source_key": "source_pmc_vitd",
+      "source_name": "PMC — Sunscreen and Vitamin D Expert Panel (2022)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9002342/",
+      "quote": "Sunscreens can be effective in preventing erythema from solar exposure without limiting the benefits with respect to vitamin D production.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B5": {
+      "source_key": "source_skincancer",
+      "source_name": "Skin Cancer Foundation — Skin Cancer Facts & Statistics",
+      "url": "https://www.skincancer.org/skin-cancer-information/skin-cancer-facts/",
+      "quote": "About 90 percent of nonmelanoma skin cancers are associated with exposure to ultraviolet (UV) radiation from the sun.",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "skincancer.org",
+        "source_type": "unknown",
+        "tier": 2,
+        "flags": [],
+        "note": "Unclassified domain — verify source authority manually"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Just because an ingredient is absorbed into the bloodstream does not mean that i"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "There is no medical evidence that sunscreen causes cancer. However, there is a l"
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "High-quality evidence has shown that sunscreen reduces the risk of developing bo"
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Sunscreens can be effective in preventing erythema from solar exposure without l"
+    },
+    "B5": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "About 90 percent of nonmelanoma skin cancers are associated with exposure to ult"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "Multiple independent authoritative institutions consulted",
+      "n_sources_consulted": 5,
+      "n_sources_verified": 5,
+      "sources": {
+        "source_aad": "verified",
+        "source_mdanderson": "verified",
+        "source_pmc_cmaj": "verified",
+        "source_pmc_vitd": "verified",
+        "source_skincancer": "verified"
+      },
+      "independence_note": "Sources span distinct institution types: professional medical association (AAD), major cancer research and treatment center (MD Anderson), peer-reviewed academic literature (PMC/CMAJ 2020), international expert consensus panel (PMC 2022), and an independent cancer prevention foundation (Skin Cancer Foundation). All five are institutionally independent with no shared authorship."
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Does the FDA's own research confirm that sunscreen chemicals are absorbed, potentially supporting the danger claim?",
+      "verification_performed": "Searched for 'FDA sunscreen chemical absorption oxybenzone bloodstream JAMA 2019 2020'. Found two FDA-sponsored JAMA studies (2019 and 2020) confirming that oxybenzone and other ingredients are absorbed into the bloodstream at concentrations exceeding the FDA threshold of 0.5 ng/mL. Oxybenzone reached up to 258.1 ng/mL and remained detectable for up to 21 days. However, both study authors explicitly stated: 'These findings do not indicate that individuals should refrain from the use of sunscreen.' The FDA called for more research but did not conclude harm.",
+      "finding": "FDA studies confirm absorption is real (oxybenzone up to 258 ng/mL, persisting 21 days), but the studies' own authors explicitly state this does not mean sunscreen should be avoided. Absorption documented; harm from that absorption: not demonstrated.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Is there evidence that oxybenzone or other absorbed chemicals disrupt hormones or cause cancer in humans at realistic exposure levels?",
+      "verification_performed": "Searched for 'oxybenzone endocrine disruptor humans evidence cancer realistic exposure'. Harvard Health and NYP/Weill Cornell both report that studies showing hormone disruption used concentrations equivalent to approximately 277 years of daily sunscreen application. Human volunteer studies confirmed no biologically significant alterations in reproductive hormones at real-world exposure levels. Oxybenzone has been in use since 1978 with no demonstrated human carcinogenicity.",
+      "finding": "Animal-model endocrine effects require ~277 years of equivalent daily human use. Human studies show no biologically significant reproductive hormone changes. No human carcinogenicity has been demonstrated after decades of use.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Does sunscreen use lead to clinically significant vitamin D deficiency in real-world populations?",
+      "verification_performed": "Searched for 'sunscreen vitamin D deficiency real world population studies clinical'. PMC 2022 expert panel found that population studies of outdoor individuals (vacationers) showed vitamin D levels 'did not seem to differ between those applying sunscreen and those who did not, with exposure time and body surface area exposed being equivalent.' Real-world sunscreen application is typically incomplete; shorter UVB wavelengths that drive vitamin D synthesis are also attenuated by the ozone layer, partially compensating. The Skin Cancer Foundation recommends dietary sources and supplements as the safe route to vitamin D rather than UV exposure.",
+      "finding": "Real-world population studies show no significant difference in vitamin D levels between sunscreen users and non-users given equivalent outdoor exposure time. Laboratory-controlled reductions do not translate to clinically meaningful deficiency in practice. Dietary supplementation is the recommended and safe vitamin D source.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Are there peer-reviewed studies directly concluding that sunscreen is more dangerous than moderate unprotected sun exposure on a net-harm basis?",
+      "verification_performed": "Searched for 'sunscreen more dangerous sun exposure net harm peer reviewed evidence'. Harvard Health explains that studies where sunscreen users appeared to have higher cancer rates reflect behavioral confounding: people who use more sunscreen tend to spend more time in the sun, reversing the causal arrow. MD Anderson, AAD, and the Skin Cancer Foundation all explicitly reject the conclusion that sunscreen causes net harm exceeding sun exposure. No peer-reviewed study was found concluding sunscreen use causes greater net harm than moderate unprotected sun exposure.",
+      "finding": "No peer-reviewed studies support this conclusion. The observed correlation is reversed causation: higher-sunscreen users get more sun, not cancer from sunscreen. All major medical institutions — AAD, MD Anderson, Skin Cancer Foundation, CDC — explicitly reject the claim.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "DISPROVED",
+  "key_results": {
+    "n_confirmed": 5,
+    "threshold": 3,
+    "operator": ">=",
+    "claim_holds": true
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.3.1",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-04-01"
+  }
+}

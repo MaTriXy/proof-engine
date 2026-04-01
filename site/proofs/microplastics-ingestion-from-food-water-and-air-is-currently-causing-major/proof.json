@@ -1,0 +1,302 @@
+{
+  "fact_registry": {
+    "B1": {
+      "key": "sc1_source_a",
+      "label": "SC1: PMC review — MPs ingested via food, inhaled via air"
+    },
+    "B2": {
+      "key": "sc1_source_b",
+      "label": "SC1: PMC endocrine review — three exposure routes confirmed"
+    },
+    "B3": {
+      "key": "sc2_source_a",
+      "label": "SC2: Frontiers endocrinology review — reproductive hormone signalling changes"
+    },
+    "B4": {
+      "key": "sc2_source_b",
+      "label": "SC2: PMC endocrine disruptors review — gonadal susceptibility and EDC axis disruption"
+    },
+    "B5": {
+      "key": "sc3_source_a",
+      "label": "SC3: Lancet eBioMedicine PMC — MPs associated with sperm dysfunction"
+    },
+    "B6": {
+      "key": "sc3_source_b",
+      "label": "SC3: Frontiers endocrinology — animal-model fertility reduction by MPs"
+    },
+    "A1": {
+      "label": "SC1: verified source count",
+      "method": "count(verified SC1 citations) = 2",
+      "result": "2"
+    },
+    "A2": {
+      "label": "SC2: verified source count",
+      "method": "count(verified SC2 citations) = 2",
+      "result": "2"
+    },
+    "A3": {
+      "label": "SC3: verified source count",
+      "method": "count(verified SC3 citations) = 2",
+      "result": "2"
+    }
+  },
+  "claim_formal": {
+    "subject": "Microplastics ingested via food, water, and air",
+    "sub_claims": [
+      {
+        "id": "SC1",
+        "property": "Humans are currently exposed to and ingesting microplastics via food, water, and air",
+        "operator": ">=",
+        "threshold": 2,
+        "operator_note": "SC1 requires at least 2 independent authoritative sources confirming that microplastic ingestion and inhalation from food, water, and air are documented in humans. This is the exposure pathway sub-claim and has the clearest evidence base."
+      },
+      {
+        "id": "SC2",
+        "property": "Microplastics exposure is causing or associated with hormone (endocrine) disruption in humans",
+        "operator": ">=",
+        "threshold": 2,
+        "operator_note": "SC2 requires at least 2 independent peer-reviewed sources documenting endocrine/hormonal changes associated with microplastic or microplastic-associated chemical (EDC) exposure. 'Causing' is interpreted broadly to include demonstrated associations with measurable hormonal changes and plausible mechanistic evidence, given that controlled human causation trials are ethically impossible. This is the more lenient interpretation — proof of strict population-level causation would require a higher threshold."
+      },
+      {
+        "id": "SC3",
+        "property": "Microplastics exposure is currently CAUSING MAJOR DECLINES in human fertility (causal, population-level, not merely associative)",
+        "operator": ">=",
+        "threshold": 3,
+        "operator_note": "SC3 uses threshold=3 because 'currently causing major declines' is a strong causal claim requiring: (a) demonstrated causation, not just association; (b) population-level magnitude ('major declines'); and (c) human-specific evidence (animal models alone are insufficient). The elevated threshold reflects the strength of the claim. Sources showing only correlation or animal-model fertility reduction count toward the evidence tally but do not establish the causal major-decline narrative on their own — the claim_holds flag for SC3 will be False if fewer than 3 qualifying sources are found."
+      }
+    ],
+    "compound_operator": "AND",
+    "operator_note": "All three sub-claims must hold for the compound claim to be PROVED. If any SC fails, the verdict is PARTIALLY VERIFIED (if at least one holds) or UNDETERMINED (if none hold). SC1 documents the exposure pathway; SC2 documents the endocrine-disruption arm of the claim; SC3 documents the fertility-decline arm with causal attribution."
+  },
+  "claim_natural": "Microplastics ingestion from food, water, and air is currently causing major declines in human fertility and hormone disruption.",
+  "citations": {
+    "B1": {
+      "source_key": "sc1_source_a",
+      "source_name": "Amobonye et al. (2023) 'Microplastics: A Real Global Threat for Environment and Food Safety' — PMC9920460",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9920460/",
+      "quote": "The main route of human exposure to MPs is through food ingestion, including seafood contaminated with microplastics. The second route of exposure is through the inhalation of air and dust containing MPs.",
+      "status": "partial",
+      "method": "fragment",
+      "coverage_pct": 50.0,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B2": {
+      "source_key": "sc1_source_b",
+      "source_name": "Bures et al. (2025) 'Micro- and Nanoplastics as Disruptors of the Endocrine System' — PMC12249724",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12249724/",
+      "quote": "Humans can be exposed to MNPs in three ways: ingestion, inhalation, and dermal contact",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B3": {
+      "source_key": "sc2_source_a",
+      "source_name": "Conley et al. (2024) 'Microplastics exposure: implications for human fertility, pregnancy and child health' — PMC10794604 (Frontiers Endocrinology)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10794604/",
+      "quote": "distinct changes in reproductive hormone signalling are observed, with reductions in the circulating concentrations of estradiol (E2) and anti-mullerian hormone (AMH), and increased concentrations of LH, follicle stimulating hormone (FSH) and testosterone",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B4": {
+      "source_key": "sc2_source_b",
+      "source_name": "Bures et al. (2025) 'Micro- and Nanoplastics as Disruptors of the Endocrine System' — PMC12249724",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12249724/",
+      "quote": "The gonads are particularly susceptible, with studies demonstrating oxidative stress, cellular apoptosis, and infertility due to MNP exposure",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B5": {
+      "source_key": "sc3_source_a",
+      "source_name": "Li et al. (2024) 'Association of mixed exposure to microplastics with sperm dysfunction: a multi-site study in China' — PMC11663775 (Lancet eBioMedicine)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11663775/",
+      "quote": "each additional type of microplastic exposure was associated with a significant decrease in total sperm number",
+      "status": "verified",
+      "method": "full_quote",
+      "coverage_pct": null,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    },
+    "B6": {
+      "source_key": "sc3_source_b",
+      "source_name": "Conley et al. (2024) 'Microplastics exposure: implications for human fertility, pregnancy and child health' — PMC10794604 (Frontiers Endocrinology)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10794604/",
+      "quote": "MNP exposure in rodent models leads to reduced sperm quantity and quality in addition to reduced testicular androgen production and circulating levels of testosterone",
+      "status": "partial",
+      "method": "fragment",
+      "coverage_pct": 50.0,
+      "fetch_mode": "live",
+      "credibility": {
+        "domain": "nih.gov",
+        "source_type": "government",
+        "tier": 5,
+        "flags": [],
+        "note": "Government domain (.gov)"
+      }
+    }
+  },
+  "extractions": {
+    "B1": {
+      "value": "partial",
+      "value_in_quote": true,
+      "quote_snippet": "The main route of human exposure to MPs is through food ingestion, including sea"
+    },
+    "B2": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "Humans can be exposed to MNPs in three ways: ingestion, inhalation, and dermal c"
+    },
+    "B3": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "distinct changes in reproductive hormone signalling are observed, with reduction"
+    },
+    "B4": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "The gonads are particularly susceptible, with studies demonstrating oxidative st"
+    },
+    "B5": {
+      "value": "verified",
+      "value_in_quote": true,
+      "quote_snippet": "each additional type of microplastic exposure was associated with a significant "
+    },
+    "B6": {
+      "value": "partial",
+      "value_in_quote": true,
+      "quote_snippet": "MNP exposure in rodent models leads to reduced sperm quantity and quality in add"
+    }
+  },
+  "cross_checks": [
+    {
+      "description": "SC1: independent sources documenting exposure via food/water/air",
+      "n_sources_consulted": 2,
+      "n_sources_verified": 2,
+      "sources": {
+        "sc1_source_a": "partial",
+        "sc1_source_b": "verified"
+      },
+      "independence_note": "Two separate peer-reviewed papers: Amobonye et al. (food chain review, PMC9920460) and Bures et al. (endocrine system review, PMC12249724) — different journals, different author teams, different research scope."
+    },
+    {
+      "description": "SC2: independent sources documenting hormonal disruption evidence",
+      "n_sources_consulted": 2,
+      "n_sources_verified": 2,
+      "sources": {
+        "sc2_source_a": "verified",
+        "sc2_source_b": "verified"
+      },
+      "independence_note": "Conley et al. (fertility/pregnancy review, PMC10794604) and Bures et al. (endocrine system review, PMC12249724) — different journals, different primary focus areas, independent literature synthesis."
+    },
+    {
+      "description": "SC3: sources documenting fertility-related MP associations",
+      "n_sources_consulted": 2,
+      "n_sources_verified": 2,
+      "sources": {
+        "sc3_source_a": "verified",
+        "sc3_source_b": "partial"
+      },
+      "independence_note": "Li et al. (multi-site human sperm study, PMC11663775) and Conley et al. (rodent model evidence, PMC10794604). Note: sc3_source_b draws from the same paper as sc2_source_a (PMC10794604) but cites a different finding (rodent sperm reduction vs. hormonal changes). Even with both sources verified, n_sc3=2 < threshold=3, so SC3 does not hold."
+    }
+  ],
+  "sub_claim_results": [
+    {
+      "id": "SC1",
+      "n_confirming": 2,
+      "threshold": 2,
+      "holds": true
+    },
+    {
+      "id": "SC2",
+      "n_confirming": 2,
+      "threshold": 2,
+      "holds": true
+    },
+    {
+      "id": "SC3",
+      "n_confirming": 2,
+      "threshold": 3,
+      "holds": false
+    }
+  ],
+  "adversarial_checks": [
+    {
+      "question": "Does the scientific consensus support the claim that microplastics are definitively CAUSING (not just associated with) infertility in humans?",
+      "verification_performed": "Searched for 'microplastics fertility causation established evidence 2024' and 'microplastics infertility not proven criticism'. Found microplasticsinfo.org review synthesizing current evidence.",
+      "finding": "The scientific consensus explicitly states causation is not established. microplasticsinfo.org: 'Current evidence does not demonstrate that microplastics are causing infertility in humans.' A systematic review (cited in the same source) found all 24 animal studies on MPs and fertility had significant methodological flaws including lack of appropriate controls, insufficient sample sizes, and incorrect statistical methods. Human cross-sectional studies show associations but cannot establish causation.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Are human sperm counts actually declining globally, or are trends more complex?",
+      "verification_performed": "Searched for 'human sperm count trends recent data 2024 2025 increase stable'. Found a recent large-scale study of 18,000+ semen samples.",
+      "finding": "A recent study analyzing more than 18,000 semen samples from more than 15,000 men found sperm concentrations have INCREASED over the past 15 years, contradicting the 'major declines' narrative. Global trends are regionally heterogeneous. The Levine et al. (2022) meta-analysis did find declining trends over decades, but attributing this specifically to microplastics (versus other EDCs, lifestyle factors, heat, obesity) is not established. This substantially undermines SC3.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Do studies specifically on MPs in semen confirm reduced sperm counts, or are results mixed?",
+      "verification_performed": "Reviewed PMC12299061 (Toxics 2025, microplastics in semen study, n=45). Also reviewed PMC11663775 (Lancet eBioMedicine, n=113, multi-site China).",
+      "finding": "Results are mixed. PMC12299061: 'No significant association was found between MP exposure and sperm concentration or total sperm count.' Only PET MPs showed a marginal (p=0.056, not significant) association with progressive motility. PMC11663775 found association with total sperm number, but explicitly states 'this study is a cross-sectional study, not supported by cohort data, and is only an association between microplastic exposure and sperm quality, but does not establish causation.' Both studies had small samples (45 and 113 participants respectively). Findings do not support 'major declines' at population scale.",
+      "breaks_proof": false
+    },
+    {
+      "question": "Are the hormone-disruption effects attributed to microplastic particles themselves, or to the chemical additives (BPA, phthalates) that leach from them?",
+      "verification_performed": "Searched for 'microplastics vs plastic additives BPA phthalates hormone disruption attribution'. Reviewed multiple PMC sources on endocrine disruption mechanisms.",
+      "finding": "Multiple reviews distinguish between MPs as particles vs. the EDCs (endocrine-disrupting chemicals) like BPA and phthalates that leach from them. The EDC effects of plastic additives are well-established; the particle effects of MPs themselves on hormones are less clear. PMC12249724 states 'MPs act through their EDCs to disrupt the feedback of the HPT and the HPG axes.' BPA/phthalates regulation is independent of microplastic ingestion per se, complicating the causal chain in the original claim which specifies 'microplastics ingestion' as the cause.",
+      "breaks_proof": false
+    }
+  ],
+  "verdict": "PARTIALLY VERIFIED",
+  "key_results": {
+    "sc1_holds": true,
+    "sc2_holds": true,
+    "sc3_holds": false,
+    "n_holding": 2,
+    "n_total": 3,
+    "claim_holds": false,
+    "any_unverified": true
+  },
+  "generator": {
+    "name": "proof-engine",
+    "version": "1.3.1",
+    "repo": "https://github.com/yaniv-golan/proof-engine",
+    "generated_at": "2026-04-01"
+  }
+}
